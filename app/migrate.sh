@@ -1,0 +1,1 @@
+sequelize db:migrate --env=database

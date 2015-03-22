@@ -1,0 +1,42 @@
+<div class="login-box">
+    <div class="register-logo">
+      <h2>{{ 'SIGNIN_TITLE' | translate }}</h2>
+    </div>
+    <div class="callout callout-success" ng-show="success">
+        {{ success|translate }}
+    </div>
+    <div class="callout callout-danger" ng-show="errors">
+        {{ errors|translate }}
+    </div>
+    <div class="callout callout-info" ng-show="info">
+        {{ info|translate }}
+    </div>
+    <!-- block content -->
+    <div class="box login-box-body">
+        <form method="post" ng-submit="login()">
+          <div class="form-group has-feedback">
+            <input type="email" name="email" size="64" ng-model="user.email" class="form-control" placeholder="{{ 'EMAIL'|translate }}" required/>
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback">
+            <input type="password" ng-model="user.password" class="form-control" placeholder="{{ 'PASSWORD'|translate }}" required/>
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div class="row">
+            <div class="col-xs-8">    
+              <div class="checkbox">
+                <label>
+                  <input ng-model="user.remember" type="checkbox"> {{ 'REMEMBER_ME'|translate }}
+                </label>
+              </div>                        
+            </div><!-- /.col -->
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'SIGN_IN'|translate }}</button>
+            </div><!-- /.col -->
+          </div>
+        </form>
+
+        <a href="#">{{ 'FORGOT_PWD'|translate }}</a><br>
+        <a href="#/register" class="text-center">{{ 'REGISTER_NOW'|translate }}</a>
+    </div>
+</div><!-- /.login-box -->

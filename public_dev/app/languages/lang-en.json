@@ -1,0 +1,29 @@
+{
+    "SIGNIN_TITLE": "Sign in to start",
+    "PASSWORD": "Password",
+    "EMAIL": "Email",
+    "REMEMBER_ME": "Remember Me",
+    "SIGN_IN": "Sign In",
+    "FORGOT_PWD": "I forgot my password",
+    "REGISTER_NOW": "Register now",
+    "USERNOTFOUND": "User not found",
+    "WRONGPASSWORD": "Wrong password",
+    
+    "REGISTER_TITLE": "Register a new membership",
+    "REGISTER": "Register",
+    "NICKNAME": "Nickname",
+    "ALHAV_ACCOUNT": "I already have a membership",
+    "REGISTERED": "You have completed your registration you can now log in",
+    
+    "SESSIONDOWN": "You have been disconnected because your session timed out", 
+    
+    "nickname,len": "Your nickname must be between 2 and 64 characters",
+    "nickname,unk": "Please enter a valid nickname",
+    "email,isEmail": "Your email address is invalid",
+    "email,unk": "Your email address is invalid",
+    "password,len": "Your password must be between 4 and 64 characters",
+    "password,unk": "Your password is invalid",
+    "unk,unk": "Unknown error, please retry later",
+    "emailUnique,unk": "You are already registered with this email address",
+    "nicknameUnique,unk": "This nickname is already taken"
+}

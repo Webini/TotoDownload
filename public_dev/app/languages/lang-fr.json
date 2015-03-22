@@ -1,0 +1,29 @@
+{
+    "SIGNIN_TITLE": "Connectez vous pour commencer",
+    "PASSWORD": "Mot de passe",
+    "EMAIL": "Email",
+    "REMEMBER_ME": "Se souvenir de moi",
+    "SIGN_IN": "Connexion",
+    "FORGOT_PWD": "J'ai oublié mon mot de passe",
+    "REGISTER_NOW": "Créer un compte",
+    "USERNOTFOUND": "Utilisateur non trouvé",
+    "WRONGPASSWORD": "Mote de passe incorrect",
+    
+    "REGISTER_TITLE": "Créer un nouveau compte",
+    "REGISTER": "Créer",
+    "NICKNAME": "Pseudo",
+    "ALHAV_ACCOUNT": "Je possède déjà un compte",
+    "REGISTERED": "Vous êtes a présent inscrit, vous pouvez vous connecter",
+    
+    "SESSIONDOWN": "Votre session a expiré, veuillez vous reconnecter.",
+    
+    "nickname,len": "Votre pseudo doit faire entre 2 et 64 caractères",
+    "nickname,unk": "Veuillez rentrer un pseudo valide",
+    "email,isEmail": "Votre adresse email est invalide",
+    "email,unk": "Votre adresse email est invalide",
+    "password,len": "Votre mot de passe doit faire entre 4 et 64 caractères",
+    "password,unk": "Votre mot de passe est invalide",
+    "unk,unk": "Une erreur inconnue s'est produite. Veuillez réessayer plus tard.",
+    "emailUnique,unk": "Vous êtes déjà enregistré avec cette adresse email",
+    "nicknameUnique,unk": "Ce pseudo est déjà utilisé"
+}

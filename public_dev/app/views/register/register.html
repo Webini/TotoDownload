@@ -1,0 +1,39 @@
+<div class="login-box">
+    <div class="register-logo">
+      <h2>{{ 'REGISTER_TITLE' | translate }}</h2>
+    </div>
+    <div class="callout callout-danger" ng-show="errors">
+        <ul>
+            <li ng-repeat="error in errors">
+                {{ (error.path + ',' + error.type)|translate }}
+            </li>
+        </ul>
+    </div>
+    <div class="box register-box-body">
+      <form name="rform" ng-submit="register()">
+          <div class="form-group has-feedback" ng-class="((rform.$submitted || rform.nick.$touched) && rform.nick.$error.required) ? 'has-error' : ''">
+            <input type="text" size="32" ng-model="user.nickname" name="nick" class="form-control" placeholder="{{ 'NICKNAME'|translate }}" required />
+            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback" ng-class="((rform.$submitted || rform.email.$touched) && (rform.email.$error.required || rform.email.$error.email)) ? 'has-error' : ''">
+            <input type="email" size="64" ng-model="user.email" class="form-control" name="email" placeholder="{{ 'EMAIL'|translate }}" required />
+            <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+          </div>
+          <div class="form-group has-feedback" ng-class="((rform.$submitted || rform.pwd.$touched) && rform.pwd.$error.required) ? 'has-error' : ''">
+            <input type="password" ng-model="user.password" name="pwd" class="form-control" placeholder="{{ 'PASSWORD'|translate }}" required />
+            <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+          </div>
+          <div class="row">
+            <div class="col-xs-8">
+                <a href="#/login" class="btn btn-block btn-default btn-flat text-center">{{ 'ALHAV_ACCOUNT'|translate }}</a>
+            </div>
+            <div class="col-xs-4">
+              <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'REGISTER'|translate }}</button>
+            </div><!-- /.col -->
+          </div>
+      </form>
+      <div ng-show="loading" class="overlay">
+        <i class="fa fa-refresh fa-spin"></i>
+      </div>
+    </div>
+</div>

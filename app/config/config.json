@@ -1,0 +1,19 @@
+{
+    "http": {
+        "port": 8081,
+        "host": "totodl.local",
+        "static": "./public/"
+    },
+    "database": {
+        "dialect": "mysql",
+        "host": "localhost",
+        "database": "totodownload",
+        "username": "totodownload",
+        "password": "x9hfUzTTA52VANT4"
+    },
+    "secret": {
+        "salt": "ef523eb0923d709f238e06584833b680",
+        "token": "153eb64c1182d1f15a7934ca2040cd2a"
+    },
+    "sessionExpiration": 240
+}
