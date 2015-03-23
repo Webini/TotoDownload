@@ -36,6 +36,7 @@
     "UPLOAD_DESC": "Upload your torrent files",
     "UPLOAD_ERROR": "Uploading error",
     "SEND_TORRENTS": "Select your torrents files",
+    "SEND_LINKS_MAGNET": "Use your links",
     "TORRENT_UPLOAD": ".torrent files",
     "MAGNET_UPLOAD": "With a magnet link",
     "LINK_UPLOAD": "With a .torrent link",

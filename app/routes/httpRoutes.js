@@ -7,7 +7,7 @@ module.exports = function(app){
     router.post('/register', authenticationCtrl.onRegister);
     router.post('/login', authenticationCtrl.onLogin);
     router.post('/verify', authenticationCtrl.onVerifyToken);
-    router.post('/upload', jwt({ secret: app.config.secret.token }), uploadCtrl.onUpload);
+    router.post('/upload/torrents', jwt({ secret: app.config.secret.token }), uploadCtrl.onUploadFiles);
     
     app.http.use('/', router);
 };

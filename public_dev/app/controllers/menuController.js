@@ -3,6 +3,8 @@ angular.module('totodl')
 function($scope, $routeParams, User, Socket){
     
     $scope.user = User.get();
+    $scope.roles = User.roles;
+    
     $scope.socket = Socket;
     
 }]);

@@ -23,10 +23,10 @@ module.exports = ['UserManager', (function(){
     
     return {  
         roles: {
-            LEETCHI: 1,
-            UPLOADER: 2,
-            ADMIN: 4,
-            SUPER_ADMIN: 8
+            LEETCHI: 0,
+            UPLOADER: 1,
+            ADMIN: 2,
+            SUPER_ADMIN: 4
         },
         
         /**

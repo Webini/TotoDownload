@@ -166,7 +166,7 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
               </a>
             </li>
-            <li>
+            <li ng-show="user.is(roles.UPLOADER)">
               <a href="#/upload">
                 <i class="fa fa-upload"></i> <span>{{ 'UPLOAD'|translate }}</span>
               </a>

@@ -17,7 +17,7 @@ function RegisterController($scope, $routeParams, $location, User){
     
     $scope.initFlow = function(){
         return {
-            target: '/upload', 
+            target: '/upload/torrents', 
             testChunks: false,
             headers: { 'authorization': 'Bearer ' + User.get().token }
         };    
@@ -68,6 +68,12 @@ function RegisterController($scope, $routeParams, $location, User){
         
         $scope.errors.push({ err: 'UPLOAD_FILES_ERROR', value: { file: $file.name } });
         return false;
+    };
+    
+    $scope.uploadFileSuccess = function($flow, $file, $message){
+        console.debug('FUKE SUCCESS');
+        console.debug("up ok => ", $flow, $file, $message);  
+        
     };
     
     $scope.addFiles = function($flow, $files){
