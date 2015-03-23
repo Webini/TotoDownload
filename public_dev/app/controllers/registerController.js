@@ -1,4 +1,4 @@
-angular.module('totodl')
+angular.module('totodlLogin')
        .config(['$routeProvider', function($routeProvider){
             $routeProvider.when('/login', {
                 templateUrl: '/app/views/register/login.html',

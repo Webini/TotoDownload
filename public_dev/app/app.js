@@ -1,10 +1,4 @@
-angular.module('totodl', [
-    'ngRoute',
-    'pascalprecht.translate',
-    'angular-loading-bar'
-]).config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider) {
-    $routeProvider.otherwise({redirectTo: '/login'});
-    
+function languageSetup($routeProvider, $translateProvider){
     //traductions
     $translateProvider.useLoaderCache(true);
     
@@ -18,9 +12,12 @@ angular.module('totodl', [
        browserLang = 'en';
     
     $translateProvider.preferredLanguage(browserLang); 
-    
-}]).run(['$rootScope', '$location', 'User', function($rootScope, $location, User) {
-    //redirect to login or dashboard if user is logged or not
+};
+
+/**
+* Redirect if user is logged / unlogged
+**/
+function redirectOnStatus($rootScope, $location, User){
     User.isValid().then(
         function success(){
             var cPath = $location.path();
@@ -33,16 +30,33 @@ angular.module('totodl', [
                 window.location = '/index.html#/login?down=true';//.path('/login').search({ down: true });
         }
     ); 
-    
-    //check if user can access to these pages
-    //cas de merde ?
-    $rootScope.$on('$routeChangeStart', function(event) {
-        var cPath = $location.path();
-        if(cPath == '/login' || cPath == '/register'){
-           if(User.get() != null)
-                window.location = '/dashboard.html#/dashboard'; //$location.url('/dashboard.html#/dashboard');//.path('/dashboard');
-        }
-        else if(User.get() == null)
-            window.location = '/index.html#/login?down=true';//.path('/login').search({ down: true });
-    });
+};
+
+// services
+angular.module('factories', []);
+
+/** Dashboard **/
+angular.module('totodl', [
+    'ngRoute',
+    'pascalprecht.translate',
+    'angular-loading-bar',
+    'factories'
+]).config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider){
+    $routeProvider.otherwise({redirectTo: '/dashboard'});
+    languageSetup($routeProvider, $translateProvider);
+}]).run(['$rootScope', '$location', 'User', function($rootScope, $location, User) {
+    redirectOnStatus($rootScope, $location, User);
+}]);
+
+/** Login / Register page **/
+angular.module('totodlLogin', [
+    'ngRoute',
+    'pascalprecht.translate',
+    'angular-loading-bar',
+    'factories'
+]).config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider) {
+    $routeProvider.otherwise({redirectTo: '/login'});
+    languageSetup($routeProvider, $translateProvider);
+}]).run(['$rootScope', '$location', 'User', function($rootScope, $location, User) {
+    redirectOnStatus($rootScope, $location, User);
 }]);

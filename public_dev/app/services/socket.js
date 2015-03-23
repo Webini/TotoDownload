@@ -1,4 +1,4 @@
-angular.module('totodl')
+angular.module('factories')
        .factory('Socket', [ '$http', '$location', '$q', 'User', 
 function factoryUser($http, $location, $q, User){
     
@@ -17,7 +17,6 @@ function factoryUser($http, $location, $q, User){
         
         socket.on('reconnect', function(){
             ret.connected = true;
-            socket.emit('authenticate', { token: User.get().token });
         });
         
         socket.on('reconnecting', function(){

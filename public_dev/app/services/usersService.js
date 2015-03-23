@@ -1,4 +1,4 @@
-angular.module('totodl')
+angular.module('factories')
        .factory('UsersService', [ '$http', '$q', function factoryUsersService($http, $q){
     
     var UsersServices = { 

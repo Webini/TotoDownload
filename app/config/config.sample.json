@@ -1,27 +1,27 @@
 {
     "http": {
         "port": 8081,
-        "host": "totodl.local",
+        "host": "localhost",
         "static": "./public/"
     },
     "database": {
         "dialect": "mysql",
         "host": "localhost",
-        "database": "totodownload",
-        "username": "totodownload",
-        "password": "x9hfUzTTA52VANT4"
+        "database": "database",
+        "username": "user",
+        "password": "password"
     },
     "secret": {
-        "salt": "ef523eb0923d709f238e06584833b680",
-        "token": "153eb64c1182d1f15a7934ca2040cd2a"
+        "salt": "md5 secret CHANGEME",
+        "token": "md5 secret CHANGEME"
     },
     "sessionExpiration": 240,
     "torrents": {
         "api": "transmission",
         "host": "localhost",
         "port": 9091,
-        "username": "dl",
-        "password": "test",
+        "username": "username",
+        "password": "password",
         "url": "/transmission/rpc"
     }
 }
