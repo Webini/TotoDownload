@@ -52,10 +52,7 @@ module.exports = ['UserManager', (function(){
         * @return string
         **/
         getToken: function(user){
-            console.log('PRE TOKEN');
-            var to =  jwt.sign(user, app.config.secret.token, { expiresInMinutes: app.config.sessionExpiration });
-            console.log('POST TOKEN');
-            return to;
+            return jwt.sign(user.public, app.config.secret.token, { expiresInMinutes: app.config.sessionExpiration });
         },
         
         /**

@@ -1,10 +1,9 @@
 angular.module('totodl', [
     'ngRoute',
     'pascalprecht.translate',
-    'angular-loading-bar',
-    'ui.router'
+    'angular-loading-bar'
 ]).config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider) {
-    $routeProvider.otherwise({redirectTo: '/dashboard'});
+    $routeProvider.otherwise({redirectTo: '/login'});
     
     //traductions
     $translateProvider.useLoaderCache(true);
@@ -19,20 +18,21 @@ angular.module('totodl', [
        browserLang = 'en';
     
     $translateProvider.preferredLanguage(browserLang); 
+    
 }]).run(['$rootScope', '$location', 'User', function($rootScope, $location, User) {
     //redirect to login or dashboard if user is logged or not
     User.isValid().then(
         function success(){
             var cPath = $location.path();
             if(cPath == '/login' || cPath == '/register')
-                $location.path('/dashboard');
+                window.location = '/dashboard.html#/dashboard'; //$location.url('/dashboard.html#/dashboard');//.path('/dashboard');
         },
         function error(){
             var cPath = $location.path();
             if(cPath != '/login' && cPath != '/register')
-                $location.path('/login').search({ down: true });
+                window.location = '/index.html#/login?down=true';//.path('/login').search({ down: true });
         }
-    );
+    ); 
     
     //check if user can access to these pages
     //cas de merde ?
@@ -40,9 +40,9 @@ angular.module('totodl', [
         var cPath = $location.path();
         if(cPath == '/login' || cPath == '/register'){
            if(User.get() != null)
-                $location.path('/dashboard');
+                window.location = '/dashboard.html#/dashboard'; //$location.url('/dashboard.html#/dashboard');//.path('/dashboard');
         }
         else if(User.get() == null)
-            $location.path('/login').search({ down: true });
+            window.location = '/index.html#/login?down=true';//.path('/login').search({ down: true });
     });
 }]);

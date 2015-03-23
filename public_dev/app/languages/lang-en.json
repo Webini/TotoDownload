@@ -8,6 +8,7 @@
     "REGISTER_NOW": "Register now",
     "USERNOTFOUND": "User not found",
     "WRONGPASSWORD": "Wrong password",
+    "LOGOUT": "Logout",
     
     "REGISTER_TITLE": "Register a new membership",
     "REGISTER": "Register",
@@ -25,5 +26,8 @@
     "password,unk": "Your password is invalid",
     "unk,unk": "Unknown error, please retry later",
     "emailUnique,unk": "You are already registered with this email address",
-    "nicknameUnique,unk": "This nickname is already taken"
+    "nicknameUnique,unk": "This nickname is already taken",
+    
+    "CONNECTING": "Connecting...",
+    "CONNECTED": "Connected"
 }

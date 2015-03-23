@@ -6,9 +6,11 @@ var ioRoutes    = require(__dirname + '/routes/ioRoutes.js');
 var orm         = require(__dirname + '/models/index.js');
 var jwt         = require('socketio-jwt');
 
-var app = express();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+var app         = express();
+var server      = require('http').Server(app);
+var io          = require('socket.io')(server);
+var torrents    = require(__dirname + '/api/torrents.js')(config.torrents);
+var updtWorker  = require(__dirname + '/worker/updateTorrents.js');
 
 //io config
 io.use(jwt.authorize({
@@ -26,7 +28,11 @@ var mApp = {
     io: io,
     server: server,
     orm: orm,
-    services: {}
+    torrents: torrents,
+    services: {},
+    workers: {
+        torrents: updtWorker    
+    }
 };
 
 module.exports = mApp;

@@ -26,7 +26,7 @@ function RegisterController($scope, $routeParams, $location, UsersService, User)
                 //store the user in localStorage
                 User.set(data);
                 //go to app main
-                $location.path('/dashboard');
+                window.location = "/dashboard.html#/dashboard";
             },
             function error(data){
                 if(data == -1)

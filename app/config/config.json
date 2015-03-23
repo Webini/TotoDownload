@@ -15,5 +15,13 @@
         "salt": "ef523eb0923d709f238e06584833b680",
         "token": "153eb64c1182d1f15a7934ca2040cd2a"
     },
-    "sessionExpiration": 240
+    "sessionExpiration": 240,
+    "torrents": {
+        "api": "transmission",
+        "host": "localhost",
+        "port": 9091,
+        "username": "dl",
+        "password": "test",
+        "url": "/transmission/rpc"
+    }
 }

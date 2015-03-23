@@ -28,6 +28,13 @@ function factoryUser($http, $q, UsersService){
             return this._loggedUser;
         },
         /**
+        * Remove user from localStoragee
+        **/
+        remove: function(){
+            this._loggedUser = null;
+            window.localStorage.setItem('_localUser', null);    
+        },
+        /**
         * Check if current user has a valid token
         **/
         isValid: function(){
@@ -44,12 +51,12 @@ function factoryUser($http, $q, UsersService){
                     if(data)
                         deferred.resolve();
                     else{
-                        _this._loggedUser = null;
+                        _this.remove();
                         deferred.reject();
                     }
                 },
                 function error(data){
-                    _this._loggedUser = null;
+                    _this.remove();
                     deferred.reject();
                 }
             );

@@ -8,6 +8,7 @@
     "REGISTER_NOW": "Créer un compte",
     "USERNOTFOUND": "Utilisateur non trouvé",
     "WRONGPASSWORD": "Mote de passe incorrect",
+    "LOGOUT": "Se déconnecter",
     
     "REGISTER_TITLE": "Créer un nouveau compte",
     "REGISTER": "Créer",
@@ -25,5 +26,8 @@
     "password,unk": "Votre mot de passe est invalide",
     "unk,unk": "Une erreur inconnue s'est produite. Veuillez réessayer plus tard.",
     "emailUnique,unk": "Vous êtes déjà enregistré avec cette adresse email",
-    "nicknameUnique,unk": "Ce pseudo est déjà utilisé"
+    "nicknameUnique,unk": "Ce pseudo est déjà utilisé",
+    
+    "CONNECTING": "Connexion...",
+    "CONNECTED": "Connecté"
 }

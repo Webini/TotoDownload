@@ -28,7 +28,6 @@
     "angular-translate": "~2.6.1",
     "angular-translate-loader-static-files": "~2.6.1",
     "angular-translate-loader-url": "~2.6.1",
-    "angular-loading-bar": "~0.7.1",
-    "angular-ui-router": "~0.2.13"
+    "angular-loading-bar": "~0.7.1"
   }
 }
