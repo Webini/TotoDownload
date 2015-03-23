@@ -29,5 +29,21 @@
     "nicknameUnique,unk": "Ce pseudo est déjà utilisé",
     
     "CONNECTING": "Connexion...",
-    "CONNECTED": "Connecté"
+    "CONNECTED": "Connecté",
+    "OPTIONS": "OPTIONS",
+    "UPLOAD": "Upload",
+    "UPLOAD_BUTTON": "Envoyer",
+    "UPLOAD_DESC": "Uploadez vos fichiers torrent",
+    "UPLOAD_ERROR": "Erreur lors de l'upload",
+    "SEND_TORRENTS": "Sélectionnez vos fichiers torrent",
+    "TORRENT_UPLOAD": "Fichiers .torrent",
+    "MAGNET_UPLOAD": "Avec un lien magnet",
+    "LINK_UPLOAD": "Avec un lien .torrent",
+    "FILES_STATUS": "Statut des fichiers",
+    "UPLOAD_FILES_ERROR": "Impossible d'uploader {{ file }}, le fichier doit être un .torrent",
+    "RETRY": "Réessayer",
+    "CANCEL": "Annuler",
+    "FILE": "Fichier",
+    "UPLOAD_NO_FILES": "Vous devez sélectionner au moins 1 fichier",
+    "NEW_UPLOAD": "Nouvel upload"
 }

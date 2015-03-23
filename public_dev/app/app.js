@@ -40,10 +40,12 @@ angular.module('totodl', [
     'ngRoute',
     'pascalprecht.translate',
     'angular-loading-bar',
-    'factories'
-]).config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider){
+    'factories',
+    'flow'
+]).config(['$routeProvider', '$translateProvider', 'flowFactoryProvider', function($routeProvider, $translateProvider, flowFactoryProvider){
     $routeProvider.otherwise({redirectTo: '/dashboard'});
     languageSetup($routeProvider, $translateProvider);
+    flowFactoryProvider.factory = fustyFlowFactory;
 }]).run(['$rootScope', '$location', 'User', function($rootScope, $location, User) {
     redirectOnStatus($rootScope, $location, User);
 }]);

@@ -1,0 +1,109 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+    {{ 'UPLOAD'|translate }}
+    <small>{{ 'UPLOAD_DESC'|translate }}</small>
+  </h1>
+  <ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="#">Forms</a></li>
+    <li class="active">General Elements</li>
+  </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+  <div class="callout callout-danger" ng-show="errors.length">
+    <ul>
+        <li ng-repeat="error in errors">
+            {{ error.err|translate:error.value }}
+        </li>
+    </ul>
+  </div>
+  <div class="row">
+     <div class="col-md-6" flow-init="{target: '/upload', testChunks:false}"
+                           flow-file-success="uploadSuccess($flow)"
+                           flow-file-error="uploadFileError($flow, $file)"
+                           flow-file-added="addFile($flow, $file)"
+                           flow-files-added="addFiles($flow, $files)"
+                           flow-complete="uploadComplete($flow)">
+        <div class="box box-primary">
+          <div ng-show="uploading == 0">
+            <div class="box-header">
+              <h3 class="box-title">{{ 'SEND_TORRENTS'|translate }}</h3>
+            </div><!-- /.box-header -->
+            <!-- form start -->
+            <form role="form">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="torrentsUpload">{{ 'TORRENT_UPLOAD'|translate }}</label>
+                  <input type="file" id="torrentsUpload" flow-btn />
+                </div>
+                <div ng-show="0">
+                    <div class="form-group">
+                      <label for="magnetLink">{{ 'MAGNET_UPLOAD'|translate }}</label>
+                      <input type="text" ng-model="magnet" id="magnetLink" class="form-control" name="magnet" />
+                    </div>
+                    <div class="form-group">
+                      <label for="uploadLink">{{ 'LINK_UPLOAD'|translate }}</label>
+                      <input type="text" ng-model="link" class="form-control" id="uploadLink" name="link" />
+                    </div>
+                </div>
+              </div><!-- /.box-body -->
+            </form>
+          </div><!-- /.box -->
+          <div ng-show="$flow.files.length">
+              <div class="box-header">
+                  <h3 class="box-title">{{ 'FILES_STATUS'|translate }}</h3>         
+              </div>
+              <div class="box-body">
+                  <div class="callout torrents-up-status" ng-class="{ 'callout-danger': file.error, 'callout-success': (file.isComplete() && !file.error) }" ng-repeat="file in $flow.files">
+                    <div class="box-tools pull-right" ng-show="uploading == 0">
+                        <button class="btn btn-box-tool close-topright" ng-click="file.cancel()"><i class="fa fa-times"></i></button>
+                    </div>  
+                      
+                    {{ 'FILE'|translate }}&nbsp;:&nbsp;<b>{{ file.name }}</b><br />
+                    <span ng-show="file.error">
+                        {{ 'UPLOAD_ERROR'|translate }}
+                    </span>
+                    <div class="progress progress-xxs" ng-show="file.isUploading()">
+                        <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="{{ Math.round(file.progress() * 100) }}" aria-valuemin="0" aria-valuemax="100" style="" ng-style="{ width: Math.round(file.progress() * 100) + '%' }">
+                            <span class="sr-only">{{ file.progress() }}</span>
+                        </div>
+                    </div>
+                    <div class="text-center" ng-show="file.error">
+                        <button class="btn btn-default btn-xs" type="button" ng-click="removeFile($flow, file)">
+                            <i class="fa fa-times"></i>&nbsp;{{ 'CANCEL'|translate }}
+                        </button>
+                        <button class="btn btn-default btn-xs" type="button" ng-click="file.retry()">
+                            <i class="fa fa-refresh"></i>&nbsp;{{ 'RETRY'|translate }}
+                        </button>
+                    </div>
+                  </div>  
+              </div>   
+          </div>
+          <div class="clearfix"></div>
+          <div class="box-footer text-center" ng-show="(uploading != 1)">
+            <button type="button" class="btn btn-primary" ng-show="(uploading == 2)" ng-click="newUpload($flow)"><i class="fa fa-reply"></i>&nbsp;&nbsp;{{ 'NEW_UPLOAD'|translate }}</button>
+            <button type="submit" class="btn btn-primary" ng-show="(uploading != 2)" ng-click="uploadFiles($flow)"><i class="fa fa-upload"></i>&nbsp;&nbsp;{{ 'UPLOAD_BUTTON'|translate }}</button>
+          </div>
+        </div>
+     </div>
+     <div class="col-md-6">
+         <div class="box box-primary">
+            <div class="box-header">
+                <h3 class="box-title">{{ 'SEND_TORRENTS'|translate }}</h3>
+            </div><!-- /.box-header -->
+            <div class="box-body">
+
+            </div>
+            <div class="box-footer text-center">
+                <button type="submit" class="btn btn-primary">{{ 'UPLOAD_BUTTON'|translate }}</button>
+            </div>
+         </div>
+     </div>
+  </div>
+    
+    
+  <div class="clear"></div>
+</section>

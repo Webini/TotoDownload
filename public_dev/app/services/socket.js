@@ -26,8 +26,7 @@ function factoryUser($http, $location, $q, User){
         socket.on('error', function(error) {
             console.debug("SOCKET ERROR => ", error);
             if(error.type == "UnauthorizedError" || error.code == "invalid_token") {
-                User.remove();
-                window.location = '/index.html#/login?down=true';
+                User.logout('/index.html#/login?down=true');
             }
         });
     });

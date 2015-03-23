@@ -5,6 +5,7 @@ var httpRoutes  = require(__dirname + '/routes/httpRoutes.js');
 var ioRoutes    = require(__dirname + '/routes/ioRoutes.js');
 var orm         = require(__dirname + '/models/index.js');
 var jwt         = require('socketio-jwt');
+var multer      = require('multer');
 
 var app         = express();
 var server      = require('http').Server(app);
@@ -21,6 +22,7 @@ io.use(jwt.authorize({
 //static files
 app.use(express.static(config.http.static));
 app.use(bodyParser.json());
+app.use(multer());
 
 var mApp = {
     config: config,

@@ -28,6 +28,11 @@ module.exports = {
         type: DataTypes.STRING(16),
         allowNull: true
       },
+      roles: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 0
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

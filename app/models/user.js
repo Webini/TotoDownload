@@ -40,6 +40,9 @@ module.exports = function(sequelize, DataTypes) {
     ip: {
         type: DataTypes.STRING(16),
         allowNull: true
+    },
+    roles: {
+        type: DataTypes.INTEGER.UNSIGNED
     }
   }, {
     getterMethods   : {
@@ -48,6 +51,9 @@ module.exports = function(sequelize, DataTypes) {
                 email: this.email,
                 id: this.id,
                 nickname: this.nickname,
+                createdAt: this.createdAt,
+                updatedAt: this.updatedAt,
+                roles: this.roles,
                 ip: this.ip
             };
         }

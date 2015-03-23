@@ -28,6 +28,8 @@
     "angular-translate": "~2.6.1",
     "angular-translate-loader-static-files": "~2.6.1",
     "angular-translate-loader-url": "~2.6.1",
-    "angular-loading-bar": "~0.7.1"
+    "angular-loading-bar": "~0.7.1",
+    "fusty-flow.js": "~1",
+    "ng-flow": "~2"
   }
 }

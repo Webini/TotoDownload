@@ -30,9 +30,18 @@ function factoryUser($http, $q, UsersService){
         /**
         * Remove user from localStoragee
         **/
-        remove: function(){
+        remove: function(){ 
             this._loggedUser = null;
             window.localStorage.setItem('_localUser', null);    
+        },
+        
+        /**
+        * Log out current user
+        * @param string redirect Redirect url
+        **/
+        logout: function(redirect){
+            this.remove();
+            window.location = redirect;
         },
         /**
         * Check if current user has a valid token

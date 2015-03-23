@@ -22,6 +22,13 @@ module.exports = ['UserManager', (function(){
     };
     
     return {  
+        roles: {
+            LEETCHI: 1,
+            UPLOADER: 2,
+            ADMIN: 4,
+            SUPER_ADMIN: 8
+        },
+        
         /**
         * Log user
         * @param object data { email, password }
@@ -32,13 +39,16 @@ module.exports = ['UserManager', (function(){
             
             app.orm['User'].find({ where: { email: data.email } }).then(
                 function success(user){
+                    if(user == null)
+                        return deferred.reject(-1);
+                    
                     var cPass = hashPassword(data.password, user.salt);
                     if(cPass != user.password)
                         deferred.reject(-2);
                     else
                         deferred.resolve(user);
                 },
-                function error(user){
+                function error(data){
                     deferred.reject(-1);
                 }
             );
@@ -84,6 +94,7 @@ module.exports = ['UserManager', (function(){
                 nickname: data.nickname,
                 email: data.email,
                 ip: data.ip,
+                roles: this.roles.LEETCHI,
                 passwordC: data.password,
                 password: hashPassword(data.password, salt),
                 salt: salt

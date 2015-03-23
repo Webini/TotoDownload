@@ -3,7 +3,6 @@ angular.module('totodl')
 function($scope, $routeParams, User){
     
     $scope.logout = function(){
-        User.remove();
-        window.location = '/index.html#/login';
+        User.logout('/index.html#/login');
     };
 }]);

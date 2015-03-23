@@ -4,3 +4,4 @@ public/js/*
 public/css/*
 public/bower_components
 npm-debug.log
+app/config/config.json

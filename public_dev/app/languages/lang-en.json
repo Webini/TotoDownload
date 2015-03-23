@@ -29,5 +29,21 @@
     "nicknameUnique,unk": "This nickname is already taken",
     
     "CONNECTING": "Connecting...",
-    "CONNECTED": "Connected"
+    "CONNECTED": "Connected",
+    "OPTIONS": "OPTIONS",
+    "UPLOAD": "Upload",
+    "UPLOAD_BUTTON": "Upload",
+    "UPLOAD_DESC": "Upload your torrent files",
+    "UPLOAD_ERROR": "Uploading error",
+    "SEND_TORRENTS": "Select your torrents files",
+    "TORRENT_UPLOAD": ".torrent files",
+    "MAGNET_UPLOAD": "With a magnet link",
+    "LINK_UPLOAD": "With a .torrent link",
+    "FILES_STATUS": "Files status",
+    "UPLOAD_FILES_ERROR": "Cannot upload {{ file }}, file type must be .torrent",
+    "RETRY": "Retry",
+    "CANCEL": "Cancel",
+    "FILE": "File",
+    "UPLOAD_NO_FILES": "You must select at least 1 file",
+    "NEW_UPLOAD": "New upload"
 }
