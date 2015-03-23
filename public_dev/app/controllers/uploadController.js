@@ -16,7 +16,6 @@ function RegisterController($scope, $routeParams, $location, User){
     $scope.Math = window.Math;
     
     $scope.initFlow = function(){
-        console.debug('TEST => ', User.get().token);
         return {
             target: '/upload', 
             testChunks: false,

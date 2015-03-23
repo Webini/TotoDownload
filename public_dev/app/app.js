@@ -23,8 +23,7 @@ function redirectOnStatus($rootScope, $location, User, successcb){
             var cPath = $location.path();
             if(cPath == '/login' || cPath == '/register')
                 window.location = '/dashboard.html#/dashboard'; //$location.url('/dashboard.html#/dashboard');//.path('/dashboard');
-            else if(successcb)
-                successcb();
+            successcb();
         },
         function error(){
             var cPath = $location.path();

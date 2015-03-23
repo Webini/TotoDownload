@@ -35,10 +35,10 @@ module.exports = function(app){
         onVerifyToken: function(req, res){
             app.services['UserManager'].verifyToken(req.body.token).then(
                 function success(){
-                    res.json(true);
+                    res.json(1);
                 },
                 function error(){
-                    res.json(false);
+                    res.json(0);
                 }
             );
         }
