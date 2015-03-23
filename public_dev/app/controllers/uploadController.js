@@ -15,6 +15,15 @@ function RegisterController($scope, $routeParams, $location, User){
     $scope.uploading = 0; //0 no upload // 1 uploading // 2 complete
     $scope.Math = window.Math;
     
+    $scope.initFlow = function(){
+        console.debug('TEST => ', User.get().token);
+        return {
+            target: '/upload', 
+            testChunks: false,
+            headers: { 'authorization': 'Bearer ' + User.get().token }
+        };    
+    };
+    
     $scope.newUpload = function($flow){
         $scope.uploading = 0;
         
@@ -29,7 +38,6 @@ function RegisterController($scope, $routeParams, $location, User){
             $scope.errors = [ { err: 'UPLOAD_NO_FILES', value: {}} ];
         }
         else{
-            $flow.opts.query = { token: User.get().token };
             $flow.upload();
             $scope.uploading = 1;
         }

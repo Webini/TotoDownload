@@ -17,12 +17,14 @@ function languageSetup($routeProvider, $translateProvider){
 /**
 * Redirect if user is logged / unlogged
 **/
-function redirectOnStatus($rootScope, $location, User){
+function redirectOnStatus($rootScope, $location, User, successcb){
     User.isValid().then(
         function success(){
             var cPath = $location.path();
             if(cPath == '/login' || cPath == '/register')
                 window.location = '/dashboard.html#/dashboard'; //$location.url('/dashboard.html#/dashboard');//.path('/dashboard');
+            else if(successcb)
+                successcb();
         },
         function error(){
             var cPath = $location.path();
@@ -46,8 +48,12 @@ angular.module('totodl', [
     $routeProvider.otherwise({redirectTo: '/dashboard'});
     languageSetup($routeProvider, $translateProvider);
     flowFactoryProvider.factory = fustyFlowFactory;
-}]).run(['$rootScope', '$location', 'User', function($rootScope, $location, User) {
-    redirectOnStatus($rootScope, $location, User);
+}]).run(['$rootScope', '$location', 'User', '$http', function($rootScope, $location, User, $http) {
+    //check login status
+    redirectOnStatus($rootScope, $location, User, function(){
+        //if all ok then set the token for http requests
+        $http.defaults.headers.common.authorization = 'Bearer ' + User.get().token;
+    });
 }]);
 
 /** Login / Register page **/

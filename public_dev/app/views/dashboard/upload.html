@@ -21,7 +21,7 @@
     </ul>
   </div>
   <div class="row">
-     <div class="col-md-6" flow-init="{target: '/upload', testChunks:false}"
+     <div class="col-md-6" flow-init="initFlow()"
                            flow-file-success="uploadSuccess($flow)"
                            flow-file-error="uploadFileError($flow, $file)"
                            flow-file-added="addFile($flow, $file)"
