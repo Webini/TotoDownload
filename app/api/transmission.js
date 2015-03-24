@@ -36,7 +36,7 @@ module.exports = function(config){
                 if(err)
                     defer.reject({ error: parseError(err) });
                 else
-                    defer.resolve({ id: response.id, hash: response.hash, name: response.name });                
+                    defer.resolve({ id: response.id, hash: response.hashString, name: response.name });                
             }
             
             if(options)

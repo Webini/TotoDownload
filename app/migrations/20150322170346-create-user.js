@@ -6,7 +6,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER.UNSIGNED
       },
       nickname: {
         type: DataTypes.STRING(32),
@@ -62,7 +62,9 @@ module.exports = {
             indexName: 'nicknameUnique',
             indicesType: 'UNIQUE'
         }
-    ).done(done);
+    );
+      
+    done();
   },
   down: function(migration, DataTypes, done) {
     migration.dropTable("Users").done(done);

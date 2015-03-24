@@ -44,25 +44,26 @@ module.exports = function(sequelize, DataTypes) {
     roles: {
         type: DataTypes.INTEGER.UNSIGNED
     }
-  }, {
-    getterMethods   : {
-        public: function(){
-            return {
-                email: this.email,
-                id: this.id,
-                nickname: this.nickname,
-                createdAt: this.createdAt,
-                updatedAt: this.updatedAt,
-                roles: this.roles,
-                ip: this.ip
-            };
+  }, 
+  {
+      getterMethods   : {
+          public: function(){
+              return {
+                  email: this.email,
+                  id: this.id,
+                  nickname: this.nickname,
+                  createdAt: this.createdAt,
+                  updatedAt: this.updatedAt,
+                  roles: this.roles,
+                  ip: this.ip
+              };
+          }
+      },
+      classMethods: {
+        associate: function(models) {
+          //  models['User'].hasMany(models['Torrent'], { as: 'torrents', through: 'uid' });
         }
-    },
-    classMethods: {
-      associate: function(models) {
-        // associations can be defined here
       }
-    }
   });
   return User;
 };
