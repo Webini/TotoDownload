@@ -6,3 +6,4 @@ public/bower_components
 npm-debug.log
 app/config/config.json
 bin/*
+app/logs/*
