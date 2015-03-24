@@ -1,21 +1,17 @@
 module.exports = function(config){
     var Transmission    = require('transmission');
     var $q              = require('q');
+    var app             = require(__dirname + '/../../app.js');
     
     trans = new Transmission(config);
     
-    //try to parse the strange format of error return by the transmission lib
+    //I was trying to parse the error but the format is too fucked, so i just log the output error
     function parseError(err){
-        if(err.result){
-            var nerr = JSON.parse(err.result);
-            if(nerr.result){
-                return nerr.result;
-            }
-            else
-                return err.result;
-        }
+        app.logger.warn(err);   
         
-        return "Unknown error";
+        if(typeof err == 'string')
+            return err;
+        return 'Unknown error';
     }
     
     return {

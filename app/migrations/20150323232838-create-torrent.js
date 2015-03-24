@@ -13,30 +13,61 @@ module.exports = {
         allowNull: true,
         references: 'Users',
         referenceKey: 'id',
-        //onDelete: 'restrict' //if we want to delete an user, we have to clean his torrents first
+        onDelete: 'restrict' //if we want to delete an user, we have to clean his torrents first
       },
       tid: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false
       },
       hash: {
-        type: DataTypes.STRING(32),
+        type: DataTypes.STRING(255),
         allowNull: false
       },
       name: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      allocineId: {
+      movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
-      image: {
+      runtime: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      title: { 
         type: DataTypes.STRING(255),
         allowNull: true
       },
-      description: {
+      genre: {
+        type: DataTypes.STRING(128),
+        allowNull: true
+      },
+      keywords: {
         type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      year: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      poster: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      synopsis: {
+        type: DataTypes.STRING(2048),
+        allowNull: true
+      },
+      synopsisShort: {
+        type: DataTypes.STRING(1024)      
+      },
+      trailer: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      screenSize: {
+        type: DataTypes.STRING(16),
         allowNull: true
       },
       guessedTitle: {
@@ -45,14 +76,6 @@ module.exports = {
       },
       guessedType: {
         type: DataTypes.STRING(32),
-        allowNull: true
-      },
-      title: { 
-        type: DataTypes.STRING(255),
-        allowNull: true
-      },
-      video: {
-        type: DataTypes.STRING(255),
         allowNull: true
       },
       zip: {

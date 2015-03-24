@@ -17,11 +17,18 @@
     },
     "sessionExpiration": 240,
     "torrents": {
-        "api": "transmission",
+        "api": "transmission", //only one supported right now
         "host": "localhost",
         "port": 9091,
         "username": "username",
         "password": "password",
         "url": "/transmission/rpc"
+    },
+    "moviesdb":{
+        "api": "allocine" //only one supported right now
+    },
+    "logs": {
+        "logs": "./app/logs/logs.txt",
+        "exceptions": "./app/logs/exceptions.txt"
     }
 }

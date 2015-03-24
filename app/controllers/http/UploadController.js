@@ -18,35 +18,12 @@ module.exports = function(app){
             
             TorrentManager.addTorrent(req.user, req.files.file).then(
                 function success(data){
-                    console.log(require('util').inspect(data));
-                    res.json(data);
+                    res.json(data.dataValues);
                 },
-                function error(data){
-                    console.log(require('util').inspect(data));      
+                function error(data){ 
+                    res.sendStatus(500);
                 }
             );
-                                                        
-            
-            /*
-            if(req.user.roles & UserManager.roles.UPLOADER && req.files && req.files.file){
-                //req.body // req.files
-                var file = req.files.file;
-                app.torrents.addFile(file.path).then(
-                    function success(data){
-                        var guessit = require(__dirname + '/../../wrapper/guessit.js');
-                        
-                        guessit.parse(data.name);
-                        
-                        res.json(data);
-                    },
-                    function error(data){
-                        respondError(-2, data.error, 403);    
-                    }
-                );
-
-            }
-            else
-                respondError(-1, 'insuffisant rights', 403);   */
         }
     }
 };

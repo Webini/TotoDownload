@@ -1,38 +1,65 @@
 "use strict";
 module.exports = function(sequelize, DataTypes) {
   var Torrent = sequelize.define("Torrent", {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: DataTypes.INTEGER.UNSIGNED
-      },
       userId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
+      },
+      tid: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        unique: 'tidUnique'
+      },
+      hash: {
+        type: DataTypes.STRING(255),
+        allowNull: false,
+        unique: 'hashUnique'
       },
       name: {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      hash: {
-        type: DataTypes.STRING(32),
-        allowNull: false
-      },
-      tid: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false
-      },
-      allocineId: {
+      movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
-      image: {
+      runtime: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      title: { 
         type: DataTypes.STRING(255),
         allowNull: true
       },
-      description: {
+      genre: {
+        type: DataTypes.STRING(128),
+        allowNull: true
+      },
+      keywords: {
         type: DataTypes.STRING(255),
+        allowNull: false
+      },
+      year: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      poster: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      synopsis: {
+        type: DataTypes.STRING(2048),
+        allowNull: true
+      },
+      synopsisShort: {
+        type: DataTypes.STRING(1024)      
+      },
+      trailer: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      screenSize: {
+        type: DataTypes.STRING(16),
         allowNull: true
       },
       guessedTitle: {
@@ -41,14 +68,6 @@ module.exports = function(sequelize, DataTypes) {
       },
       guessedType: {
         type: DataTypes.STRING(32),
-        allowNull: true
-      },
-      title: {
-        type: DataTypes.STRING(255),
-        allowNull: true
-      },
-      video: {
-        type: DataTypes.STRING(255),
         allowNull: true
       },
       zip: {
@@ -68,14 +87,6 @@ module.exports = function(sequelize, DataTypes) {
       error: {
         type: DataTypes.STRING(1024),
         allowNull: true
-      },
-      createdAt: {
-        allowNull: false,
-        type: DataTypes.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: DataTypes.DATE
       }
   }, {
     classMethods: {
