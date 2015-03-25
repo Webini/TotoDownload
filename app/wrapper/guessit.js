@@ -9,6 +9,7 @@ module.exports = (function(){
             var cwd = path.normalize(__dirname + '/../../bin/usr/local/bin/'); 
             var pythonPath = path.normalize(cwd + '/../lib/python2.7/dist-packages/');
             var guessitPath = path.normalize(cwd + '/guessit');
+            var defer = $q.defer();
 
             var child = spawn(
                 'python', 
@@ -20,7 +21,6 @@ module.exports = (function(){
                     }
                 }
             );
-            var defer = $q.defer();
             
             child.stdout.on('data', function(response){
                 var data = response.toString()
@@ -35,7 +35,6 @@ module.exports = (function(){
                 
                 try{
                     data = JSON.parse(data);
-                    
                     defer.resolve(data);
                 }
                 catch(e){
@@ -44,7 +43,7 @@ module.exports = (function(){
             });
             
             child.stderr.on('data', function(err){
-                defer.reject('unknown error');    
+                defer.reject('unknown error', err.toString());    
             });
             
             return defer.promise;

@@ -7,8 +7,7 @@ module.exports = function(sequelize, DataTypes) {
       },
       tid: {
         type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
-        unique: 'tidUnique'
+        allowNull: false
       },
       hash: {
         type: DataTypes.STRING(255),

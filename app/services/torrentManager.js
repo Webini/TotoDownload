@@ -85,17 +85,6 @@ module.exports = ['TorrentManager', (function(){
     **/
     TorrentManager._getTorrentName = function(torrent){
         console.log('_getTorrentName'.toUpperCase());
-        //crapy but guessit will guess the data only if movie has an extension
-        /*if(data.name.charAt(data.name.length - 4) == '.')
-            data.name += '.avi';
-
-        //remove the ext after guessit
-        //@TODO bug 
-        function remExt(data){
-            if(data.name.charAt(data.name.length - 4) == '.')
-                data.name = data.name.substr(0, data.name.length - 4);
-            data.guessedType = parsed.type.value;
-        }*/
         
         return guessit.parse(TorrentManager._addExtension(torrent.name)).then(
             function success(parsed){
@@ -113,12 +102,13 @@ module.exports = ['TorrentManager', (function(){
                 }
 
                 if(parsed.screenSize){
-                    torrent.screenSize = parsed.screenSize.value;    file
+                    torrent.screenSize = parsed.screenSize.value; 
                 }
-            
+                
                 return TorrentManager._moviesdbParse(torrent);
             },
             function error(err){
+                console.log('GET NAME ERR => ', err);
                 return $q.resolve(torrent);      
             }
         );
@@ -159,6 +149,7 @@ module.exports = ['TorrentManager', (function(){
     * @return promise
     **/
     TorrentManager._upsertTorrent = function(torrent){
+        console.log('_upsertTorrent'.toUpperCase());
         if(!torrent.keywords){
             torrent.keywords = getKeywordsFromTitle(torrent.name);
         }
@@ -169,17 +160,9 @@ module.exports = ['TorrentManager', (function(){
             },
             function err(e){
                 app.logger.warn('Cannot add torrent', torrent, e);
-                return $q.reject('Cannot add torrent');
+                return $q.reject('Cannot add torrent', torrent, e);
             }
         );
-        /*
-        return app.orm['Torrent']
-                  .findOrCreate({ where: torrent })
-                  .spread(function(result, created){
-                        return result;
-                  }).fail(function err(e){
-                        return 'Cannot add torrent';
-                  });*/
     };
     
     /**

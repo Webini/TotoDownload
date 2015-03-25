@@ -27,6 +27,9 @@ module.exports = {
         type: DataTypes.STRING(255),
         allowNull: false
       },
+      files: {
+        type:       
+      },
       movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
@@ -123,17 +126,7 @@ module.exports = {
             indicesType: 'UNIQUE'
         }
     );
-
-
-    migration.addIndex(
-        'Torrents',
-        ['tid'],
-        {
-            indexName: 'tidUnique',
-            indicesType: 'UNIQUE'
-        }
-    );
-      
+    
     done();
   },
   down: function(migration, DataTypes, done) {

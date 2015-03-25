@@ -82,7 +82,7 @@ module.exports = function(config){
         
         /**
         * retreive torrents with id @ids
-        * @param array ids Torrents ids
+        * @param array ids Torrents ids, if transmission restart ID can change so don't use id to identify torrent, prefer hash 
         * @return promise
         **/
         get: function(ids){
