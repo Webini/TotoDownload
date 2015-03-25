@@ -5,15 +5,20 @@ angular.module('totodl')
                 controller: 'UploadController'
             });
        }])
-       .controller('UploadController', [ '$scope', '$routeParams', '$location', 'User',
-function RegisterController($scope, $routeParams, $location, User){
+       .controller('UploadController', [ '$scope', '$routeParams', '$location', 'User', 'TorrentsService',
+function RegisterController($scope, $routeParams, $location, User, TorrentsService){
     
     var clearErrors = false;
-    $scope.link = '';
-    $scope.magnet = '';
+    //form http links
+    $scope.linkUrl = '';
     $scope.errors = [];
     $scope.uploading = 0; //0 no upload // 1 uploading // 2 complete
     $scope.Math = window.Math;
+    $scope.uploadingLink = false;
+    $scope.lastLinkUploaded = null;
+    
+    //uploaded files
+    $scope.uploaded = [];
     
     $scope.initFlow = function(){
         return {
@@ -21,6 +26,27 @@ function RegisterController($scope, $routeParams, $location, User){
             testChunks: false,
             headers: { 'authorization': 'Bearer ' + User.get().token }
         };    
+    };
+    
+    $scope.sendLink = function(){
+        $scope.uploadingLink = true;
+        console.debug($scope.linkUrl);
+        TorrentsService.sendLink($scope.linkUrl).then(
+            function success(data){
+                $scope.errors = [];
+                $scope.linkUrl = '';
+                $scope.uploaded.push(data);
+                $scope.lastLinkUploaded = data;
+                console.debug($scope.lastLinkUploaded);
+            },
+            function error(data){
+                $scope.lastLinkUploaded = null;
+                $scope.errors = [{ err: 'LINK_ERROR', value: {} }];
+            }
+        ).finally(function(){
+            $scope.uploadingLink = false;    
+        });
+        
     };
     
     $scope.newUpload = function($flow){
@@ -71,9 +97,8 @@ function RegisterController($scope, $routeParams, $location, User){
     };
     
     $scope.uploadFileSuccess = function($flow, $file, $message){
-        console.debug('FUKE SUCCESS');
-        console.debug("up ok => ", $flow, $file, $message);  
-        
+        var torrent = JSON.parse($message);
+        $scope.uploaded.push(torrent);
     };
     
     $scope.addFiles = function($flow, $files){

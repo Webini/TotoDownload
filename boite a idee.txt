@@ -1,0 +1,9 @@
+- possibilitée de compresser les fichiers torrents si + de 3 files par exemple et moins de 10 go ou un truc du genre
+- Commentaire sur le torrents
+- Nombre de fois ou il a été dl ( > impact recherches / ou mise en avant ? )
+- Voter avec des étoiles ? pour juger le truc
+- Lien pour le dl qui pointe vers un controller qui permettra de soit faire un location vers le lien public ou rendre l'accès privé
+- checker les doublons a l'ajout des torrents, en proposant les torrents similaires a l'upload
+- Checker les derniers téléchargements des gars et leur proposer de les noter avec des *** ou poser un commentaire après re visite du site // mettre ca en notif
+- rss reader ?
+- Possibilitée strip meta movie

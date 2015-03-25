@@ -68,7 +68,8 @@ module.exports = function(config){
             var filter = (type == 'episode' ? 'tvseries' : 'movie');
             
             allocine.api(filter, {
-                code: id
+                code: id,
+                profile: 'medium'
             },
             function(error, results){
                 if(error){

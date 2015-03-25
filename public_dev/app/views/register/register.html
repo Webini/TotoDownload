@@ -10,7 +10,7 @@
         </ul>
     </div>
     <div class="box register-box-body">
-      <form name="rform" ng-submit="register()">
+      <form ng-submit="register()">
           <div class="form-group has-feedback" ng-class="((rform.$submitted || rform.nick.$touched) && rform.nick.$error.required) ? 'has-error' : ''">
             <input type="text" size="32" ng-model="user.nickname" name="nick" class="form-control" placeholder="{{ 'NICKNAME'|translate }}" required />
             <span class="glyphicon glyphicon-user form-control-feedback"></span>

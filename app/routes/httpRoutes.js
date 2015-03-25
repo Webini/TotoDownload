@@ -12,6 +12,7 @@ module.exports = function(app){
     router.post('/login', authenticationCtrl.onLogin);
     router.post('/verify', authenticationCtrl.onVerifyToken);
     router.post('/upload/torrents', authenticateFilter, roleUploaderFilter, uploadCtrl.onUploadFiles);
+    router.post('/upload/link', authenticateFilter, roleUploaderFilter, uploadCtrl.onUploadLink);
     
     app.http.use('/', router);
 };

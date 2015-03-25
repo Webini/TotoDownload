@@ -1,4 +1,4 @@
-angular.module('factories')
+angular.module('services')
        .factory('User', [ '$http', '$q', 'UsersService', 
 function factoryUser($http, $q, UsersService){
     var user = {

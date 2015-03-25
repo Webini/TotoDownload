@@ -1,4 +1,4 @@
-angular.module('factories')
+angular.module('services')
        .factory('Socket', [ '$http', '$location', '$q', 'User', 
 function factoryUser($http, $location, $q, User){
     

@@ -3,7 +3,18 @@ module.exports = ['TorrentManager', (function(){
     var $q              = require('q');
     var guessit         = require(__dirname + '/../wrapper/guessit.js');
     var _               = require('underscore');
+    var utils           = require('util');
+    var events          = require('events');
     
+    
+    function TorrentManager(){
+    };
+    
+    /**
+    * Remove all special chars from @title
+    * @param string title 
+    * @return string
+    **/
     function getKeywordsFromTitle(title){
         var keywords = title.match(/[a-zA-Z]+/img);
         console.log("KEYWORDS ===> ", require('util').inspect(keywords));
@@ -13,135 +24,191 @@ module.exports = ['TorrentManager', (function(){
         }
         
         return keywords.join(' ');
-    }
-
-    return {
-        /**
-        * Add a torrent
-        * @param object user User object with { id, roles, etc... }
-        * @param object torrent Torrent objec with { id, hash, name }
-        **/
-        addTorrent: function(user, file){
-            var defer        = $q.defer();
-            
-            //if the client has successfully added the .torrent
-            function addFile(next){
-                app.api.torrents.addFile(file.path).then(
-                    function success(torrent){
-                        //set the torrent uid with our user id 
-                        torrent.userId = user.id;
-                        torrent.tid = torrent.id;
-                        delete torrent.id;
-                        
-                        next(torrent, saveTorrent);
-                    },
-                    function error(data){
-                        defer.reject({ code: -1, error: data.error });
-                    }
-                );
-            };
-            
-            //parse torrents informations thank to allocine
-            //ca serait plus logique de le faire après ca...
-            function moviesdbParse(data, next){
-                var moviesdb = app.api.moviesdb;
-                
-                function onError(data){
-                    next(data);   
-                }
-                //search for a movie
-                moviesdb.match(data.guessedTitle, data.guessedType).then(
-                    function success(response){
-                        //retreive movie info
-                        moviesdb.getMovie(response.id).then(
-                            function success(rtot){
-                                next(_.extend(data, rtot));
-                            },
-                            onError
-                        );
-                    },
-                    onError
-                );
-                    /*
-                
-                var filter = (data.guessedType == 'episode' ? 'tvseries' : 'movie');
-                console.log('FILTER => ', filter);
-                allocine.api('search', {
-                    q: data.guessedTitle,
-                    count: 1,
-                    filter: filter
-                },
-                function(error, results){
-                    if(!error)
-                        console.log(require('util').inspect(results));
-                    
-                    console.log(require('util').inspect(error), require('util').inspect(results.feed[filter]));
-                    next(data);   
-                });*/
-            };
-            
-            //retreive the torrent name 
-            function getTorrentName(data, next){
-                //crapy but guessit will guess the data only if movie has an extension
-                if(data.name.charAt(data.name.length - 4) == '.')
-                    data.name += '.avi';
-                
-                //remove the ext after guessit
-                //@TODO bug 
-                function remExt(data){
-                    if(data.name.charAt(data.name.length - 4) == '.')
-                        data.name = data.name.substr(0, data.name.length - 4);
-                    data.guessedType = parsed.type.value;
-                }
-                
-                guessit.parse(data.name).then(
-                    function success(parsed){
-                        remExt(data);
-                        
-                        if(data.guessedType == 'unknown'){
-                            next(data);
-                            return;
-                        }
-                        
-                        if(data.guessedType === 'movie'){
-                            data.guessedTitle = parsed.title.value;
-                        }
-                        else if(data.guessedType === 'episode'){
-                            data.guessedTitle = parsed.series.value;
-                        }
-                        
-                        if(parsed.screenSize){
-                            data.screenSize = parsed.screenSize.value;    
-                        }
-                        
-                        moviesdbParse(data, next);
-                    },
-                    function error(err){
-                        remExt(data);
-                        next(data);      
-                    }
-                );
-            };
-    
-            function saveTorrent(torrent){
-                if(!torrent.keywords){
-                    torrent.keywords = getKeywordsFromTitle(torrent.name);
-                }
-
-                app.orm['Torrent']
-                   .findOrCreate({ where: torrent })
-                   .spread(function(result, created){
-                        defer.resolve(result);
-                   }).fail(function err(e){
-                        app.logger.warn('Cannot add torrent', torrent, e);
-                        defer.reject('Cannot add torrent');
-                   });
-            };
-            
-            //addFile then getTorrentName [ if ok => allocineParse => ] then saveTorrent
-            addFile(getTorrentName);
-            
-            return defer.promise;
-        }
     };
+    
+    /**
+    * Add a torrent with magnet / http link
+    * @param string url
+    * @param object User user object
+    * @return promise
+    **/
+    TorrentManager._addUrl = function(url, user){
+        console.log('_addLink'.toUpperCase());
+        return app.api.torrents.addUrl(url).then(
+            function success(torrent){
+                torrent.userId = user.id;
+                torrent.tid = torrent.id;
+                delete torrent.id;
+                
+                return torrent;
+            },
+            function error(data){
+                return $q.reject({ code: -1, error: data.error });      
+            }
+        );
+    };
+
+    /**
+    * Add a torrent file
+    * @param string file File 
+    * @param object User user object
+    * @return promise
+    **/
+    TorrentManager._addFile = function(file, user){
+        console.log('_addFile'.toUpperCase());
+        return app.api.torrents.addFile(file.path).then(
+            function success(torrent){
+                //set the torrent uid with our user id 
+                torrent.userId = user.id;
+                torrent.tid = torrent.id;
+                delete torrent.id;
+
+                return torrent;
+            },
+            function error(data){
+                return $q.reject({ code: -1, error: data.error });
+            }
+        );
+    };
+                          
+    TorrentManager._addExtension = function(filename){
+        if(filename.charAt(filename.length - 4) != '.'){
+            return filename + '.avi';
+        }
+        return filename;
+    };
+    
+    /**
+    * Try to guess real name from torrent name
+    * @param object torrent { tid: torrentId, hash: torrentHash, name: torrentName } 
+    * @return promise
+    **/
+    TorrentManager._getTorrentName = function(torrent){
+        console.log('_getTorrentName'.toUpperCase());
+        //crapy but guessit will guess the data only if movie has an extension
+        /*if(data.name.charAt(data.name.length - 4) == '.')
+            data.name += '.avi';
+
+        //remove the ext after guessit
+        //@TODO bug 
+        function remExt(data){
+            if(data.name.charAt(data.name.length - 4) == '.')
+                data.name = data.name.substr(0, data.name.length - 4);
+            data.guessedType = parsed.type.value;
+        }*/
+        
+        return guessit.parse(TorrentManager._addExtension(torrent.name)).then(
+            function success(parsed){
+                torrent.guessedType = parsed.type.value;
+                
+                if(torrent.guessedType == 'unknown'){
+                    return $q.resolve(torrent);
+                }
+
+                if(torrent.guessedType === 'movie'){
+                    torrent.guessedTitle = parsed.title.value;
+                }
+                else if(torrent.guessedType === 'episode'){
+                    torrent.guessedTitle = parsed.series.value;
+                }
+
+                if(parsed.screenSize){
+                    torrent.screenSize = parsed.screenSize.value;    file
+                }
+            
+                return TorrentManager._moviesdbParse(torrent);
+            },
+            function error(err){
+                return $q.resolve(torrent);      
+            }
+        );
+    };
+
+    /**
+    * Retrieve informations about our torrent
+    * @return promise
+    **/
+    TorrentManager._moviesdbParse = function(torrent){
+        console.log('_moviesdbParse'.toUpperCase(), torrent.guessedTitle);
+        var moviesdb = app.api.moviesdb;
+
+        function err(e){ 
+            torrent.guessedType = 'unknown';
+            return $q.resolve(torrent); 
+        }
+        
+        //search for a movie
+        return moviesdb.match(torrent.guessedTitle, torrent.guessedType).then(
+            function success(response){
+                //retreive movie info
+                torrent.movieId = response.id;
+                return moviesdb.getMovie(response.id).then(
+                    function success(rtot){
+                        return _.extend(torrent, rtot);
+                    },
+                    err
+                );
+            },
+            err
+        );
+    };
+
+    /**
+    * If torrent not exist create it in database else return existing row 
+    * @param object Torrent object
+    * @return promise
+    **/
+    TorrentManager._upsertTorrent = function(torrent){
+        if(!torrent.keywords){
+            torrent.keywords = getKeywordsFromTitle(torrent.name);
+        }
+        
+        return app.orm.Torrent.upsert(torrent).then(
+            function success(ok){
+                return app.orm.Torrent.find({ where: torrent });
+            },
+            function err(e){
+                app.logger.warn('Cannot add torrent', torrent, e);
+                return $q.reject('Cannot add torrent');
+            }
+        );
+        /*
+        return app.orm['Torrent']
+                  .findOrCreate({ where: torrent })
+                  .spread(function(result, created){
+                        return result;
+                  }).fail(function err(e){
+                        return 'Cannot add torrent';
+                  });*/
+    };
+    
+    /**
+    * Add a torrent
+    * @param object user User object with { id, roles, etc... }
+    * @param string file Path to the .torrent
+    * @return promise
+    **/
+    TorrentManager.addTorrent = function(user, file){
+        console.log('addTorrent'.toUpperCase());
+
+        return TorrentManager._addFile(file, user)
+                             .then(TorrentManager._getTorrentName)
+                             .then(TorrentManager._upsertTorrent);
+    };
+    
+    /**
+    * Add a torrent with link / magnet
+    * @param object user User object with { id, roles, etc... }
+    * @param string url Http link / magnet
+    * @return promise
+    **/
+    TorrentManager.addUrl = function(user, url){
+        console.log('addUrl'.toUpperCase());
+
+        return TorrentManager._addUrl(url, user)
+                             .then(TorrentManager._getTorrentName)
+                             .then(TorrentManager._upsertTorrent);
+    };
+    
+    return TorrentManager;
 })()];

@@ -34,14 +34,14 @@ function redirectOnStatus($rootScope, $location, User, successcb){
 };
 
 // services
-angular.module('factories', []);
+angular.module('services', []);
 
 /** Dashboard **/
 angular.module('totodl', [
     'ngRoute',
     'pascalprecht.translate',
     'angular-loading-bar',
-    'factories',
+    'services',
     'flow'
 ]).config(['$routeProvider', '$translateProvider', 'flowFactoryProvider', function($routeProvider, $translateProvider, flowFactoryProvider){
     $routeProvider.otherwise({redirectTo: '/dashboard'});
@@ -60,7 +60,7 @@ angular.module('totodlLogin', [
     'ngRoute',
     'pascalprecht.translate',
     'angular-loading-bar',
-    'factories'
+    'services'
 ]).config(['$routeProvider', '$translateProvider', function($routeProvider, $translateProvider) {
     $routeProvider.otherwise({redirectTo: '/login'});
     languageSetup($routeProvider, $translateProvider);
