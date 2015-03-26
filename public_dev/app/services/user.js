@@ -75,7 +75,7 @@ function factoryUser($http, $q, UsersService){
                 return deferred.promise;
             }
             
-            $http.post('/verify', { token: this._loggedUser.token }).then(
+            $http.post('/auth/verify', { token: this._loggedUser.token }).then(
                 function success(response){
                     console.debug(response.data);
                     if(response.data)

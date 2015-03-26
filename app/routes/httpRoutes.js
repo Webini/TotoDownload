@@ -6,11 +6,12 @@ module.exports = function(app){
     var uploadCtrl          = require(__dirname + '/../controllers/http/UploadController.js')(app);
     
     var authenticateFilter = jwt({ secret: app.config.secret.token });
-    var roleUploaderFilter = roleFilter(app.services.UserManager.roles.UPLOADER);
+    var roleUploaderFilter = roleFilter(app.services.UserService.roles.UPLOADER);
     
-    router.post('/register', authenticationCtrl.onRegister);
-    router.post('/login', authenticationCtrl.onLogin);
-    router.post('/verify', authenticationCtrl.onVerifyToken);
+    router.post('/auth/register', authenticationCtrl.onRegister);
+    router.post('/auth/login', authenticationCtrl.onLogin);
+    router.post('/auth/verify', authenticationCtrl.onVerifyToken);
+    
     router.post('/upload/torrents', authenticateFilter, roleUploaderFilter, uploadCtrl.onUploadFiles);
     router.post('/upload/link', authenticateFilter, roleUploaderFilter, uploadCtrl.onUploadLink);
     

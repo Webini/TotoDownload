@@ -3,7 +3,7 @@ module.exports = function(app){
         onRegister: function(req, res){
             req.body.ip = req.ip;
             
-            app.services['UserManager'].create(req.body).then(
+            app.services.UserService.create(req.body).then(
                 function success(data){
                     res.json(data);
                 }, 
@@ -14,7 +14,7 @@ module.exports = function(app){
         },
         
         onLogin: function(req, res){
-            app.services['UserManager'].login(req.body).then(
+            app.services.UserService.login(req.body).then(
                 function success(user){
                     if(user.ip != req.ip){
                         user.updateAttributes({
@@ -23,7 +23,7 @@ module.exports = function(app){
                     }
                     
                     var ouser = user.public;
-                    ouser['token'] = app.services['UserManager'].getToken(user);
+                    ouser['token'] = app.services.UserService.getToken(user);
                     res.json(ouser);
                 },
                 function error(err){
@@ -33,7 +33,7 @@ module.exports = function(app){
         },
         
         onVerifyToken: function(req, res){
-            app.services['UserManager'].verifyToken(req.body.token).then(
+            app.services.UserService.verifyToken(req.body.token).then(
                 function success(){
                     res.json(1);
                 },

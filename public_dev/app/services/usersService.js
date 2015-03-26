@@ -10,7 +10,7 @@ angular.module('services')
         register: function(user){
             var deferred = $q.defer();
             
-            $http.post('/register', user).then(
+            $http.post('/auth/register', user).then(
                 function success(response){
                     console.debug(response.data, response.data.errors);
                     if(response.data.errors)
@@ -35,7 +35,7 @@ angular.module('services')
         login: function(user){
             var def = $q.defer();
             
-            $http.post('/login', user).then(
+            $http.post('/auth/login', user).then(
                 function success(response){
                     if(!response.data.error)
                         def.resolve(response.data);

@@ -1,6 +1,5 @@
 module.exports = function(app){
-    var UserManager = app.services['UserManager'];
-    var TorrentManager = app.services['TorrentManager'];
+    var TorrentService = app.services.TorrentService;
     
     function respondError(res, code, message, status){
         if(!status)
@@ -19,7 +18,7 @@ module.exports = function(app){
                 return respondError(res, -1, 'file not found', 500);   
             }
             
-            TorrentManager.addTorrent(req.user, req.files.file).then(
+            TorrentService.addTorrent(req.user, req.files.file).then(
                 function success(data){
                     res.json(data.dataValues);
                 },
@@ -38,7 +37,7 @@ module.exports = function(app){
                 return respondError(res, -1, 'link not found', 500);
             }
             
-            TorrentManager.addUrl(req.user, req.body.link).then(
+            TorrentService.addUrl(req.user, req.body.link).then(
                 function success(data){
                     res.json(data.dataValues);   
                 },

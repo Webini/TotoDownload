@@ -1,4 +1,4 @@
-module.exports = ['TorrentManager', (function(){
+module.exports = ['TorrentService', (function(){
     var app             = require(__dirname + '/../app.js');
     var $q              = require('q');
     var guessit         = require(__dirname + '/../wrapper/guessit.js');
@@ -7,20 +7,20 @@ module.exports = ['TorrentManager', (function(){
     var events          = require('events');
     
     
-    function TorrentManager(){
+    function TorrentService(){
     };
     
     /**
     * Remove all special chars from @title
+    * @todo purify title crap from filename
     * @param string title 
     * @return string
     **/
-    function getKeywordsFromTitle(title){
+    TorrentService._getKeywordsFromTitle = getKeywordsFromTitle(title){
         var keywords = title.match(/[a-zA-Z]+/img);
-        console.log("KEYWORDS ===> ", require('util').inspect(keywords));
         
         if(!keywords){
-            keywords = title;   
+            keywords = [ title ];   
         }
         
         return keywords.join(' ');
@@ -32,7 +32,7 @@ module.exports = ['TorrentManager', (function(){
     * @param object User user object
     * @return promise
     **/
-    TorrentManager._addUrl = function(url, user){
+    TorrentService._addUrl = function(url, user){
         console.log('_addLink'.toUpperCase());
         return app.api.torrents.addUrl(url).then(
             function success(torrent){
@@ -54,7 +54,7 @@ module.exports = ['TorrentManager', (function(){
     * @param object User user object
     * @return promise
     **/
-    TorrentManager._addFile = function(file, user){
+    TorrentService._addFile = function(file, user){
         console.log('_addFile'.toUpperCase());
         return app.api.torrents.addFile(file.path).then(
             function success(torrent){
@@ -71,7 +71,7 @@ module.exports = ['TorrentManager', (function(){
         );
     };
                           
-    TorrentManager._addExtension = function(filename){
+    TorrentService._addExtension = function(filename){
         if(filename.charAt(filename.length - 4) != '.'){
             return filename + '.avi';
         }
@@ -83,10 +83,10 @@ module.exports = ['TorrentManager', (function(){
     * @param object torrent { tid: torrentId, hash: torrentHash, name: torrentName } 
     * @return promise
     **/
-    TorrentManager._getTorrentName = function(torrent){
+    TorrentService._getTorrentName = function(torrent){
         console.log('_getTorrentName'.toUpperCase());
         
-        return guessit.parse(TorrentManager._addExtension(torrent.name)).then(
+        return guessit.parse(TorrentService._addExtension(torrent.name)).then(
             function success(parsed){
                 torrent.guessedType = parsed.type.value;
                 
@@ -105,7 +105,7 @@ module.exports = ['TorrentManager', (function(){
                     torrent.screenSize = parsed.screenSize.value; 
                 }
                 
-                return TorrentManager._moviesdbParse(torrent);
+                return TorrentService._moviesdbParse(torrent);
             },
             function error(err){
                 console.log('GET NAME ERR => ', err);
@@ -118,7 +118,7 @@ module.exports = ['TorrentManager', (function(){
     * Retrieve informations about our torrent
     * @return promise
     **/
-    TorrentManager._moviesdbParse = function(torrent){
+    TorrentService._moviesdbParse = function(torrent){
         console.log('_moviesdbParse'.toUpperCase(), torrent.guessedTitle);
         var moviesdb = app.api.moviesdb;
 
@@ -148,10 +148,10 @@ module.exports = ['TorrentManager', (function(){
     * @param object Torrent object
     * @return promise
     **/
-    TorrentManager._upsertTorrent = function(torrent){
+    TorrentService._upsertTorrent = function(torrent){
         console.log('_upsertTorrent'.toUpperCase());
         if(!torrent.keywords){
-            torrent.keywords = getKeywordsFromTitle(torrent.name);
+            torrent.keywords = TorrentService._getKeywordsFromTitle(torrent.name);
         }
         
         return app.orm.Torrent.upsert(torrent).then(
@@ -171,12 +171,12 @@ module.exports = ['TorrentManager', (function(){
     * @param string file Path to the .torrent
     * @return promise
     **/
-    TorrentManager.addTorrent = function(user, file){
+    TorrentService.addTorrent = function(user, file){
         console.log('addTorrent'.toUpperCase());
 
-        return TorrentManager._addFile(file, user)
-                             .then(TorrentManager._getTorrentName)
-                             .then(TorrentManager._upsertTorrent);
+        return TorrentService._addFile(file, user)
+                             .then(TorrentService._getTorrentName)
+                             .then(TorrentService._upsertTorrent);
     };
     
     /**
@@ -185,13 +185,25 @@ module.exports = ['TorrentManager', (function(){
     * @param string url Http link / magnet
     * @return promise
     **/
-    TorrentManager.addUrl = function(user, url){
+    TorrentService.addUrl = function(user, url){
         console.log('addUrl'.toUpperCase());
 
-        return TorrentManager._addUrl(url, user)
-                             .then(TorrentManager._getTorrentName)
-                             .then(TorrentManager._upsertTorrent);
+        return TorrentService._addUrl(url, user)
+                             .then(TorrentService._getTorrentName)
+                             .then(TorrentService._upsertTorrent);
     };
     
-    return TorrentManager;
+    /**
+    * Retreive torrent from client torrent ( transmission, uTorrent, ... ) 
+    **/
+    TorrentService.getAll = function(){
+        return app.api.Torrent.get().then(function(data){
+            
+            
+        });
+    };
+    
+    // @todo same with database
+    
+    return TorrentService;
 })()];

@@ -1,4 +1,4 @@
-module.exports = ['UserManager', (function(){
+module.exports = ['UserService', (function(){
     var jwt           = require("jsonwebtoken");
     var app           = require(__dirname + '/../app.js');
     var $q            = require('q');
