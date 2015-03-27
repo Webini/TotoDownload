@@ -33,6 +33,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 0
       },
+      uploadRatio: {
+        type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 1
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

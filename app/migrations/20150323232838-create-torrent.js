@@ -28,7 +28,8 @@ module.exports = {
         allowNull: false
       },
       files: {
-        type:       
+        type: DataTypes.TEXT,
+        allowNull: false
       },
       movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -86,8 +87,8 @@ module.exports = {
         defaultValue: false,
         allowNull: false
       },
-      size: {
-        type: DataTypes.BIGINT.UNSIGNED,
+      eta: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
       status: {
@@ -96,7 +97,85 @@ module.exports = {
         allowNull: false
       },
       error: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      error: {
         type: DataTypes.STRING(1024),
+        allowNull: true
+      },
+      downloadDir: {
+        type: DataTypes.STRING(512),
+        allowNull: true
+      },
+      isFinished: {
+        type: DataTypes.BOOLEAN,
+        defaults: false,
+        allowNull: false
+      },
+      desiredAvailable: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true
+      },
+      leftUntilDone: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true,
+      },
+      sizeWhenDone: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true
+      },
+      totalSize: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true
+      },
+      magnetLink: {
+        type: DataTypes.STRING(2048),
+        allowNull: true
+      },
+      seedRatio: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      seedRatioMode: {
+        type: DataType.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+      },
+      uploadRatio: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      trackers: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      peersConnected: {
+         type: DataTypes.INTEGER.UNSIGNED,
+         allowNull: true
+      },
+      peersSendingToUs: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      peersSendingToUs: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      peersGettingFromUs: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      rateDownload: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      rateUpload: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      activityDate: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
       createdAt: {
