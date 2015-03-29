@@ -1,14 +1,19 @@
 module.exports = (function(){
+    var mutex = false;
+    
     function worker(){
-        /**
-         @TODO
         var app = require(__dirname + '/../app.js');
         
-        app.torrents.get(function(err, data){
-            console.log(require('util').inspect(data));
-            throw new Error('STAAAAAPPPP');            
+        if(mutex)
+            return;
+        
+        mutex = true;
+        
+        app.services.TorrentService.getAll().then(function(data){
+            app.services.SyncService.update(data);
+        }).finally(function(){
+            mutex = false;
         });
-        **/
     };
     
     return {
@@ -16,7 +21,7 @@ module.exports = (function(){
         
         start: function(){
             if(!this._iid)
-                setInterval(worker, 200);    
+                setInterval(worker, 500);    
         },
         stop: function(){
             if(this._iid){

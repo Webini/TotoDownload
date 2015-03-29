@@ -3,6 +3,14 @@ module.exports = function(config){
     var $q              = require('q');
     var app             = require(__dirname + '/../../app.js');
     
+    var S4 = function() {
+        return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+    };
+    
+    var uuid = function() {
+        return (S4() + S4() + '-' + S4() + '-' + S4() + '-' + S4() + '-' + S4() + S4() + S4());
+    };
+
     trans = new Transmission(config);
     
     //I was trying to parse the error but the format is too fucked, so i just log the output error
@@ -76,8 +84,36 @@ module.exports = function(config){
         * Retreive all torrents 
         * @return promise
         **/
-        getAll: function(){
-            return this.get();
+        getAll: function(columns){
+            var defer = $q.defer();
+            
+            var options = {
+                arguments : {
+                    fields : ['activityDate', 'desiredAvailable', 'downloadDir', 'error', 'errorString', 'eta', 'files', 'hashString', 'id', 'isFinished', 'isStalled', 'leftUntilDone', 'metadataPercentComplete', 'name', 'peersConnected', 'peersGettingFromUs', 'peersSendingToUs', 'percentDone', 'queuePosition', 'rateDownload', 'rateUpload', 'recheckProgress', 'seedRatioMode', 'seedRatioLimit', 'sizeWhenDone', 'status', 'totalSize', 'trackers', 'uploadedEver', 'uploadRatio']
+                },
+                method : trans.methods.torrents.get,
+                tag : uuid()
+            };
+            
+            trans.callServer(options, function(err, response){
+                if(err){
+                    defer.reject({ error: parseError(err, 'undef') });
+                }
+                else{
+                    response = response.torrents;
+                    //replace key hashString by hash
+                    for(var i = 0; i < response.length; i++){
+                        response[i]['hash'] = response[i]['hashString'];
+                        response[i]['tid'] = response[i]['id'];
+                        delete response[i]['hashString'];
+                        delete response[i]['id'];
+                    }
+                    
+                    defer.resolve(response);
+                }
+            });
+            
+            return defer.promise;
         },
         
         /**
@@ -90,7 +126,7 @@ module.exports = function(config){
             
             function responseCallback(err, response){
                 if(err)
-                    defer.reject({ error: parseError(err, path) });
+                    defer.reject({ error: parseError(err, 'undef') });
                 else
                     defer.resolve(response);                
             }

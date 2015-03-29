@@ -31,6 +31,11 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: false
     },
+    uploadRatio: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 1
+    },
     ip: {
         type: DataTypes.STRING(16),
         allowNull: true

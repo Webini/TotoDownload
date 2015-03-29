@@ -6,5 +6,5 @@ function($scope, $routeParams, User, Socket){
     $scope.roles = User.roles;
     
     $scope.socket = Socket;
-    
+     
 }]);

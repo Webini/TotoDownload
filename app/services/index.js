@@ -15,4 +15,12 @@ fs
     services[service[0]] = service[1];
   });
 
+
+services['ready'] = function(){
+    for(var name in this){
+        if(name != 'ready' && this[name].ready)
+            this[name].ready();
+    }
+};
+
 module.exports = services;

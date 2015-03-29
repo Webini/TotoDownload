@@ -5,9 +5,14 @@ module.exports = ['TorrentService', (function(){
     var _               = require('underscore');
     var utils           = require('util');
     var events          = require('events');
-    
+    var SyncService     = null;
     
     function TorrentService(){
+    };
+    
+    
+    TorrentService.ready = function(){
+        SyncService = app.services.SyncService;      
     };
     
     /**
@@ -16,7 +21,7 @@ module.exports = ['TorrentService', (function(){
     * @param string title 
     * @return string
     **/
-    TorrentService._getKeywordsFromTitle = getKeywordsFromTitle(title){
+    TorrentService._getKeywordsFromTitle = function(title){
         var keywords = title.match(/[a-zA-Z]+/img);
         
         if(!keywords){
@@ -149,17 +154,16 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService._upsertTorrent = function(torrent){
-        console.log('_upsertTorrent'.toUpperCase());
         if(!torrent.keywords){
             torrent.keywords = TorrentService._getKeywordsFromTitle(torrent.name);
         }
         
         return app.orm.Torrent.upsert(torrent).then(
             function success(ok){
-                return app.orm.Torrent.find({ where: torrent });
+                return app.orm.Torrent.find({ where: { hash: torrent.hash } });
             },
             function err(e){
-                app.logger.warn('Cannot add torrent', torrent, e);
+                app.logger.log('Cannot add torrent', torrent, e);
                 return $q.reject('Cannot add torrent', torrent, e);
             }
         );
@@ -173,10 +177,10 @@ module.exports = ['TorrentService', (function(){
     **/
     TorrentService.addTorrent = function(user, file){
         console.log('addTorrent'.toUpperCase());
-
+        
         return TorrentService._addFile(file, user)
                              .then(TorrentService._getTorrentName)
-                             .then(TorrentService._upsertTorrent);
+                             .then(SyncService.updateOne);
     };
     
     /**
@@ -190,17 +194,49 @@ module.exports = ['TorrentService', (function(){
 
         return TorrentService._addUrl(url, user)
                              .then(TorrentService._getTorrentName)
-                             .then(TorrentService._upsertTorrent);
+                             .then(SyncService.updateOne);
     };
+    
+    /**
+    * Save all torrent to database 
+    * @param array[object] torrents
+    
+    TorrentService.saveAll = function(torrents){
+        var promise = $q.defer();
+        var quantity = torrents.length;
+        var okTorrents = []; //retour
+            
+        for(var i = 0; i < torrents.length; i++){
+            TorrentService._upsertTorrent(torrent).then(
+                function(toto){
+                    okTorrents.push(toto);
+                    quantity--;
+                    if(quantity <= 0)
+                        promise.resolve(okTorrents);
+                },
+                function error(err, torrent, e){
+                    quantity--;
+                }
+            );
+        }
+        
+        return promise.promise;
+    };
+    **/
     
     /**
     * Retreive torrent from client torrent ( transmission, uTorrent, ... ) 
     **/
     TorrentService.getAll = function(){
-        return app.api.Torrent.get().then(function(data){
-            
-            
-        });
+        return app.api.torrents.getAll();
+    };
+    
+    /**
+    * Retreive torrents from database
+    * @todo
+    **/
+    TorrentService.getAllFromDb = function(){
+        return app.orm.Torrent.all();
     };
     
     // @todo same with database

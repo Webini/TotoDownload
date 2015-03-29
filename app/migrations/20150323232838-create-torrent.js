@@ -19,6 +19,11 @@ module.exports = {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false
       },
+      syncTag: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        default: 0,
+        allowNull: true
+      },
       hash: {
         type: DataTypes.STRING(255),
         allowNull: false
@@ -27,9 +32,9 @@ module.exports = {
         type: DataTypes.STRING(255),
         allowNull: false
       },
-      files: {
+      filesJson: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true
       },
       movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -100,7 +105,7 @@ module.exports = {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
-      error: {
+      errorString: {
         type: DataTypes.STRING(1024),
         allowNull: true
       },
@@ -111,7 +116,7 @@ module.exports = {
       isFinished: {
         type: DataTypes.BOOLEAN,
         defaults: false,
-        allowNull: false
+        allowNull: true
       },
       desiredAvailable: {
         type: DataTypes.BIGINT.UNSIGNED,
@@ -138,7 +143,7 @@ module.exports = {
         allowNull: true
       },
       seedRatioMode: {
-        type: DataType.INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: true,
         defaultValue: 0
       },
@@ -146,17 +151,13 @@ module.exports = {
         type: DataTypes.INTEGER,
         allowNull: true
       },
-      trackers: {
+      trackersJson: {
         type: DataTypes.TEXT,
         allowNull: true
       },
       peersConnected: {
          type: DataTypes.INTEGER.UNSIGNED,
          allowNull: true
-      },
-      peersSendingToUs: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: true
       },
       peersSendingToUs: {
         type: DataTypes.INTEGER.UNSIGNED,

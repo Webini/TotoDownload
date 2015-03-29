@@ -12,11 +12,20 @@ module.exports = function(sequelize, DataTypes) {
       hash: {
         type: DataTypes.STRING(255),
         allowNull: false,
-        unique: 'hashUnique'
+        unique: true
+      },
+      syncTag: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true,
+        default: 0
       },
       name: {
         type: DataTypes.STRING(255),
         allowNull: false
+      },
+      filesJson: {
+        type: DataTypes.TEXT,
+        allowNull: true
       },
       movieId: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -74,23 +83,115 @@ module.exports = function(sequelize, DataTypes) {
         defaultValue: false,
         allowNull: false
       },
-      size: {
-        type: DataTypes.BIGINT.UNSIGNED,
+      eta: {
+        type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
       status: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        allowNull: false
+        allowNull: true
       },
       error: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      errorString: {
         type: DataTypes.STRING(1024),
         allowNull: true
-      }
+      },
+      downloadDir: {
+        type: DataTypes.STRING(512),
+        allowNull: true
+      },
+      isFinished: {
+        type: DataTypes.BOOLEAN,
+        defaults: false,
+        allowNull: true
+      },
+      desiredAvailable: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true
+      },
+      leftUntilDone: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true,
+      },
+      sizeWhenDone: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true
+      },
+      totalSize: {
+        type: DataTypes.BIGINT.UNSIGNED,
+        allowNull: true
+      },
+      magnetLink: {
+        type: DataTypes.STRING(2048),
+        allowNull: true
+      },
+      seedRatio: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      seedRatioMode: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        defaultValue: 0
+      },
+      uploadRatio: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      trackersJson: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      peersConnected: {
+         type: DataTypes.INTEGER.UNSIGNED,
+         allowNull: true
+      },
+      peersSendingToUs: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      peersGettingFromUs: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      rateDownload: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      rateUpload: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      activityDate: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: true
+      },
+      files: DataTypes.VIRTUAL,
+      trackers: DataTypes.VIRTUAL
   }, {
     classMethods: {
       associate: function(models) {
       }
+    },
+    getterMethods: {
+        trackers: function(){
+            return JSON.parse(this.trackersJson);
+        },
+        files: function(){
+            return JSON.parse(this.filesJson);    
+        }
+    },
+    setterMethods: {
+        trackers: function(data){
+            this.trackersJson = JSON.stringify(data);    
+        },
+        files: function(data){
+            this.filesJson = JSON.stringify(data);    
+        }
     }
   });
   return Torrent;
