@@ -83,5 +83,5 @@ module.exports = function(grunt) {
 	**/
     grunt.registerTask('default', [ 'watch' ]);
     grunt.registerTask('install-alte', [ 'copy' ]);
-    grunt.registerTask('build', [ 'uglify' ]);
+    grunt.registerTask('build', [ 'uglify', 'less' ]);
 };

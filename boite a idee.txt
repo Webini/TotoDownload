@@ -8,5 +8,5 @@
 - rss reader ?
 - Possibilitée strip meta movie
 - Hubic ?
-
+- Pouvoir generer un stack de liens soit le stack du torrent complet, soit a selectionner ?
 https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt
