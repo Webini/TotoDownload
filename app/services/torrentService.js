@@ -89,11 +89,16 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService._getTorrentName = function(torrent){
-        console.log('_getTorrentName'.toUpperCase());
+        console.log('_getTorrentName'.toUpperCase(), TorrentService._addExtension(torrent.name));
         
         return guessit.parse(TorrentService._addExtension(torrent.name)).then(
             function success(parsed){
                 torrent.guessedType = parsed.type.value;
+                torrent.screenSize = (parsed.screenSize ? parsed.screenSize.value : null);
+                
+                //if we have 1080p or 720p, etc... and an unknown type we can affirm that this file is a movie
+                if(torrent.screenSize && torrent.guessedType == 'unknown') 
+                    torrent.guessedType = 'movie';
                 
                 if(torrent.guessedType == 'unknown'){
                     return $q.resolve(torrent);
@@ -104,10 +109,6 @@ module.exports = ['TorrentService', (function(){
                 }
                 else if(torrent.guessedType === 'episode'){
                     torrent.guessedTitle = parsed.series.value;
-                }
-
-                if(parsed.screenSize){
-                    torrent.screenSize = parsed.screenSize.value; 
                 }
                 
                 return TorrentService._moviesdbParse(torrent);
@@ -169,6 +170,7 @@ module.exports = ['TorrentService', (function(){
         );
     };
     
+    
     /**
     * Add a torrent
     * @param object user User object with { id, roles, etc... }
@@ -196,33 +198,6 @@ module.exports = ['TorrentService', (function(){
                              .then(TorrentService._getTorrentName)
                              .then(SyncService.updateOne);
     };
-    
-    /**
-    * Save all torrent to database 
-    * @param array[object] torrents
-    
-    TorrentService.saveAll = function(torrents){
-        var promise = $q.defer();
-        var quantity = torrents.length;
-        var okTorrents = []; //retour
-            
-        for(var i = 0; i < torrents.length; i++){
-            TorrentService._upsertTorrent(torrent).then(
-                function(toto){
-                    okTorrents.push(toto);
-                    quantity--;
-                    if(quantity <= 0)
-                        promise.resolve(okTorrents);
-                },
-                function error(err, torrent, e){
-                    quantity--;
-                }
-            );
-        }
-        
-        return promise.promise;
-    };
-    **/
     
     /**
     * Retreive torrent from client torrent ( transmission, uTorrent, ... ) 

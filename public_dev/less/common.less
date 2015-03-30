@@ -9,6 +9,10 @@ ul {
     display: none;
 }
 
+.torrent-uploads .box-body {
+    min-height: 100px;
+}
+
 .torrents-up-status {    
     border-width: 1px 1px 1px 5px;
     border-color: #eee;
@@ -25,4 +29,24 @@ ul {
     height: 0px;
     width: 0px;
     overflow: visible;
+}
+
+.torrent {
+    min-height: 110px !important;
+    
+    .bg-aqua img { 
+        height: 110px; 
+        width: 83px; 
+        vertical-align: top !important; 
+        border-radius: 2px 0 0px 2px;   
+    }
+    .info-box-icon { height: 110px; width: 83px; line-height: 110px; } 
+    
+    .info-box-content {
+        margin-left: 83px;   
+    }
+    
+    .progress {
+        width: 100%;    
+    }
 }

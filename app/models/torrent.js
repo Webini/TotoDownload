@@ -1,5 +1,7 @@
 "use strict";
 module.exports = function(sequelize, DataTypes) {
+  var _ = require('underscore');
+    
   var Torrent = sequelize.define("Torrent", {
       userId: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -183,6 +185,17 @@ module.exports = function(sequelize, DataTypes) {
         },
         files: function(){
             return JSON.parse(this.filesJson);    
+        },
+        public: function(){
+            //maybe perf issues
+            var values = _.extend({
+                trackers: this.trackers,
+                files: this.files
+            }, this.dataValues);
+            
+            delete values['filesJson'];
+            delete values['trackersJson'];
+            return values;
         }
     },
     setterMethods: {

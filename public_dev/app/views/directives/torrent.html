@@ -1,0 +1,21 @@
+
+
+<div class="info-box-icon bg-aqua" ng-show="torrent.guessedType == 'unknown'">
+    <i class="fa fa-files-o"></i>
+</div>
+<div class="info-box-icon bg-aqua" ng-show="torrent.guessedType != 'unknown' && torrent.poster">
+    <img src="{{ torrent.poster }}" />
+</div>
+<div class="info-box-content">
+    <span class="info-box-number">{{ torrent.name }}</span>
+    <unit-display class="info-box-text" speed="torrent.rateDownload" suffix="/s"></unit-display>
+    <div class="progress progress-xs progress-striped active">
+        <div class="progress-bar progress-bar-aqua progress-bar-striped" ng-style="{ 'width': ((torrent.sizeWhenDone - torrent.leftUntilDone) / torrent.sizeWhenDone) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+    </div>
+    
+    <a href="#" class="small-box-footer">
+      More info <i class="fa fa-arrow-circle-right"></i>
+    </a>
+
+    {{ torrent.rateDownload / 1024 }} ----- {{ torrent.rateDownload }}
+</div><!-- /.info-box-content -->

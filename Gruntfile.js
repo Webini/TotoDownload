@@ -18,7 +18,8 @@ module.exports = function(grunt) {
                         './public_dev/app/app.js',
                         './public_dev/app/controllers/registerController.js',
                         './public_dev/app/controllers/**/*.js',
-                        './public_dev/app/services/**/*.js'
+                        './public_dev/app/services/**/*.js',
+                        './public_dev/app/directives/**/*.js'
 					]
 				},
 				options: {

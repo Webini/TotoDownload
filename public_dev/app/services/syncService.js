@@ -1,11 +1,9 @@
 angular.module('services')
-       .factory('SyncService', [ '$http', '$q', 'Socket', 'User', 
-function($http, $q, Socket, User){
+       .factory('SyncService', [ '$http', '$q', 'Socket', 'User', '$rootScope', 
+function($http, $q, Socket, User, $rootScope){
+    var _this = this;
     
-    function SyncService(){
-    };
-    
-    SyncService.data = {
+    this.data = {
         states: {},
         torrents: [],
         lastChange: Date.now()
@@ -14,15 +12,15 @@ function($http, $q, Socket, User){
     /**
     * Get all torrents from server
     **/
-    SyncService._getAll = function(){
+    this._getAll = function(){
         return $http.get('/torrents/all').then(
             function(response){
-                console.debug('get all', response);
-                SyncService.data.torrents = response.data;
+                _this.data.torrents = response.data;
                 
-                console.debug('get all', SyncService.data.torrents);
+                console.debug('get all', _this.data.torrents);
                 //call SyncService to register new sync tags
-                SyncService.updateStates(response.data);
+                _this.updateStates(response.data);
+                $rootScope.$broadcast('torrents-change');
             }
         );
     };
@@ -32,31 +30,37 @@ function($http, $q, Socket, User){
     * @param object torrent
     * @return void
     **/
-    SyncService.onChangeState = function(torrent){
-        if(SyncService.data.states[torrent.hash] === torrent.syncTag)
+    this.onChangeState = function(torrent){
+        if(_this.data.states[torrent.hash] === torrent.syncTag)
             return;
         
         console.log('change sync');
         
-        if(!SyncService.data.states[torrent.hash]){
+        if(!_this.data.states[torrent.hash]){
             //insert torrent
-            SyncService.data.torrents.push(torrent);
+            _this.data.torrents.push(torrent);
         }
         else{
             //update torrent
-            for(var i = 0; i < SyncService.data.torrents.length; i++){
-                if(SyncService.data.torrents[i].hash == torrent.hash){
-                    SyncService.data.torrents[i] = torrent;
+            for(var i = 0; i < _this.data.torrents.length; i++){
+                if(_this.data.torrents[i].hash == torrent.hash){
+                    //preserve angular $$ tags
+                    for(var key in torrent){
+                        _this.data.torrents[i][key] = torrent[key];   
+                    }
+                    
                     break;
                 }
             }
         }
         
-        SyncService.data.lastChange = Date.now();
+        _this.data.lastChange = Date.now();
         
-        console.debug(SyncService.data.lastChange, SyncService.data.torrents[0].syncTag, SyncService.data.torrents[0].name);
-        SyncService.data.states[torrent.hash] = torrent.syncTag;
-        Socket.setSyncTag({ hash: torrent.hash, sync: torrent.syncTag });
+        _this.data.states[torrent.hash] = torrent.syncTag;
+        //no resync needed after one change notification
+        //Socket.setSyncTag({ hash: torrent.hash, sync: torrent.syncTag });
+        
+        $rootScope.$broadcast('torrents-change');
     };
     
     /**
@@ -64,16 +68,16 @@ function($http, $q, Socket, User){
     * @param array torrents
     * @return void
     **/
-    SyncService.updateStates = function(torrents){
+    this.updateStates = function(torrents){
         console.log('change State');
         var change = [];
         
         for(var i = 0; i < torrents.length; i++){
             var tag = { hash: torrents[i].hash, sync: torrents[i].syncTag };
             
-            if(!SyncService.data.states[tag.hash] ||
-                SyncService.data.states[tag.hash] != tag.sync){
-                SyncService.data.states[tag.hash] = tag.sync;
+            if(!_this.data.states[tag.hash] ||
+                _this.data.states[tag.hash] != tag.sync){
+                _this.data.states[tag.hash] = tag.sync;
                 change.push(tag);
             }
         }
@@ -85,22 +89,57 @@ function($http, $q, Socket, User){
     * Resynchronize states after disconnection
     * @return void
     **/
-    SyncService.resyncStates = function(){
+    this.resyncStates = function(){
         console.log('resync');
         
         var ostates = [];
         
-        for(var hash in SyncService.data.states){
-            ostates.push({ hash: hash, sync: SyncService.data.states[hash] });   
+        for(var hash in _this.data.states){
+            ostates.push({ hash: hash, sync: _this.data.states[hash] });   
         }
         
         Socket.setSyncTags(ostates);
     };
     
-    Socket.io.on('torrent_change', SyncService.onChangeState);
-    Socket.io.on('reconnect', SyncService.resyncStates);
     
-    SyncService._getAll();
+    /**
+    * Remove a torrent from memory
+    * @param string hash Torrent hash
+    * @return boolean true = ok
+    **/
+    this.removeFromMemory = function(hash){
+        var offset = -1;
+        for(var i = 0; i < _this.data.torrents.length; i++){
+            if(_this.data.torrents[i].hash == hash){
+                offset = i;
+                break;
+            }    
+        }
+        
+        if(offset > -1){
+            _this.data.torrents.splice(offset, 1);
+            return true;
+        }
+        return false;
+    };
     
-    return SyncService;
+    /**
+    * When a torrent is deleted
+    * @param object { hash: TorrentHash }
+    * @return void
+    **/
+    this.onDeleted = function(torrent){
+        console.debug('SyncService.onDeleted', torrent);
+        
+        if(_this.removeFromMemory(torrent.hash))
+            $rootScope.$broadcast('torrents-change');
+    };
+    
+    Socket.io.on('torrent_change', this.onChangeState);
+    Socket.io.on('torrent_deleted', this.onDeleted);
+    Socket.io.on('reconnect', this.resyncStates);
+    
+    this._getAll();
+    
+    return this;
 }]);

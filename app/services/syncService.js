@@ -63,18 +63,57 @@ module.exports = ['SyncService', (function(){
     **/
     SyncService.update = function(torrents){
         SyncService._updateTags(torrents);
-       
+        
+        //update & inserts
         for(var i = 0; i < torrents.length; i++){
             if(!stack[torrents[i].hash] || 
                 stack[torrents[i].hash].syncTag != torrents[i].syncTag){
                 app.services.TorrentService._upsertTorrent(torrents[i])
-                                           .then(SyncService.onChange, function(a, b, c) { app.logger.log('Sync.update error', a, b, c, torrents); });
+                                           .then(
+                                                SyncService.onChange, 
+                                                function(a, b, c) { 
+                                                    app.logger.log('Sync.update error', a, b, c, torrents); 
+                                                }
+                                           );
+            }
+        }
+        
+        //delete
+        for(var hash in stack){
+            var found = false;
+            for(var i = 0; i < torrents.length; i++){
+                if(torrents[i].hash == hash){
+                    found = true;
+                    break;
+                }
+            }
+            
+            if(!found){
+                SyncService.onDeleted(stack[hash]);
             }
         }
     };
     
     /**
-    * Notify @when torrent has change
+    * Notify when @torrent has been deleted
+    * @return void
+    **/
+    SyncService.onDeleted = function(torrent){
+        console.log('SyncService.onDelete', torrent.name);
+        
+        stack[torrent.hash].destroy();
+        delete stack[torrent.hash];
+        
+        for(var sid in childStack){
+            if(childStack[sid].tags[torrent.hash]){
+                delete childStack[sid].tags[torrent.hash];
+                childStack[sid].socket.emit('torrent_deleted', { hash: torrent.hash });
+            }
+        }
+    };
+    
+    /**
+    * Notify when @torrent has change
     * @return torrent
     **/
     SyncService.onChange = function(torrent){
@@ -86,7 +125,7 @@ module.exports = ['SyncService', (function(){
                 childStack[sid].tags[torrent.hash] != torrent.syncTag){
                 
                 childStack[sid].tags[torrent.hash] = torrent;
-                childStack[sid].socket.emit('torrent_change', torrent);
+                childStack[sid].socket.emit('torrent_change', torrent.public);
             }
         }
         
@@ -104,8 +143,10 @@ module.exports = ['SyncService', (function(){
         childStack[socket.id].tags[tag.hash] = tag.sync;
         
         //if tag send by child is too old 
-        if(tag.sync != stack[tag.hash].syncTag)
-            socket.emit('torrent_change', stack[tag.hash]);
+        if(!stack[tag.hash])
+            socket.emit('torrent_deleted', { hash: tag.hash });
+        else if(tag.sync != stack[tag.hash].syncTag)
+            socket.emit('torrent_change', stack[tag.hash].public);
     };
     
     

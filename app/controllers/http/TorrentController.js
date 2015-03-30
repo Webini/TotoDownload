@@ -7,7 +7,7 @@ module.exports = function(app){
             var out = [];
             
             for(var hash in torrents)
-                out.push(torrents[hash]);
+                out.push(torrents[hash].public);
             
             res.json(out);
         }

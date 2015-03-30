@@ -5,13 +5,13 @@ angular.module('totodl')
                 controller: 'DashboardController'
             });
        }])
-       .controller('DashboardController', [ '$scope', '$routeParams', 'SyncService', 
-function($scope, $routeParams, SyncService){
+       .controller('DashboardController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 
+function($scope, $rootScope, $routeParams, SyncService){
     console.debug(SyncService.torrents);
     
-    $scope.torrents = []; //SyncService.data.torrents;
+    $scope.torrents = [];
     $scope.lastChange = SyncService.data.lastChange;
-
+/*
     
     $scope.$watch(
         function(){ return SyncService.data.lastChange; },
@@ -23,5 +23,11 @@ function($scope, $routeParams, SyncService){
             }
             
         }
-    );
+    );*/
+    
+    $rootScope.$on('torrents-change', function(){
+        $scope.torrents = SyncService.data.torrents;
+        if(!$scope.$$phase)
+            $scope.$apply();
+    });
 }]);   

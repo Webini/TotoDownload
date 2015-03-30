@@ -5,7 +5,7 @@ module.exports = (function(){
         var app = require(__dirname + '/../app.js');
         
         if(mutex)
-            return;
+            return console.log('MUTEX');
         
         mutex = true;
         
@@ -14,6 +14,7 @@ module.exports = (function(){
         }).finally(function(){
             mutex = false;
         });
+        
     };
     
     return {
