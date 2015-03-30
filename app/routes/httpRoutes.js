@@ -16,7 +16,9 @@ module.exports = function(app){
     router.post('/torrents/upload/files', authenticateFilter, roleUploaderFilter, uploadCtrl.onUploadFiles);
     router.post('/torrents/upload/link', authenticateFilter, roleUploaderFilter, uploadCtrl.onUploadLink);
     
-    router.get('/torrents/all', authenticateFilter, torrentCtrl.getAll);
+    router.post('/torrents/pause', authenticateFilter, roleUploaderFilter, torrentCtrl.onPause);
+    router.post('/torrents/start', authenticateFilter, roleUploaderFilter, torrentCtrl.onStart);
+    router.get('/torrents/all', authenticateFilter, torrentCtrl.onGetAll);
     
     app.http.use('/', router);
 };

@@ -137,6 +137,42 @@ module.exports = function(config){
                 trans.get(responseCallback);
             
             return defer.promise;
+        },
+        
+        /**
+        * Pause a torrent
+        * @param string Hash Torrent hash
+        * @return promise
+        **/
+        pause: function(id){
+            var defer = $q.defer();
+            
+            trans.stop([id], function(err, response){
+                if(err)
+                    defer.reject({ error: parseError(err, 'undef') });
+                else
+                    defer.resolve(response);    
+            });
+            
+            return defer.promise;
+        },
+        
+        /**
+        * Start a torrent
+        * @param string Hash Torrent hash
+        * @return promise
+        **/
+        start: function(id){
+            var defer = $q.defer();
+            
+            trans.start([id], function(err, response){
+                if(err)
+                    defer.reject({ error: parseError(err, 'undef') });
+                else
+                    defer.resolve(response);    
+            });
+            
+            return defer.promise;
         }
     };
 };

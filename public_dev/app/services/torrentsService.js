@@ -19,7 +19,33 @@ angular.module('services')
             );
             
             return deferred.promise;
-        }
+        },
+        
+        /**
+        * Pause a torrent
+        * @param string hash Torrent hash
+        * @return promise
+        **/
+        pause: function(hash){
+            return $http.post('/torrents/pause', { hash: hash }).then(
+                function success(response){
+                    return response.data;
+                }
+            );
+        },
+        
+        /**
+        * Start a torrent
+        * @param string hash Torrent hash
+        * @return promise
+        **/
+        start: function(hash){
+            return $http.post('/torrents/start', { hash: hash }).then(
+                function success(response){
+                    return response.data;   
+                }
+            );
+        } 
     };
            
     return TorrentsService;

@@ -48,5 +48,20 @@
     "FILE": "Fichier",
     "UPLOAD_NO_FILES": "Vous devez sélectionner au moins 1 fichier",
     "NEW_UPLOAD": "Nouvel upload",
-    "TORRENT_ADDED": "<b>{{ torrent }}</b> a été ajouté a la liste des téléchargements"
+    "TORRENT_ADDED": "<b>{{ torrent }}</b> a été ajouté a la liste des téléchargements",
+    "MB": "Mo",
+    "GB": "Go",
+    "KB": "Ko",
+    "B": "O",
+    "DL_FROM": "Téléchargement depuis {{ to_us }} peers / {{ total }} peers",
+    "UPLOAD_RATIO": "Upload ratio {{ ratio }}",
+    "PAUSED": "En pause",
+    "QUEUED_CHECK": "En attente de vérification",
+    "CHECK_FILES": "Vérification des fichiers",
+    "DL_WAIT": "En attente de téléchargement",
+    "SEED_WAIT": "En attente pour seed",
+    "SEEDING_TO": "Upload vers {{ from_us }} peers / {{ total }} peers",
+    "ISOLATED": "Impossible de trouver des sources",
+    "START": "Démarrer",
+    "PAUSE": "Pause"
 }

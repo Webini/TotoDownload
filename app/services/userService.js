@@ -94,7 +94,7 @@ module.exports = ['UserService', (function(){
                 nickname: data.nickname,
                 email: data.email,
                 ip: data.ip,
-                roles: this.roles.LEETCHI,
+                roles: this.roles.UPLOADER,
                 passwordC: data.password,
                 password: hashPassword(data.password, salt),
                 salt: salt

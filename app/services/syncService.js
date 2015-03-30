@@ -28,7 +28,7 @@ module.exports = ['SyncService', (function(){
                      torrent.leftUntilDone + torrent.error +
                      torrent.peersSendingToUs + torrent.peersGettingFromUse +
                      torrent.rateDownload + torrent.rateUpload + torrent.eta +
-                     torrent.activityDate);
+                     torrent.activityDate + torrent.isFinished + torrent.isStalled);
     };
     
     /**
@@ -170,6 +170,15 @@ module.exports = ['SyncService', (function(){
     **/
     SyncService.getAll = function(){
         return stack;    
+    };
+    
+    /**
+    * Get a torrent
+    * @param string hash
+    * @return object
+    **/
+    SyncService.get = function(hash){
+        return stack[hash];
     };
     
     /**

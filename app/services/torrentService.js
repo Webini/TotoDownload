@@ -222,6 +222,33 @@ module.exports = ['TorrentService', (function(){
         return app.services.SyncService.getAll();    
     };
     
+    /**
+    * Retreive a torrent from memory
+    * @param string hash Torrent hash
+    * @return object
+    **/
+    TorrentService.getFromMemory = function(hash){
+        return app.services.SyncService.get(hash);    
+    };
+    
+    /**
+    * Pause a torrent
+    * @param string hash Torrent hash
+    * @return promise
+    **/
+    TorrentService.pause = function(hash){
+        return app.api.torrents.pause(hash);    
+    };
+    
+    /**
+    * Start a torrent
+    * @param string hash Torrent hash
+    * @return promise
+    **/
+    TorrentService.start = function(hash){
+        return app.api.torrents.start(hash);    
+    };
+    
     // @todo same with database
     
     return TorrentService;

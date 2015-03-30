@@ -1,0 +1,20 @@
+angular.module('totodl')
+       .directive('progressWidth', function(){
+    return {
+        restrict: 'A',
+        scope: {
+            'total': '=progressTotal',
+            'left': '=progressLeft'
+        },
+        link: function($scope, $elem, $attr){
+            
+            $scope.$watch('left', function(newVal, oldVal){
+                if(newVal == oldVal && $scope.checkSame)
+                    return;
+                
+                $scope.checkSame = true;
+                $elem.css('width', (Math.round((($scope.total - $scope.left) / $scope.total) * 1000) / 10) + '%');
+            });
+        } 
+    };
+});  

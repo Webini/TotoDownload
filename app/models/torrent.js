@@ -111,6 +111,11 @@ module.exports = function(sequelize, DataTypes) {
         defaults: false,
         allowNull: true
       },
+      isStalled: {
+        type: DataTypes.BOOLEAN,
+        defaults: false,
+        allowNull: true
+      },
       desiredAvailable: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: true
