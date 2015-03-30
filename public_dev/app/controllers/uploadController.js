@@ -22,7 +22,7 @@ function RegisterController($scope, $routeParams, $location, User, TorrentsServi
     
     $scope.initFlow = function(){
         return {
-            target: '/upload/torrents', 
+            target: '/torrents/upload/files', 
             testChunks: false,
             headers: { 'authorization': 'Bearer ' + User.get().token }
         };    

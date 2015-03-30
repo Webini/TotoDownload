@@ -22,7 +22,13 @@
       </div>
     </div>
     <div class="box-body">
-      Start creating your amazing application!
+      Start creating your amazing application! => {{ lastChange }}
+        
+        <div ng-repeat="torrent in torrents" >
+            <input type="text" ng-model="torrent.syncTag" />
+            {{ torrent.syncTag }} // {{ torrent.name }} // {{ ((torrent.sizeWhenDone - torrent.leftUntilDone) / torrent.sizeWhenDone) * 100 }} // {{ rateDownload / 1024 }} ----- {{ torrent.rateDownload }}
+        
+        </div>
     </div><!-- /.box-body -->
     <div class="box-footer">
       Footer

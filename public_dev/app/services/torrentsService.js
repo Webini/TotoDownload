@@ -1,5 +1,5 @@
 angular.module('services')
-       .service('TorrentsService', [ '$http', '$q', function factoryUsersService($http, $q){
+       .service('TorrentsService', [ '$http', '$q', function($http, $q){
     
     var TorrentsService = {
         /**
@@ -9,7 +9,7 @@ angular.module('services')
         sendLink: function(link){
             var deferred = $q.defer();
             
-            $http.post('/upload/link', { link: link }).then(
+            $http.post('/torrents/upload/link', { link: link }).then(
                 function success(response){
                     deferred.resolve(response.data);   
                 },

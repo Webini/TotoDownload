@@ -239,6 +239,14 @@ module.exports = ['TorrentService', (function(){
         return app.orm.Torrent.all();
     };
     
+    /**
+    * Retreive torrents from memory
+    * @return array
+    **/
+    TorrentService.getAllFromMemory = function(){
+        return app.services.SyncService.getAll();    
+    };
+    
     // @todo same with database
     
     return TorrentService;

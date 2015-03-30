@@ -61,9 +61,9 @@ mApp.api = {
 
 mApp.services = require(__dirname + '/services/index.js');
 
+//notify services that all is ready
+mApp.services.ready();
+
 //define http routes
 httpRoutes(mApp);
 ioRoutes(mApp);
-
-//notify services that all is ready
-mApp.services.ready();

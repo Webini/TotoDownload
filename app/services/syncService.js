@@ -14,7 +14,7 @@ module.exports = ['SyncService', (function(){
             app.logger.log(data.length + ' torrents founds in database');
             
             for(var i = 0; i < data.length; i++){
-                stack[data[i]] = data[i];                
+                stack[data[i].hash] = data[i];                
             }
         });
     };
@@ -68,7 +68,7 @@ module.exports = ['SyncService', (function(){
             if(!stack[torrents[i].hash] || 
                 stack[torrents[i].hash].syncTag != torrents[i].syncTag){
                 app.services.TorrentService._upsertTorrent(torrents[i])
-                                           .then(SyncService.onChange, function(a, b, c){ console.log(a, b, c); });
+                                           .then(SyncService.onChange, function(a, b, c) { app.logger.log('Sync.update error', a, b, c, torrents); });
             }
         }
     };
@@ -82,11 +82,11 @@ module.exports = ['SyncService', (function(){
         for(var sid in childStack){
             // if we can't found the torrent in child list or
             // if the syncTag has changed
-            if(!childStack[sid].list[torrent.hash] ||
-                childStack[sid].list[torrent.hash] != torrent.syncTag){
+            if(!childStack[sid].tags[torrent.hash] ||
+                childStack[sid].tags[torrent.hash] != torrent.syncTag){
                 
-                childStack[sid].list[torrent.hash] = torrent;
-                childStack[sid].socket.emit('change', torrent);
+                childStack[sid].tags[torrent.hash] = torrent;
+                childStack[sid].socket.emit('torrent_change', torrent);
             }
         }
         
@@ -94,12 +94,50 @@ module.exports = ['SyncService', (function(){
     };
     
     /**
-    * Register @socket with @torrentsList
-    * @param object socket 
-    * @param array[Object { 'hash': 'syncTag' }] Register to this torrents updates
+    * Define sync tag for an user
+    * @param object socket Socket
+    * @param object { hash: 'hash', sync: 'sync tag'} tag 
+    * @return void
     **/
-    SyncService.register = function(socket, list){
-        childStack[socket.id] = { socket: socket, list: list };
+    SyncService.setSyncTag = function(socket, tag){
+        console.log('SyncService.setSyncTag', socket.id, tag);
+        childStack[socket.id].tags[tag.hash] = tag.sync;
+        
+        //if tag send by child is too old 
+        if(tag.sync != stack[tag.hash].syncTag)
+            socket.emit('torrent_change', stack[tag.hash]);
+    };
+    
+    
+    /**
+    * Define sync tags for an user
+    * @param object socket User socket
+    * @param array[ object { hash, sync } ] Tags
+    * @return void
+    **/
+    SyncService.setSyncTags = function(socket, tags){
+        console.log('SyncService.setSyncTags', socket.id, tags);
+        for(var i = 0; i < tags.length; i++){
+            SyncService.setSyncTag(socket, tags[i]);
+        }
+    };
+    
+    
+    /**
+    * Get all torrents in stack
+    * @return array
+    **/
+    SyncService.getAll = function(){
+        return stack;    
+    };
+    
+    /**
+    * Register @socket
+    * @param object socket
+    **/
+    SyncService.register = function(socket){
+        console.log('SyncService.register', socket.id);
+        childStack[socket.id] = { socket: socket, tags: {} };
     };
     
     /**

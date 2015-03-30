@@ -1,6 +1,6 @@
 angular.module('services')
-       .factory('User', [ '$http', '$q', 'UsersService', 
-function factoryUser($http, $q, UsersService){
+       .service('User', [ '$http', '$q', 'UsersService', 
+function($http, $q, UsersService){
     var user = {
         roles: {
             LEETCHI: 0,

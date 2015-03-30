@@ -3,7 +3,7 @@ module.exports = function(socket){
     
     return {
         onConnect: function(){
-            
+            app.services.SyncService.register(socket);
         },
         onDisconnect: function(){
             app.services.SyncService.unregister(socket);

@@ -1,5 +1,5 @@
 angular.module('services')
-       .service('UsersService', [ '$http', '$q', function factoryUsersService($http, $q){
+       .service('UsersService', [ '$http', '$q', function($http, $q){
     
     var UsersServices = { 
         /**

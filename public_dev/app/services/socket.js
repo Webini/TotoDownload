@@ -1,6 +1,6 @@
 angular.module('services')
        .factory('Socket', [ '$http', '$location', '$q', 'User', 
-function factoryUser($http, $location, $q, User){
+function($http, $location, $q, User){
     
     var socket = io.connect('http://' + $location.host() + ':' + $location.port(), {
       'query': 'token=' + User.get().token 
@@ -8,7 +8,25 @@ function factoryUser($http, $location, $q, User){
 
     var ret = {
         io: socket,
-        connected: false
+        connected: false,
+        
+        /**
+        * Define new torrent sync tag
+        * @param object { hash: 'hash', sync: 'sync tag'} tag 
+        * @return void
+        **/
+        setSyncTag: function(tag){
+            socket.emit('updateTag', tag);    
+        },
+        
+        /**
+        * Define new torents sync tag
+        * @param array[ object { hash, sync } ] Tags
+        * @return void
+        **/
+        setSyncTags: function(tags){
+            socket.emit('updateTags', tags);                
+        }
     };
     
     socket.on('connect', function(){
