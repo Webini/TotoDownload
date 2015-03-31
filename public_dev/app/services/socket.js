@@ -1,5 +1,5 @@
 angular.module('services')
-       .factory('Socket', [ '$http', '$location', '$q', 'User', 
+       .factory('Socket', [ '$http', '$location', '$q', 'User',
 function($http, $location, $q, User){
     
     var socket = io.connect('http://' + $location.host() + ':' + $location.port(), {
@@ -48,6 +48,9 @@ function($http, $location, $q, User){
             }
         });
     });
-     
+    
+    //bind UsersServices routes
+    socket.on('new-user', User._onNewUser);  
+    
     return ret;
 }]);

@@ -143,9 +143,13 @@ module.exports = {
         type: DataTypes.STRING(2048),
         allowNull: true
       },
-      seedRatio: {
+      uploadedEver: {
         type: DataTypes.INTEGER,
         allowNull: true
+      },
+      seedRatioLimit: {
+        type: DataTypes.INTEGER,
+        allowNull: true 
       },
       seedRatioMode: {
         type: DataTypes.INTEGER,
@@ -153,7 +157,7 @@ module.exports = {
         defaultValue: 0
       },
       uploadRatio: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true
       },
       trackersJson: {

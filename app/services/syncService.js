@@ -107,7 +107,7 @@ module.exports = ['SyncService', (function(){
         for(var sid in childStack){
             if(childStack[sid].tags[torrent.hash]){
                 delete childStack[sid].tags[torrent.hash];
-                childStack[sid].socket.emit('torrent_deleted', { hash: torrent.hash });
+                childStack[sid].socket.emit('torrent-deleted', { hash: torrent.hash });
             }
         }
     };
@@ -125,7 +125,7 @@ module.exports = ['SyncService', (function(){
                 childStack[sid].tags[torrent.hash] != torrent.syncTag){
                 
                 childStack[sid].tags[torrent.hash] = torrent;
-                childStack[sid].socket.emit('torrent_change', torrent.public);
+                childStack[sid].socket.emit('torrent-change', torrent.public);
             }
         }
         
@@ -144,9 +144,9 @@ module.exports = ['SyncService', (function(){
         
         //if tag send by child is too old 
         if(!stack[tag.hash])
-            socket.emit('torrent_deleted', { hash: tag.hash });
+            socket.emit('torrent-deleted', { hash: tag.hash });
         else if(tag.sync != stack[tag.hash].syncTag)
-            socket.emit('torrent_change', stack[tag.hash].public);
+            socket.emit('torrent-change', stack[tag.hash].public);
     };
     
     

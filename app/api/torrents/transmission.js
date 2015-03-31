@@ -84,12 +84,12 @@ module.exports = function(config){
         * Retreive all torrents 
         * @return promise
         **/
-        getAll: function(columns){
+        getAll: function(){
             var defer = $q.defer();
             
             var options = {
                 arguments : {
-                    fields : ['activityDate', 'desiredAvailable', 'downloadDir', 'error', 'errorString', 'eta', 'files', 'hashString', 'id', 'isFinished', 'isStalled', 'leftUntilDone', 'metadataPercentComplete', 'name', 'peersConnected', 'peersGettingFromUs', 'peersSendingToUs', 'percentDone', 'queuePosition', 'rateDownload', 'rateUpload', 'recheckProgress', 'seedRatioMode', 'seedRatioLimit', 'sizeWhenDone', 'status', 'totalSize', 'trackers', 'uploadedEver', 'uploadRatio']
+                    fields : ['activityDate', 'desiredAvailable', 'downloadDir', 'error', 'errorString', 'eta', 'files', 'hashString', 'id', 'isFinished', 'isStalled', 'leftUntilDone', 'metadataPercentComplete', 'name', 'peersConnected', 'peersGettingFromUs', 'peersSendingToUs', 'percentDone', 'queuePosition', 'rateDownload', 'magnetLink', 'rateUpload', 'recheckProgress', 'uploadedEver', 'seedRatioLimit', 'seedRatioMode', 'sizeWhenDone', 'status', 'totalSize', 'trackers', 'uploadedEver', 'uploadRatio']
                 },
                 method : trans.methods.torrents.get,
                 tag : uuid()

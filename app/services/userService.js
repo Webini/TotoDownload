@@ -98,14 +98,30 @@ module.exports = ['UserService', (function(){
                 passwordC: data.password,
                 password: hashPassword(data.password, salt),
                 salt: salt
-            }).then(function success(data){
+            }).then(function success(user){
+                app.io.sockets.emit('new-user', user.public);
                 deferred.resolve({ ok: 1 });
             }, function error(err){
                 deferred.reject({ errors: app.services['ErrorSerializer'].format(err) });
             });
             
             return deferred.promise;
-        }
+        },
         
+        /**
+        * Récupère tous les users
+        * @return promise
+        **/
+        getAll: function(){
+            return app.orm.User.all();
+        },
+        
+        /**
+        * Récupère un user grace a son ID
+        * @return promise
+        **/
+        get: function(id){
+            return app.orm.User.find( { id: id } );    
+        }
     };
 })()];

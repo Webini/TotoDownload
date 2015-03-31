@@ -1,7 +1,7 @@
 angular.module('services')
        .service('UsersService', [ '$http', '$q', function($http, $q){
     
-    var UsersServices = { 
+    var UsersService = {
         /**
         * Register a new user
         * @param Object user { nickname, email, password }
@@ -50,7 +50,6 @@ angular.module('services')
             return def.promise;
         }
     };
-    
-    
-    return UsersServices;
+           
+    return UsersService;
 }]);

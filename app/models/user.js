@@ -48,13 +48,11 @@ module.exports = function(sequelize, DataTypes) {
       getterMethods   : {
           public: function(){
               return {
-                  email: this.email,
                   id: this.id,
                   nickname: this.nickname,
                   createdAt: this.createdAt,
                   updatedAt: this.updatedAt,
-                  roles: this.roles,
-                  ip: this.ip
+                  roles: this.roles
               };
           }
       },

@@ -23,7 +23,8 @@ function redirectOnStatus($rootScope, $location, User, successcb){
             var cPath = $location.path();
             if(cPath == '/login' || cPath == '/register')
                 window.location = '/dashboard.html#/dashboard'; //$location.url('/dashboard.html#/dashboard');//.path('/dashboard');
-            successcb();
+            if(successcb)
+                successcb();
         },
         function error(){
             var cPath = $location.path();
@@ -49,10 +50,7 @@ angular.module('totodl', [
     flowFactoryProvider.factory = fustyFlowFactory;
 }]).run(['$rootScope', '$location', 'User', '$http', function($rootScope, $location, User, $http) {
     //check login status
-    redirectOnStatus($rootScope, $location, User, function(){
-        //if all ok then set the token for http requests
-        $http.defaults.headers.common.authorization = 'Bearer ' + User.get().token;
-    });
+    redirectOnStatus($rootScope, $location, User);
 }]);
 
 /** Login / Register page **/

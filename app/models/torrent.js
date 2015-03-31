@@ -136,7 +136,11 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING(2048),
         allowNull: true
       },
-      seedRatio: {
+      uploadedEver: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      seedRatioLimit: {
         type: DataTypes.INTEGER,
         allowNull: true
       },
@@ -146,7 +150,7 @@ module.exports = function(sequelize, DataTypes) {
         defaultValue: 0
       },
       uploadRatio: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: true
       },
       trackersJson: {

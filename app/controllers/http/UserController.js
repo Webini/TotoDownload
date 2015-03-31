@@ -41,6 +41,44 @@ module.exports = function(app){
                     res.json(0);
                 }
             );
+        },
+        
+        /**
+        * get all users
+        **/
+        onGetUsers: function(req, res){
+            app.services.UserService.getAll().then(
+                function(users){
+                    var out = [];
+                    for(var i = 0; i < users.length; i++)
+                        out.push(users[i].public);
+                    
+                    res.json(out);
+                },
+                function(e){
+                    app.logger.log('onGetUsers error', e);
+                    res.sendStatus(403);      
+                }
+            );
+                                                   
+        },
+        
+        /**
+        * Get one user
+        **/
+        onGetUser: function(req, res){
+            if(!req.body.id)
+                return res.sendStatus(403);
+            
+            app.services.UserService.get(req.body.id).then(
+                function(user){
+                    res.json(user.public);
+                },
+                function(e){
+                    app.logger.log('onGetUsers error', e);
+                    res.sendStatus(403);   
+                }
+            );
         }
     };
 };

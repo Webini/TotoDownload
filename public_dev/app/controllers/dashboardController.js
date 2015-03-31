@@ -9,8 +9,10 @@ angular.module('totodl')
 function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService){
     console.debug(SyncService.torrents);
     
+    $scope.Math = Math;
     $scope.roles = User.roles;
     $scope.user = User.get();
+    $scope.users = User;
     $scope.torrents = SyncService.data.torrents;
     //$scope.lastChange = SyncService.data.lastChange;
 /*
@@ -35,11 +37,10 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService){
                 console.debug('PAUSE OK => ', data);    
             },
             function error(err){
+                torrent.loading = false;    
                 console.debug('ERROR => ', err);
             }
-        ).finally(function(){
-            torrent.loading = false;    
-        });
+        );
     };
     
     $scope.start = function(torrent){
@@ -50,15 +51,32 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService){
                 console.debug('START OK => ', data);    
             },
             function error(err){
+                torrent.loading = false;
                 console.debug('START ERR => ', err);
             }
-        ).finally(function(){
-            torrent.loading = false; 
-        });
+        );
     };
     
-    $rootScope.$on('torrents-change', function(){
-        $scope.torrents = SyncService.data.torrents;
+    $rootScope.$on('torrents-change', function($evt, torrents){
+        $scope.torrents = torrents;
+        
+        if(!$scope.$$phase)
+            $scope.$apply();
+    });
+    
+    $rootScope.$on('torrent-change', function($evt, torrent){
+        //disable loading state when we received change notification
+        
+        for(var i = 0; i < $scope.torrents.length; i++){
+            if($scope.torrents[i].hash == torrent.hash){
+                //$scope.torrents[i] = $torrent
+                if($scope.torrents[i].loading)
+                    $scope.torrents[i].loading = false;
+
+                break;
+            }
+        }
+        
         if(!$scope.$$phase)
             $scope.$apply();
     });
