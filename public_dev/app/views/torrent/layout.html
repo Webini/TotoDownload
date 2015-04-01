@@ -1,0 +1,61 @@
+<div class="torrent-preview">
+    <div ng-show="!error && !loadingGlob">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            <span ng-if="torrent.guessedTitle">{{ torrent.title ? torrent.title : torrent.guessedTitle }}<small>&nbsp;-&nbsp;{{ torrent.name }}</small></span>
+            <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
+          </h1>
+        </section>
+        <section class="content-header">
+            <div class="box box-solid torrent nomargin" ng-include="smallView"></div>
+        </section>
+        <section class="content">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">{{ 'ACTIONS' | translate }}</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li ng-class="{'active': (page == 'preview')}" ng-if="torrent.runtime || torrent.genre || torrent.year || torrent.synopsis">
+                                    <a href="#/torrent/{{ torrent.hash }}/preview"><i class="fa fa-info-circle"></i> {{ 'INFORMATIONS' | translate }}</a>
+                                </li>
+                                <li ng-class="{'active': (page == 'trailer')}" ng-if="torrent.trailer">
+                                    <a href="#/torrent/{{ torrent.hash }}/trailer"><i class="fa fa-youtube-play"></i> {{ 'TRAILER'|translate }}</a>
+                                </li>
+                                <li ng-class="{'actives': (page == 'files')}">
+                                    <a href="#/torrent/{{ torrent.hash }}/files"><i class="fa fa-files-o"></i> {{ 'FILES'|translate }}</a>
+                                </li>
+                            </ul>
+                        </div><!-- /.box-body -->
+                    </div>
+                </div>
+                <div class="col-md-9" ng-include="pageTemplate"></div>
+            </div>
+        </section>
+    </div>    
+
+    <div class="row" ng-show="error">
+        <div class="col-xs-6 col-xs-offset-3 alert alert-danger alert-dismissable err-margin">
+            <h4>{{ 'ERROR' | translate }}</h4>
+            <p>{{ error | translate }}</p>
+            <p class="text-center"><button class="btn btn-default" type="button" onclick="window.history.back()"><i class="fa fa-arrow-circle-left"></i>&nbsp;{{ 'BACK'|translate }}</button></p>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    
+    <div class="row" ng-show="loadingGlob">
+        <div class="col-xs-6 col-xs-offset-3">
+            <div class="box box-default err-margin">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{ 'LOADING' | translate }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ 'RETRIEVING_DATA' | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

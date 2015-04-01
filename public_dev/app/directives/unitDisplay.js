@@ -8,7 +8,6 @@ angular.module('totodl')
         },
         template: '{{ sizeLabel }} {{ sizeUnit | translate }}{{ suffix }}',
         link: function($scope, $elem, $attr){
-            console.log('YOLOLOLO');
             $scope.sizeLabel = -1;
             
             $scope.$watch('size', function(newVal, oldVal){

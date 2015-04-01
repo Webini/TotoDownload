@@ -16,7 +16,7 @@
     "crc": "^3.2.1",
     "express": "^4.12.3",
     "express-jwt": "^2.1.0",
-    "jsonwebtoken": "^4.2.1",
+    "jsonwebtoken": "^4.2.2",
     "multer": "^0.1.8",
     "mysql": "^2.5.5",
     "q": "^1.2.0",

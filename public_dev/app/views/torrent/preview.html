@@ -1,79 +1,36 @@
-<div class="torrent-preview">
-
-    <div ng-show="!error && !loadingGlob">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-          <h1>
-            <span ng-if="torrent.guessedTitle">{{ torrent.guessedTitle }}<small>&nbsp;-&nbsp;{{ torrent.name }}</small></span>
-            <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
-          </h1>
-        </section>
-        <section class="content">
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="box box-solid">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'ACTIONS' | translate }}</h3>
-                        </div>
-                        <div class="box-body no-padding">
-                            <ul class="nav nav-pills nav-stacked">
-                            <li class="active"><a href="#"><i class="fa fa-info-circle"></i> {{ 'INFORMATIONS' | translate }}</a></li>
-                            <li ng-if="torrent.trailer"><a href="#"><i class="fa fa-youtube-play"></i> {{ 'TRAILER'|translate }}</a></li>
-                            </ul>
-                        </div><!-- /.box-body -->
-                    </div>
-                </div>
-                <div class="col-md-9">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">{{ 'INFORMATIONS' | translate }}</h3>
-                        </div>
-                        <div class="box-body">
-                            <div class="row">
-                                <div ng-class="{ 'col-md-12': !torrent.poster, 'col-md-8': torrent.poster }">
-                                    <table class="table table-striped">
-                                        <tr>
-                                            <td>
-                                                
-                                            </td>
-                                            <td>
-                                                
-                                            </td>
-                                        </tr>
-                                    
-                                    
-                                    </table>
-                                </div>
-
-                                <div ng-if="torrent.poster" class="col-md-4">
-                                    <img ng-src="{{ torrent.poster }}" class="allwidth" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div>    
-
-    <div class="row" ng-show="error">
-        <div class="col-xs-6 col-xs-offset-3 alert alert-danger alert-dismissable err-margin">
-            <h4>{{ 'ERROR' | translate }}</h4>
-            <p>{{ error | translate }}</p>
-            <p class="text-center"><button class="btn btn-default" type="button" onclick="window.history.back()"><i class="fa fa-arrow-circle-left"></i>&nbsp;{{ 'BACK'|translate }}</button></p>
-        </div>
-        <div class="clearfix"></div>
+<div class="box box-primary">
+    <div class="box-header with-border">
+        <h3 class="box-title">{{ 'INFORMATIONS' | translate }}</h3>
     </div>
-    
-    <div class="row" ng-show="loadingGlob">
-        <div class="col-xs-6 col-xs-offset-3">
-            <div class="box box-default err-margin">
-                <div class="box-header with-border">
-                  <h3 class="box-title">{{ 'LOADING' | translate }}</h3>
-                </div>
-                <div class="box-body">
-                    {{ 'RETRIEVING_DATA' | translate }}
-                </div>
+    <div class="box-body">
+        <div class="row">
+            <div ng-class="{ 'col-md-12': !torrent.poster, 'col-md-8': torrent.poster }">
+                <table class="table table-striped">
+                    <tr ng-if="torrent.runtime">
+                        <td>
+                            {{ 'RUNTIME' | translate }}
+                        </td>
+                        <td>
+                            <time-display time="torrent.runtime" type="normal"></time-display>
+                        </td>
+                    </tr>
+                    <tr ng-if="torrent.genre">
+                        <td>{{ 'GENRE' | translate }}</td>
+                        <td>{{ torrent.genre }}</td>
+                    </tr>
+                    <tr ng-if="torrent.year">
+                        <td>{{ 'YEAR'|translate }}</td>
+                        <td>{{ torrent.year }}</td>
+                    </tr>
+                    <tr ng-if="torrent.synopsis">
+                        <td>{{ 'SYNOPSIS'|translate }}</td>
+                        <td ng-bind-html="raw(torrent.synopsis)"></td>
+                    </tr>
+                </table> 
+            </div>
+
+            <div ng-if="torrent.poster" class="col-md-4">
+                <img ng-src="{{ torrent.poster }}" class="allwidth" />
             </div>
         </div>
     </div>

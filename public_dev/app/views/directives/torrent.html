@@ -1,17 +1,16 @@
 <div ng-show="torrent.loading" class="overlay">
     <i class="fa fa-refresh fa-spin"></i>
 </div>
-
-
 <div ng-class="{ 'bg-aqua': !torrent.error && torrent.status != 6, 'bg-red': torrent.error, 'bg-green': !torrent.error && torrent.status == 6 }" class="info-box-icon" ng-show="!torrent.guessedType || torrent.guessedType == 'unknown'">
     <i class="fa fa-files-o"></i>
 </div>
 <div ng-class="{ 'bg-aqua': !torrent.error && torrent.status != 6, 'bg-red': torrent.error, 'bg-green': !torrent.error && torrent.status == 6 }" class="info-box-icon" ng-show="torrent.guessedType != 'unknown' && torrent.poster">
     <img ng-src="{{ torrent.poster }}" />
 </div>
+
 <div class="info-box-content">
     <div class="info-box-number text-overflow">
-        <span ng-if="torrent.guessedTitle">{{ torrent.guessedTitle }}<span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span></span>
+        <span ng-if="torrent.guessedTitle">{{ torrent.title ? torrent.title : torrent.guessedTitle }}<span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span></span>
         <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
     </div>
     <div class="text-overflow">
@@ -77,6 +76,9 @@
         <span ng-if="torrent.status <= 4">
             <unit-display size="torrent.sizeWhenDone - torrent.leftUntilDone" suffix=""></unit-display> /
             <unit-display size="torrent.sizeWhenDone" suffix=""></unit-display>
+            <span ng-if="torrent.status == 4">
+                &nbsp;-&nbsp;{{ 'ETA' | translate }}&nbsp;<time-display time="torrent.eta" type="min"></time-display>
+            </span>
         </span>
         <span ng-if="torrent.status > 4">
             {{ 'SIZE' | translate }}
@@ -92,7 +94,7 @@
 </div><!-- /.info-box-content -->
 <div class="box-footer text-center">
     <span ng-if="torrent.userId" class="pull-right">{{ 'UPLOADED_BY' | translate:{ name: users.get(torrent.userId).nickname } }}</span>
-    <a href="#/torrent/{{ torrent.hash }}/preview" class="center-footer">
+    <a href="#/torrent/{{ torrent.hash }}/{{ torrent.guessedType != 'unknown' && torrent.guessedType ? 'preview' : 'files' }}" class="center-footer" ng-if="!smallView">
         {{ 'INFO_DOWNLOAD' | translate }}
         <i class="fa fa-arrow-circle-right"></i>
     </a>
