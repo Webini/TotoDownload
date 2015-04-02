@@ -45,7 +45,7 @@ angular.module('services')
                     return response.data;   
                 }
             );
-        } 
+        }
     };
            
     return TorrentsService;

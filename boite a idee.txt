@@ -9,4 +9,6 @@
 - Possibilitée strip meta movie
 - Hubic ?
 - Pouvoir generer un stack de liens soit le stack du torrent complet, soit a selectionner ?
+- Après upload du torrent demander a l'uploadeur si les meta de chez allociné sont valides
+
 https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt

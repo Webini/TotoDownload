@@ -94,5 +94,6 @@
     "GENRE": "Genre",
     "YEAR": "Year",
     "SYNOPSIS": "Synopsis",
-    "FILES": "Files"
+    "FILES": "Files",
+    "QUALITY": "Quality"
 }

@@ -25,7 +25,7 @@
                                 <li ng-class="{'active': (page == 'trailer')}" ng-if="torrent.trailer">
                                     <a href="#/torrent/{{ torrent.hash }}/trailer"><i class="fa fa-youtube-play"></i> {{ 'TRAILER'|translate }}</a>
                                 </li>
-                                <li ng-class="{'actives': (page == 'files')}">
+                                <li ng-class="{'active': (page == 'files')}">
                                     <a href="#/torrent/{{ torrent.hash }}/files"><i class="fa fa-files-o"></i> {{ 'FILES'|translate }}</a>
                                 </li>
                             </ul>

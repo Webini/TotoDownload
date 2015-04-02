@@ -1,0 +1,9 @@
+<div ng-repeat="(key, item) in items">
+    <div ng-if="key.substr(0,2) == '__'" ng-repeat="file in item">
+        {{ file.filename }} [[ {{ file.extension }} ]]
+    </div>
+    <div ng-if="key.substr(0,2) != '__'">
+        {{ key }}
+        <div ng-if="!item['$$empty']" ng-include="'/app/views/directives/files.html'" ng-init="items = item"></div>
+    </div>
+</div>

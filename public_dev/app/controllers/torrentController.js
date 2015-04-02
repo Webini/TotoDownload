@@ -5,8 +5,8 @@ angular.module('totodl')
                 controller: 'TorrentController'
             });
        }])
-       .controller('TorrentController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', '$sce', 'TorrentsService', 
-function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsService){
+       .controller('TorrentController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', '$sce', 'TorrentsService', 'FilesService', 
+function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsService, FilesService){
     
     $scope.smallView = '/app/views/directives/torrent.html';
     $scope.pageTemplate = '/app/views/torrent/' + $routeParams.page + '.html';
@@ -50,6 +50,7 @@ function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsServ
     SyncService.get($routeParams.torrent).then(
         function(torrent){
             $scope.torrent = torrent;
+            $scope.files = new FilesService(torrent.files);
         },
         function(err){
             $scope.error = 'TORRENT_NOT_FOUND';

@@ -14,6 +14,10 @@
                             <time-display time="torrent.runtime" type="normal"></time-display>
                         </td>
                     </tr>
+                    <tr ng-if="torrent.screenSize">
+                        <td>{{ 'QUALITY' | translate }}</td>
+                        <td>{{ torrent.screenSize }}</td>
+                    </tr>
                     <tr ng-if="torrent.genre">
                         <td>{{ 'GENRE' | translate }}</td>
                         <td>{{ torrent.genre }}</td>
