@@ -109,9 +109,9 @@ module.exports = ['TorrentService', (function(){
                 }
                 else if(torrent.guessedType === 'episode'){
                     torrent.guessedTitle = parsed.series.value;
-                    
-                    if(parsed.episodeNumber || parsed.season)
-                        torrent.guessedEpisode = parsed.episodeNumber.value || parsed.season.value;
+
+                    torrent.guessedEpisode = (parsed.episodeNumber ? parsed.episodeNumber.value : null);
+                    torrent.guessedSeason = (parsed.season ? parsed.season.value : null);
                 }
                 
                 return TorrentService._moviesdbParse(torrent);

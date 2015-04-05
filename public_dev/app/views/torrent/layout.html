@@ -3,7 +3,15 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            <span ng-if="torrent.guessedTitle">{{ torrent.title ? torrent.title : torrent.guessedTitle }}<small>&nbsp;-&nbsp;{{ torrent.name }}</small></span>
+            <span ng-if="torrent.guessedTitle">
+                {{ torrent.title ? torrent.title : torrent.guessedTitle }}
+                <span ng-if="torrent.guessedEpisode || torrent.guessedSeason">
+                    &nbsp;-&nbsp;
+                    <span ng-if="torrent.guessedSeason">S{{ torrent.guessedSeason }}</span>
+                    <span ng-if="torrent.guessedEpisode">E{{ torrent.guessedEpisode }}</span>
+                </span>
+                <span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span>
+            </span>
             <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
           </h1>
         </section>

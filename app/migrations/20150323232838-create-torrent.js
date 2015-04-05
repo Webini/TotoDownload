@@ -88,7 +88,11 @@ module.exports = {
         allowNull: true
       },
       guessedEpisode: {
-        type: DataTypes.STRING(32),
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      guessedSeason: {
+        type: DataTypes.INTEGER,
         allowNull: true
       },
       zip: {

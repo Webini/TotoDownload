@@ -10,7 +10,15 @@
 
 <div class="info-box-content">
     <div class="info-box-number text-overflow">
-        <span ng-if="torrent.guessedTitle">{{ torrent.title ? torrent.title : torrent.guessedTitle }}<span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span></span>
+        <span ng-if="torrent.guessedTitle">
+            {{ torrent.title ? torrent.title : torrent.guessedTitle }}
+            <span ng-if="torrent.guessedEpisode || torrent.guessedSeason">
+                &nbsp;-&nbsp;
+                <span ng-if="torrent.guessedSeason">S{{ torrent.guessedSeason }}</span>
+                <span ng-if="torrent.guessedEpisode">E{{ torrent.guessedEpisode }}</span>
+            </span>
+            <span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span>
+        </span>
         <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
     </div>
     <div class="text-overflow">
