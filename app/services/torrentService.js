@@ -22,7 +22,7 @@ module.exports = ['TorrentService', (function(){
     * @return string
     **/
     TorrentService._getKeywordsFromTitle = function(title){
-        var keywords = title.match(/[a-zA-Z]+/img);
+        var keywords = title.match(/[a-zA-Z0-9]+/img);
         
         if(!keywords){
             keywords = [ title ];   
@@ -109,6 +109,9 @@ module.exports = ['TorrentService', (function(){
                 }
                 else if(torrent.guessedType === 'episode'){
                     torrent.guessedTitle = parsed.series.value;
+                    
+                    if(parsed.episodeNumber || parsed.season)
+                        torrent.guessedEpisode = parsed.episodeNumber.value || parsed.season.value;
                 }
                 
                 return TorrentService._moviesdbParse(torrent);

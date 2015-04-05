@@ -14,6 +14,7 @@ var io          = require('socket.io')(server);
 var torrents    = require(__dirname + '/api/torrents/index.js');
 var moviesdb    = require(__dirname + '/api/moviesdb/index.js');
 var updtWorker  = require(__dirname + '/worker/updateTorrents.js');
+var syncWorker  = require(__dirname + '/worker/synchronizeDatabase.js');
 
 var logger = new (winston.Logger)({
     transports: [
@@ -48,7 +49,8 @@ var mApp = {
     services: {},
     api: {},
     workers: {
-        torrents: updtWorker    
+        torrents: updtWorker,
+        sync: syncWorker
     }
 };
 

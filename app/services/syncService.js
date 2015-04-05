@@ -2,6 +2,7 @@ module.exports = ['SyncService', (function(){
     var app             = require(__dirname + '/../app.js');
     var $q              = require('q');
     var crc32           = require('crc').crc32;
+    var _               = require('underscore');
     
     function SyncService(){
     };
@@ -56,6 +57,24 @@ module.exports = ['SyncService', (function(){
                                           .then(SyncService.onChange);
     };
     
+    
+    /**
+    * Save changes in database
+    * @return void
+    **/
+    SyncService.databaseSynchronize = function(){
+        var promises = [];
+
+        for(var hash in stack){
+            if(stack[hash].needSync){
+                delete stack[hash].needSync;
+                promises.push(app.services.TorrentService._upsertTorrent(stack[hash].dataValues));
+            }
+        }
+        
+        return $q.all(promises);
+    };
+    
     /**
     * Update torrents status
     * save them in database if there are change, and notify clients
@@ -68,13 +87,11 @@ module.exports = ['SyncService', (function(){
         for(var i = 0; i < torrents.length; i++){
             if(!stack[torrents[i].hash] || 
                 stack[torrents[i].hash].syncTag != torrents[i].syncTag){
-                app.services.TorrentService._upsertTorrent(torrents[i])
-                                           .then(
-                                                SyncService.onChange, 
-                                                function(a, b, c) { 
-                                                    app.logger.log('Sync.update error', a, b, c, torrents); 
-                                                }
-                                           );
+                
+                _.extend(stack[torrents[i].hash], torrents[i]);
+                stack[torrents[i].hash].needSync = true;
+                
+                SyncService.onChange(stack[torrents[i].hash]);
             }
         }
         
@@ -118,6 +135,7 @@ module.exports = ['SyncService', (function(){
     **/
     SyncService.onChange = function(torrent){
         stack[torrent.hash] = torrent;
+        
         for(var sid in childStack){
             // if we can't found the torrent in child list or
             // if the syncTag has changed

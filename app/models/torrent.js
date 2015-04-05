@@ -80,6 +80,10 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING(32),
         allowNull: true
       },
+      guessedEpisode: {
+        type: DataTypes.STRING(32),
+        allowNull: true
+      },
       zip: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
