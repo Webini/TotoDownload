@@ -63,10 +63,10 @@ function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsServ
         if($scope.torrent && torrent.hash == $scope.torrent.hash){
             if($scope.torrent.loading)
                 $scope.torrent.loading = false;
+            
+            if(!$scope.$$phase)
+                $scope.$apply();
         }
-        
-        if(!$scope.$$phase)
-            $scope.$apply();
     });
     
     $scope.$on("$destroy", function handler() {

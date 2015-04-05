@@ -68,7 +68,9 @@ module.exports = ['SyncService', (function(){
         for(var hash in stack){
             if(stack[hash].needSync){
                 delete stack[hash].needSync;
-                promises.push(app.services.TorrentService._upsertTorrent(stack[hash].dataValues));
+                promises.push(app.services.TorrentService._upsertTorrent(stack[hash].dataValues).then(function(torrent){
+                    stack[torrent.hash] = torrent;
+                }));
             }
         }
         
@@ -88,10 +90,15 @@ module.exports = ['SyncService', (function(){
             if(!stack[torrents[i].hash] || 
                 stack[torrents[i].hash].syncTag != torrents[i].syncTag){
                 
-                _.extend(stack[torrents[i].hash], torrents[i]);
-                stack[torrents[i].hash].needSync = true;
-                
-                SyncService.onChange(stack[torrents[i].hash]);
+                //first time we get this torrent
+                if(!stack[torrents[i].hash])
+                    SyncService.updateOne(torrents[i]);
+                else{ //else we stack the modification for a cron update
+                    _.extend(stack[torrents[i].hash], torrents[i]);
+                    stack[torrents[i].hash].needSync = true;
+
+                    SyncService.onChange(stack[torrents[i].hash]);
+                }
             }
         }
         

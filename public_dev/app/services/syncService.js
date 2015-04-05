@@ -37,7 +37,7 @@ function($http, $q, Socket, User, $rootScope){
     **/
     this.get = function(hash){
         var defer = $q.defer();
-        
+        //if we already are loading all torrents, we have to wait until the end of the request the send result to the promise
         if(this.data.loading){
             this.data.loading.then(
                 function(data){

@@ -3,10 +3,14 @@ angular.module('services')
     
     function FilesService(pfiles){
         this.files = pfiles;
-        this.out = { '$$empty': true, '__files': [] };
+        this.out = null;
         
         this.apply();
         console.debug(this.out, this.files);
+    };
+           
+    FilesService.prototype.resetOutput = function(){
+        this.out = { '$$time': Math.floor(Math.random() * Date.now()), '$$empty': true, '__files': [] };    
     };
     
     /***
@@ -18,21 +22,32 @@ angular.module('services')
     * @return outData ptr
     **/
     FilesService.prototype.addFile = function(outData, fileName, rawData, last){
+        if(last || !outData[fileName]){
+            outData['$$empty'] = false;
+        }
+        
         if(last){
-            rawData['filename'] = fileName;
+            var data = {
+                filename: fileName,
+                keywords: fileName.toLowerCase()
+                                  .match(/[a-zA-Z0-9]+/img)
+                                  .join(' '),
+                raw: rawData
+            };
+
             var extPos = -1;
             
             if((extPos = fileName.lastIndexOf('.')) >= 0)
-                rawData['extension'] = fileName.substr(extPos+1, fileName.length).toLowerCase();
+                data.extension = fileName.substr(extPos+1, fileName.length).toLowerCase();
             
-            outData['__files'].push(rawData);
-            outData['$$empty'] = false;
+            outData['__files'].push(data);
             
             return outData; 
         }
         
         if(!outData[fileName])
-            outData[fileName] = { '$$empty': true, '__files': [] };
+            outData[fileName] = { '$$empty': true, '__files': [], '$$time': Math.floor(Math.random() * Date.now()) };
+        
         
         return outData[fileName];
     };
@@ -40,9 +55,13 @@ angular.module('services')
     /***
     * Parse all files
     **/
-    FilesService.prototype.apply = function(){
-        if(!this.files)
+    FilesService.prototype.apply = function(files){
+        if(files)
+            this.files = files;
+        else if(!this.files)
             return false;
+        
+        this.resetOutput();
         
         for(var i = 0; i < this.files.length; i++){
             var exploded = this.files[i].name.split('/');

@@ -4,16 +4,15 @@ angular.module('totodl')
         restrict: 'A',
         scope: {
             'total': '=progressTotal',
-            'left': '=progressLeft'
+            'done': '=progressDone'
         },
         link: function($scope, $elem, $attr){
-            
-            $scope.$watch('left', function(newVal, oldVal){
+            $scope.$watch('done', function(newVal, oldVal){
                 if(newVal == oldVal && $scope.checkSame)
                     return;
                 
                 $scope.checkSame = true;
-                $elem.css('width', (Math.round((($scope.total - $scope.left) / $scope.total) * 1000) / 10) + '%');
+                $elem.css('width', Math.round($scope.done / $scope.total * 100) + '%');
             });
         } 
     };

@@ -1,8 +1,14 @@
-<div class="box box-primary">
+<div class="box box-primary" ng-controller="FilesController">
     <div class="box-header with-border">
         <h3 class="box-title">{{ 'FILES' | translate }}</h3>
+        <div class="box-tools pull-right">
+            <div class="has-feedback">
+                <input type="text" ng-model="filesSearch.keywords" class="form-control input-sm" placeholder="{{ 'SEARCH'|translate }}">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+        </div>
     </div>
-    <div class="box-body" ng-controller="FilesController">
-        <files-display items="files.out"></files-display>
+    <div class="box-body">
+        <files-display items="files.out" class="first"></files-display>
     </div>
 </div>
