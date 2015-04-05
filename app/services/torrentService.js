@@ -138,7 +138,7 @@ module.exports = ['TorrentService', (function(){
             function success(response){
                 //retreive movie info
                 torrent.movieId = response.id;
-                return moviesdb.getMovie(response.id).then(
+                return moviesdb.getMovie(response.id, torrent.guessedType).then(
                     function success(rtot){
                         return _.extend(torrent, rtot);
                     },

@@ -10,7 +10,7 @@ module.exports = (function(){
             var pythonPath = path.normalize(cwd + '/../lib/python2.7/dist-packages/');
             var guessitPath = path.normalize(cwd + '/guessit');
             var defer = $q.defer();
-
+            
             var child = spawn(
                 'python', 
                 [ guessitPath, '-a', filename],
