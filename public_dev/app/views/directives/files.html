@@ -7,10 +7,16 @@
     </div>
     <!-- files -->
     <div ng-if="key.substr(0,2) == '__'" ng-repeat="file in item | filter:filesSearch:filesComparator">
-        <a ng-if="file.raw.bytesCompleted == file.raw.length" href="#"><i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}</a>
+        <div ng-if="file.raw.bytesCompleted == file.raw.length" class="completed">
+            <a href="#">
+                <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
+                <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
+            </a>
+        </div>
         
         <div ng-if="file.raw.bytesCompleted != file.raw.length">
             <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
+            <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
             <div class="progress xxs">
                 <div class="progress-bar progress-bar-aqua" progress-done="file.raw.bytesCompleted" progress-total="file.raw.length" progress-width></div>
             </div>

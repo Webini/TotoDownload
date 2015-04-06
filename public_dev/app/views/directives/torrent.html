@@ -1,8 +1,9 @@
+
 <div ng-show="torrent.loading" class="overlay">
     <i class="fa fa-refresh fa-spin"></i>
 </div>
-
-  
+<div ng-class="{'torrent-widget': !smallView}" ng-click="gotoDetails()">
+ 
 <!-- poster -->
 <div ng-class="{ 'bg-aqua': !torrent.error && torrent.status != 6, 'bg-red': torrent.error, 'bg-green': !torrent.error && torrent.status == 6 }" class="info-box-icon" ng-show="!torrent.guessedType || torrent.guessedType == 'unknown'">
     <i class="fa fa-files-o"></i>
@@ -43,7 +44,7 @@
         <!-- DOWNLOADING -->
         <span ng-if="torrent.status == 4 && !torrent.error">
             <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-                <a href="javascript:" ng-click="pause(torrent)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
+                <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
             </span>
             {{ 'DL_FROM' | translate:{to_us: torrent.peersSendingToUs, total: torrent.peersConnected} }}&nbsp;-&nbsp;
             <i class="fa fa-arrow-down small-text"></i>&nbsp;<unit-display size="torrent.rateDownload" suffix="/s"></unit-display>&nbsp;&nbsp;
@@ -65,13 +66,13 @@
         <span ng-if="torrent.status == 0 && !torrent.error">
             <i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSED' | translate }}
             <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-                &nbsp;-&nbsp;<a href="javascript:" ng-click="start(torrent)"><i class="fa fa-repeat small-text"></i>&nbsp;{{ 'START'|translate }}</a>
+                &nbsp;-&nbsp;<a href="javascript:" ng-click="start($event)"><i class="fa fa-repeat small-text"></i>&nbsp;{{ 'START'|translate }}</a>
             </span>
         </span>
         <!-- ERROR -->
         <span ng-if="torrent.error" class="text-red">
             <span ng-if="(torrent.userId == user.id || user.is(roles.ADMIN)) && torrent.status != 0">
-                <a href="javascript:" ng-click="pause(torrent)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
+                <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
             </span>
             {{ torrent.errorString }}
         </span>
@@ -107,24 +108,11 @@
     
     <div class="to-footer">
         <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-            <a href="javascript:" 
-               ng-dialog="/app/views/popup/remove.html"
-               ng-dialog-class="ngdialog-theme-toto"
-               ng-dialog-show-close="false"
-               ng-dialog-controller="RemoveTorrentController"
-               ng-dialog-data="{{ torrent }}"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
+            <a href="javascript:" ng-click="remove($event)"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
             <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>
         </span>
         <span ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: users.get(torrent.userId).nickname } }}</span>
     </div>
-    
 </div>
-
-
-<div class="box-footer text-center" ng-if="!smallView">
-    <a href="#/torrent/{{ torrent.hash }}/{{ torrent.guessedType != 'unknown' && torrent.guessedType ? 'preview' : 'files' }}">
-        {{ 'INFO_DOWNLOAD' | translate }}
-        <i class="fa fa-arrow-circle-right"></i>
-    </a>
-    <div class="clearfix"></div>
+    
 </div>

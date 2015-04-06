@@ -5,8 +5,8 @@ angular.module('totodl')
                 controller: 'DashboardController'
             });
        }])
-       .controller('DashboardController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', 'TorrentsService', 'ngDialog',
-function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, ngDialog){
+       .controller('DashboardController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', 'TorrentsService',
+function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService){
     $scope.torrents = SyncService.data.torrents;
     //$scope.lastChange = SyncService.data.lastChange;
     

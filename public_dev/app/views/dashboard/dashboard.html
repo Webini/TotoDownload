@@ -7,5 +7,5 @@
 
 <!-- Main content -->
 <section class="content">
-    <div class="box box-solid torrent" ng-repeat="torrent in torrents track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
+    <div class="box box-solid torrent" ng-repeat="torrent in torrents | orderBy:'-createdAt' track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
 </section><!-- /.content -->

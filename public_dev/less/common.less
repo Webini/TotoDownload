@@ -42,8 +42,16 @@ ul {
 
 .torrent.nomargin { margin-bottom: 0px; }
 
+
 .torrent {
     min-height: 111px !important;
+
+    .torrent-widget:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .torrent-widget { cursor: pointer; }
+    
     
     .info-box-icon img { 
         height: 111px; 
@@ -93,6 +101,8 @@ ul {
     .fa { width: 18px; text-align: center; }
     
     .progress.xxs { margin-bottom: 5px; }
+    
+    .completed { border-bottom: 1px solid #F5F5F5; margin-bottom: 4px; }
 }
 
 @import "modal.less";
