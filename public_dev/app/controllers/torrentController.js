@@ -5,8 +5,8 @@ angular.module('totodl')
                 controller: 'TorrentController'
             });
        }])
-       .controller('TorrentController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', '$sce', 'TorrentsService', 'FilesService', 
-function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsService, FilesService){
+       .controller('TorrentController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', '$sce', 'TorrentsService', 'FilesService', 
+function($scope, $rootScope, $routeParams, SyncService, $sce, TorrentsService, FilesService){
     
     $scope.smallView = '/app/views/directives/torrent.html';
     $scope.pageTemplate = '/app/views/torrent/' + $routeParams.page + '.html';
@@ -15,8 +15,6 @@ function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsServ
     $scope.loadingGlob = true;
     $scope.error = false;
     $scope.torrent = null;
-    $scope.users = User;
-    $scope.user = User.get();
     
     $scope.raw = function(data){
         return $sce.trustAsHtml(data);
@@ -25,26 +23,6 @@ function($scope, $rootScope, $routeParams, SyncService, User, $sce, TorrentsServ
     $scope.trusted = function(url){
         return $sce.trustAsResourceUrl(url);    
     };
-    
-    //pause the torrent
-    $scope.pause = function(){
-        $scope.torrent.loading = true;
-        
-        TorrentsService.pause($scope.torrent.hash).then(
-            function ok(data){},
-            function error(err){ $scope.torrent.loading = false; }
-        );
-    };
-    
-    //start the torrent
-    $scope.start = function(torrent){
-        $scope.torrent.loading = true;
-        
-        TorrentsService.start($scope.torrent.hash).then(
-            function ok(data){},
-            function error(err){ $scope.torrent.loading = false; }
-        );
-    };    
     
     //retreive torrent
     SyncService.get($routeParams.torrent).then(

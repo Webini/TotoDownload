@@ -52,6 +52,26 @@ module.exports = function(config){
         },
         
         /**
+        * Remove the torrent & torrent's files
+        * @param hash Torrent's hash
+        * @return promise
+        **/
+        remove: function(hash){
+            var defer = $q.defer();
+
+            function responseCallback(err, response){
+                if(err) 
+                    defer.reject({ error: parseError(err, 'undef') });
+                else
+                    defer.resolve(response);                
+            }
+
+            trans.remove([hash], true, responseCallback);
+
+            return defer.promise;
+        },
+        
+        /**
         * Add a new torrent url
         * @param string url Url
         * @param object options Option for the torrent currently accept only { 'download-dir': DIR } 
@@ -66,7 +86,7 @@ module.exports = function(config){
             
             function responseCallback(err, response){
                 if(err)
-                    defer.reject({ error: parseError(err, path) });
+                    defer.reject({ error: parseError(err, 'undef') });
                 else
                     defer.resolve({ id: response.id, hash: response.hashString, name: response.name });                
             }

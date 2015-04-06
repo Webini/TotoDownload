@@ -16,7 +16,7 @@
           </h1>
         </section>
         <section class="content-header">
-            <div class="box box-solid torrent nomargin" ng-include="smallView"></div>
+            <div class="box box-solid torrent nomargin" ng-controller="WidgetController" ng-include="smallView"></div>
         </section>
         <section class="content">
             <div class="row">
@@ -35,6 +35,9 @@
                                 </li>
                                 <li ng-class="{'active': (page == 'files')}">
                                     <a href="#/torrent/{{ torrent.hash }}/files"><i class="fa fa-files-o"></i> {{ 'FILES'|translate }}</a>
+                                </li>
+                                <li ng-class="{'active': (page == 'trackers') }">
+                                    <a href="#/torrent/{{ torrent.hash }}/trackers"><i class="fa fa-share-alt"></i> {{ 'TRACKERS'|translate }}</a>
                                 </li>
                             </ul>
                         </div><!-- /.box-body -->

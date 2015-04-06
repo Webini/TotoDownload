@@ -14,12 +14,7 @@ module.exports = function(app){
         },
         
         onPause: function(req, res){
-            var torrent = TorrentService.getFromMemory(req.body.hash);
-            
-            if(!torrent || torrent.userId != req.user.id && !(req.user.roles & UserService.roles.ADMIN)){
-                app.logger.log('Trying to pause torrent ', req.body, req.user, torrent);
-                return res.sendStatus(403);
-            }
+            var torrent = req.torrent;
             
             TorrentService.pause(torrent.hash).then(
                 function(data){
@@ -33,12 +28,7 @@ module.exports = function(app){
         },
         
         onStart: function(req, res){
-            var torrent = TorrentService.getFromMemory(req.body.hash);
-            
-            if(!torrent || torrent.userId != req.user.id && !(req.user.roles & UserService.roles.ADMIN)){
-                app.logger.log('Trying to start torrent ', req.body, req.user, torrent);
-                return res.sendStatus(403);
-            }
+            var torrent = req.torrent;
             
             TorrentService.start(torrent.hash).then(
                 function(data){
@@ -47,6 +37,20 @@ module.exports = function(app){
                 function(err){
                     res.status(403)
                        .json(err);      
+                }
+            );
+        },
+        
+        onRemove: function(req, res){
+            var torrent = req.torrent;
+            
+            TorrentService.removeTorrent(torrent.hash).then(
+                function(data){
+                    res.json(1);    
+                },
+                function(err){
+                    res.status(500)
+                       .json(err);
                 }
             );
         }

@@ -45,6 +45,19 @@ angular.module('services')
                     return response.data;   
                 }
             );
+        },
+        
+        /**
+        * Remove a torrent
+        * @param string hash Torrent hash
+        * @return promise
+        **/
+        remove: function(hash){
+            return $http.post('/torrents/remove', { hash: hash }).then(
+                function(response){
+                    return response.data;      
+                }
+            );
         }
     };
            

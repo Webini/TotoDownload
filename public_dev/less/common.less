@@ -44,7 +44,7 @@ ul {
 
 .torrent {
     min-height: 111px !important;
-     
+    
     .info-box-icon img { 
         height: 111px; 
         width: 83px; 
@@ -55,10 +55,11 @@ ul {
     
     .info-box-content {
         margin-left: 83px;   
+        height: 111px;
     }
     
     .progress {
-        width: 100%;    
+        width: 100%;     
         margin-bottom: 0px;
     }
     
@@ -67,14 +68,15 @@ ul {
         word-break: break-all;
         overflow: hidden;
         white-space: nowrap;
-    }
+    }  
     
     .text-lighter { color: #a6a6a6; }
     .small-text { font-size: 0.85em; }
     
     .box-footer { padding: 4px 10px; } 
-    .center-footer { width: 222px; display: block; margin: 0 auto; }
     .clearfix { height: 0px; }
+    
+    .to-footer { line-height: 30px; }
 }
 
 .torrent-preview {
@@ -86,9 +88,11 @@ ul {
 .torrent-files.first { margin: 0px }
 .torrent-files {
     margin-left: 20px;
-    margin-top: 5px;
+    margin-top: 5px; 
     
     .fa { width: 18px; text-align: center; }
     
     .progress.xxs { margin-bottom: 5px; }
 }
+
+@import "modal.less";

@@ -189,6 +189,15 @@ module.exports = ['TorrentService', (function(){
     };
     
     /**
+    * Remove a torrent
+    * @param string hash
+    * @return promise
+    **/
+    TorrentService.removeTorrent = function(hash){
+        return app.api.torrents.remove(hash);
+    };
+    
+    /**
     * Add a torrent with link / magnet
     * @param object user User object with { id, roles, etc... }
     * @param string url Http link / magnet

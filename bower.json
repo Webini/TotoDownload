@@ -30,6 +30,7 @@
     "angular-translate-loader-url": "~2.6.1",
     "angular-loading-bar": "~0.7.1",
     "fusty-flow.js": "~1",
-    "ng-flow": "~2"
+    "ng-flow": "~2",
+    "ngDialog": "~0.3.12"
   }
 }

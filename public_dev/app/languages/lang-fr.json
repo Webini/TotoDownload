@@ -96,5 +96,10 @@
     "SYNOPSIS": "Synopsis",
     "FILES": "Fichiers",
     "QUALITY": "Qualité",
-    "SEARCH": "Rechercher"
+    "SEARCH": "Rechercher",
+    "REMOVE_TORRENT": "Supprimer",
+    "REMOVE_CONFIRM": "Voulez-vous vraiment supprimer <b>{{ name }}</b> ?",
+    "DELETE": "Supprimer",
+    "REMOVE_MODAL_TITLE": "Supprimer le torrent ?",
+    "TRACKERS": "Trackers"
 }

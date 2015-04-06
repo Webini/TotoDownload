@@ -1,12 +1,17 @@
 <div ng-show="torrent.loading" class="overlay">
     <i class="fa fa-refresh fa-spin"></i>
 </div>
+
+  
+<!-- poster -->
 <div ng-class="{ 'bg-aqua': !torrent.error && torrent.status != 6, 'bg-red': torrent.error, 'bg-green': !torrent.error && torrent.status == 6 }" class="info-box-icon" ng-show="!torrent.guessedType || torrent.guessedType == 'unknown'">
     <i class="fa fa-files-o"></i>
 </div>
 <div ng-class="{ 'bg-aqua': !torrent.error && torrent.status != 6, 'bg-red': torrent.error, 'bg-green': !torrent.error && torrent.status == 6 }" class="info-box-icon" ng-show="torrent.guessedType != 'unknown' && torrent.poster">
     <img ng-src="{{ torrent.poster }}" />
 </div>
+
+
 
 <div class="info-box-content">
     <div class="info-box-number text-overflow">
@@ -71,7 +76,7 @@
             {{ torrent.errorString }}
         </span>
     </div>
-    
+
     <!-- la classe "active" causait de gros problemes de perf sur mon nux sans acceleration GPU --> 
     <div class="progress progress-xs progress-striped" ng-if="torrent.status <= 4">
         <div ng-class="{'progress-bar-aqua': !torrent.error, 'progress-bar-danger': torrent.error}" class="progress-bar progress-bar-striped" ng-style="{ 'width': ((torrent.sizeWhenDone - torrent.leftUntilDone) / torrent.sizeWhenDone) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
@@ -79,7 +84,7 @@
     <div class="progress progress-xs progress-striped progress-bar-aqua progress-bar-stripped" ng-if="torrent.status > 4">
         <div ng-class="{'progress-bar-green': !torrent.error, 'progress-bar-red': torrent.error}" class="progress-bar progress-bar-striped" ng-style="{ 'width': (torrent.uploadRatio / torrent.seedRatioLimit) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
     </div>
-    
+
     <div class="text-overflow">
         <span ng-if="torrent.status <= 4">
             <unit-display size="torrent.sizeWhenDone - torrent.leftUntilDone" suffix=""></unit-display> /
@@ -99,10 +104,25 @@
             </span>
         </span>
     </div>
-</div><!-- /.info-box-content -->
-<div class="box-footer text-center">
-    <span ng-if="torrent.userId" class="pull-right">{{ 'UPLOADED_BY' | translate:{ name: users.get(torrent.userId).nickname } }}</span>
-    <a href="#/torrent/{{ torrent.hash }}/{{ torrent.guessedType != 'unknown' && torrent.guessedType ? 'preview' : 'files' }}" class="center-footer" ng-if="!smallView">
+    
+    <div class="to-footer">
+        <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
+            <a href="javascript:" 
+               ng-dialog="/app/views/popup/remove.html"
+               ng-dialog-class="ngdialog-theme-toto"
+               ng-dialog-show-close="false"
+               ng-dialog-controller="RemoveTorrentController"
+               ng-dialog-data="{{ torrent }}"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
+            <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>
+        </span>
+        <span ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: users.get(torrent.userId).nickname } }}</span>
+    </div>
+    
+</div>
+
+
+<div class="box-footer text-center" ng-if="!smallView">
+    <a href="#/torrent/{{ torrent.hash }}/{{ torrent.guessedType != 'unknown' && torrent.guessedType ? 'preview' : 'files' }}">
         {{ 'INFO_DOWNLOAD' | translate }}
         <i class="fa fa-arrow-circle-right"></i>
     </a>
