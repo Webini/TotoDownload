@@ -11,6 +11,14 @@ module.exports = ['UserService', (function(){
         return hash;
     };
     
+    function createMd5Hash(data){
+        var hash = crypt.createHash('md5')
+                        .update(data)
+                        .digest('hex');
+        
+        return hash;
+    };
+    
     function random(length){
         var abc = 'abcdefghijklmnopqrstuvwxyz0123456789';
         var out = '';    
@@ -97,6 +105,7 @@ module.exports = ['UserService', (function(){
                 roles: this.roles.UPLOADER,
                 passwordC: data.password,
                 password: hashPassword(data.password, salt),
+                downloadHash: createMd5Hash(random(32) + salt),
                 salt: salt
             }).then(function success(user){
                 app.io.sockets.emit('new-user', user.public);

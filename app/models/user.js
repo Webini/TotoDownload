@@ -42,6 +42,10 @@ module.exports = function(sequelize, DataTypes) {
     },
     roles: {
         type: DataTypes.INTEGER.UNSIGNED
+    },
+    downloadHash: {
+        allowNull: false,
+        type: DataTypes.STRING(32)
     }
   }, 
   {

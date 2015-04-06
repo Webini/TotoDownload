@@ -38,6 +38,10 @@ module.exports = {
           allowNull: false,
           defaultValue: 1
       },
+      downloadHash: {
+        allowNull: false,
+        type: DataTypes.STRING(32)
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

@@ -24,6 +24,8 @@ module.exports = function(app){
                     
                     var ouser = user.public;
                     ouser['token'] = app.services.UserService.getToken(user);
+                    ouser['downloadHash'] = user.downloadHash;
+                    
                     res.json(ouser);
                 },
                 function error(err){

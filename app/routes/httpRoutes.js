@@ -24,6 +24,8 @@ module.exports = function(app){
     router.post('/torrents/remove', authenticateFilter, roleUploaderFilter, myFilter, torrentCtrl.onRemove);
     router.post('/torrents/pause', authenticateFilter, roleUploaderFilter, myFilter, torrentCtrl.onPause);
     router.post('/torrents/start', authenticateFilter, roleUploaderFilter, myFilter, torrentCtrl.onStart);
+    router.get('/torrents/download/:torrentHash([a-zA-Z0-9]+)/:userId([0-9]+)/:userHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:fileName');
+    
     router.get('/torrents/all', authenticateFilter, torrentCtrl.onGetAll);
     
     app.http.use('/', router);
