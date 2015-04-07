@@ -18,7 +18,7 @@ fs
 
 services['ready'] = function(){
     for(var name in this){
-        if(name != 'ready' && this[name].ready)
+        if(name != 'ready' && this[name] && this[name].ready)
             this[name].ready();
     }
 };

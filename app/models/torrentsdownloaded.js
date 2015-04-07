@@ -12,6 +12,11 @@ module.exports = function(sequelize, DataTypes) {
       vote: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
+      },
+      downloads: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 1
       }
   }, {
     classMethods: {

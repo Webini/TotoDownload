@@ -1,6 +1,6 @@
 angular.module('totodl')
-       .controller('FilesController', [ '$scope', '$rootScope',  
-function($scope, $rootScope){
+       .controller('FilesController', [ '$scope', '$rootScope', 'User',  
+function($scope, $rootScope, User){
     var types = {
         pic: 'fa-picture-o',    
         zip: 'fa-archive',
@@ -64,6 +64,7 @@ function($scope, $rootScope){
     
     $scope.Math = Math;
     $scope.__firstFilesCtrl = true;
+    $scope.user = User.get();
     
     $scope.extensionToCss = function(ext){
         if(extensions[ext])
@@ -85,6 +86,10 @@ function($scope, $rootScope){
         }
         
         return (found == keywords.length);
+    };
+    
+    $scope.getLink = function(rawFile, fileName){
+        return '/torrents/download/' + $scope.torrent.hash + '/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + rawFile.id + '/' + encodeURIComponent(fileName);  
     };
     
     $scope.$watch('torrent.leftUntilDone', function(newVal, oldVal){

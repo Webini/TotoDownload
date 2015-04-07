@@ -2,16 +2,64 @@ module.exports = ['DownloadService', (function(){
     var app             = require(__dirname + '/../app.js');
     var $q              = require('q');
     var path            = require('path');
+    var downloadToken   = app.config.download;
     
     function DownloadService(){}
     
-    DownloadService._getDownloadLink = function(torrent, file, user){
-        return {
-            torrent: torrent,
-            segment: //segment d'url a dl, on doit passer au moins un hash pour éviter qu'un mec puisse deviner l'url via le hash torrent, 
-                     //mais il doit être constant pour qu'il downloader a la flashget marche sans faire chier
+    
+    /**
+    * Retreive the filepath for a give torrent's file
+    * @param callback callback node function(error, response)
+    * @return void
+    **/
+    DownloadService.getLocalPath = function(torrentHash, hashTTL, ttl, fileId, callback){
+        var defer = $q.defer();
+        var assertTTLHash = this._generateExpirationHash(ttl);
         
-        };
+        if(assertTTLHash != hashTTL)
+            return callback('Invalid TTL');
+        
+        var torrent = app.services.TorrentService.getFromMemory(torrentHash);
+        if(!torrent)
+            return callback('Torrent not found');
+        
+        if(!torrent.files[fileId])
+            return callback('File not found');
+        
+        return callback(null, path.join(
+            torrent.downloadDir,
+            torrent.files[fileId].name
+        ));
+        
+    };
+    
+    /**
+    * generate expiration hash
+    * @param int expiration timestamp
+    * @return string
+    **/
+    DownloadService._generateExpirationHash = function(expiration){
+        return app.services.CryptoService.createMd5Hash(expiration + app.config.download);
+    };
+    
+    /**
+    * Generate the public file link
+    **/
+    DownloadService._generatePublicLink = function(torrent, fileId, user){
+        return app.services.ConfigService.get('downloadTTL').then(
+            function(conf){
+                var expiration = (parseInt(Date.now() / 1000) + parseInt(conf.value)).toString();
+                var linkTTLHash = DownloadService._generateExpirationHash(expiration);
+                var fileSegments = torrent.files[fileId].name.split('/');
+                
+                return {
+                    torrent: torrent,
+                    fileId: fileId,
+                    segment: '/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
+                    user: user
+                };
+            }
+        );
     };
     
     /**
@@ -23,33 +71,26 @@ module.exports = ['DownloadService', (function(){
         return app.services.UserService.get(userId).then(
             //check if this user is valid
             function success(user){
-                if(user.downloadHash == userHash){
+                if(user.downloadHash == userHash && user.id == userId){
                     var torrent = app.services.TorrentService.getFromMemory(torrentHash);
                     if(!torrent || !torrent.files[fileId])
                         return $q.reject('Torrent not found');
                     
+                    if(torrent.files[fileId].length !== torrent.files[fileId].bytesCompleted)
+                        return $q.reject('File not finished');
+                        
                     //if ok we retreive the download link
-                    return DownloadService._getDownloadLink(torrent, torrent.files[fileId], user);
+                    return DownloadService._generatePublicLink(torrent, fileId, user);
                 }
-                else   
+                else
                     return $q.reject('Invalid userHash');
             }
-        ).then(
-            //if we have the download link, we update database with one new download from this user for the torrent X
-            function success(result){
-                
-                
-            }
-        );
+        )
+        .then(function(linkData){ //save the download in database
+            app.services.TorrentsDownloadedService.addDownload(linkData.torrent.id, linkData.user.id);
+            return linkData.segment;
+        });       
     };
     
-    /**
-    * Retreive the local file link 
-    * @return promise
-    **/
-    DownloadService.getLocalFileLink = function(torrentHash, fileId){
-        
-        
-    };
-    
-})];
+    return DownloadService;
+})()];

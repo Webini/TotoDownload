@@ -67,6 +67,7 @@ angular.module('services')
             var exploded = this.files[i].name.split('/');
             var ptr = this.out;
             for(var j = 0, len = exploded.length; j < len; j++){
+                this.files[i].id = i;
                 ptr = this.addFile(ptr, exploded[j], this.files[i], (j == len-1));
             }
         }

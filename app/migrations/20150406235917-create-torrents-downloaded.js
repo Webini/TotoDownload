@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: function(migration, DataTypes, done) {
-    migration.createTable("TorrentsDownloaded", {
+    migration.createTable("TorrentsDownloadeds", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -26,6 +26,11 @@ module.exports = {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: true
       },
+      downloads: {
+        type: DataTypes.INTEGER.UNSIGNED,
+        allowNull: false,
+        defaultValue: 1
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE
@@ -40,15 +45,12 @@ module.exports = {
     });
     
     migration.addIndex(
-        'TorrentsDownloaded',
+        'TorrentsDownloadeds',
         ['userId'],
         {
-            indexName: 'hashUnique',
-            indicesType: 'UNIQUE'
+            indexName: 'userIdIndex'
         }
-    );
-      
-    done(done);
+    ).done(done);
   },
   down: function(migration, DataTypes, done) {
     migration.dropTable("TorrentsDownloadeds").done(done);

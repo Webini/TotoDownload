@@ -13,7 +13,8 @@
     },
     "secret": {
         "salt": "md5 secret CHANGEME",
-        "token": "md5 secret CHANGEME"
+        "token": "md5 secret CHANGEME",
+        "download": "md5 secret CHANGEME"
     },
     "sessionExpiration": 240,
     "torrents": {
