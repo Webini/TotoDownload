@@ -20,8 +20,8 @@
             {{ torrent.title ? torrent.title : torrent.guessedTitle }}
             <span ng-if="torrent.guessedEpisode || torrent.guessedSeason">
                 &nbsp;-&nbsp;
-                <span ng-if="torrent.guessedSeason">S{{ torrent.guessedSeason }}</span>
-                <span ng-if="torrent.guessedEpisode">E{{ torrent.guessedEpisode }}</span>
+                <span ng-if="torrent.guessedSeason">S<digits-display number="torrent.guessedSeason" length="2"></digits-display></span>
+                <span ng-if="torrent.guessedEpisode">E<digits-display number="torrent.guessedEpisode" length="2"></digits-display></span>
             </span>
             <span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span>
         </span>
@@ -106,7 +106,7 @@
         </span>
     </div>
     
-    <div class="to-footer">
+    <div class="to-footer text-overflow">
         <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
             <a href="javascript:" ng-click="remove($event)"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
             <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>

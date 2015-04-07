@@ -53,27 +53,25 @@ module.exports = {
     },{
         "charset": "utf8",
         "collate": "utf8_general_ci"
-    });
-      
-    migration.addIndex(
-        'Users',
-        ['email'],
-        {
-            indexName: 'emailUnique',
-            indicesType: 'UNIQUE'
-        }
-    );
-      
-    migration.addIndex(
-        'Users',
-        ['nickname'],
-        {
-            indexName: 'nicknameUnique',
-            indicesType: 'UNIQUE'
-        }
-    );
-      
-    done();
+    }).then(function(){
+        return migration.addIndex(
+            'Users',
+            ['email'],
+            {
+                indexName: 'emailUnique',
+                indicesType: 'UNIQUE'
+            }
+        );
+    }).then(function(){
+        return migration.addIndex(
+            'Users',
+            ['nickname'],
+            {
+                indexName: 'nicknameUnique',
+                indicesType: 'UNIQUE'
+            }
+        );
+    }).done(done);
   },
   down: function(migration, DataTypes, done) {
     migration.dropTable("Users").done(done);

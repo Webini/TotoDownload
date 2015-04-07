@@ -42,15 +42,15 @@ module.exports = {
     },{
         "charset": "utf8",
         "collate": "utf8_general_ci"
-    });
-    
-    migration.addIndex(
-        'TorrentsDownloadeds',
-        ['userId'],
-        {
-            indexName: 'userIdIndex'
-        }
-    ).done(done);
+    }).then(function(){
+        return migration.addIndex(
+            'TorrentsDownloadeds',
+            ['userId'],
+            {
+                indexName: 'userIdIndex'
+            }
+        );
+    }).done(done);
   },
   down: function(migration, DataTypes, done) {
     migration.dropTable("TorrentsDownloadeds").done(done);

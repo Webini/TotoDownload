@@ -208,23 +208,15 @@ module.exports = {
         "charset": "utf8",
         "collate": "utf8_general_ci"
     }).then(function success(data){
-        console.log(require('util').inspect(data));
-    },
-    function err(data){
-        console.log(require('util').inspect(data));
-    });
-      
-        
-    migration.addIndex(
-        'Torrents',
-        ['hash'],
-        {
-            indexName: 'hashUnique',
-            indicesType: 'UNIQUE'
-        }
-    );
-    
-    done();
+        return migration.addIndex(
+            'Torrents',
+            ['hash'],
+            {
+                indexName: 'hashUnique',
+                indicesType: 'UNIQUE'
+            }
+        );
+    }).done(done);
   },
   down: function(migration, DataTypes, done) {
     migration.dropTable("Torrents").done(done);
