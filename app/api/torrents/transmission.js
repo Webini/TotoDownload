@@ -136,6 +136,30 @@ module.exports = function(config){
             return defer.promise;
         },
         
+        /***
+        * Define new configuration for the torrent
+        * @param array ids Torrents ids
+        * @param object options { seedRatioLimit } (only one param for now)
+        * @return promise
+        **/
+        set: function(ids, options){
+            var defer = $q.defer();
+            
+            function responseCallback(err, response){
+                if(err)
+                    defer.reject({ error: parseError(err, 'undef') });
+                else
+                    defer.resolve(response);                
+            }
+            
+            if(options['seedRatioLimit'])
+                options['seedRatioMode'] = 1; //seedRatioMode = Use global (0), torrent (1), or unlimited (2) limit. 
+            
+            trans.set(ids, options, responseCallback);
+            
+            return defer.promise;
+        },
+        
         /**
         * retreive torrents with id @ids
         * @param array ids Torrents ids, if transmission restart ID can change so don't use id to identify torrent, prefer hash 

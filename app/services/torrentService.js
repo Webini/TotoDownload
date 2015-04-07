@@ -45,6 +45,9 @@ module.exports = ['TorrentService', (function(){
                 torrent.tid = torrent.id;
                 delete torrent.id;
                 
+                //don't need to wait for the response
+                TorrentService.setRatioLimit(user, torrent.hash);
+                
                 return torrent;
             },
             function error(data){
@@ -68,6 +71,9 @@ module.exports = ['TorrentService', (function(){
                 torrent.tid = torrent.id;
                 delete torrent.id;
 
+                //don't need to wait for the response
+                TorrentService.setRatioLimit(user, torrent.hash);
+                
                 return torrent;
             },
             function error(data){
@@ -171,6 +177,18 @@ module.exports = ['TorrentService', (function(){
                 return $q.reject('Cannot add torrent', torrent, e);
             }
         );
+    };
+    
+    /**
+    * Set the ratio configuration of the user for the given torrent
+    * @param user User model
+    * @param torrentHash string Torrent hash
+    * @return promise
+    **/
+    TorrentService.setRatioLimit = function(user, torrentHash){
+        console.log('TorrentService.setRatioLimit'.toUpperCase(), user.uploadRatio);
+        
+        return app.api.torrents.set([torrentHash], { seedRatioLimit: user.uploadRatio });
     };
     
     

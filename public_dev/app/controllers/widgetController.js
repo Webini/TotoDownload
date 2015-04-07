@@ -42,7 +42,7 @@ function($scope, $location, User, TorrentsService, ngDialog){
         ngDialog.open({
             template: '/app/views/popup/remove.html',
             className: 'ngdialog-theme-toto',
-            showClose: 'false',
+            showClose: false,
             controller: 'RemoveTorrentController',
             data: $scope.torrent
         });

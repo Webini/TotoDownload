@@ -14,10 +14,13 @@
 - Alertes mail quand le download est dans la liste des download et qu'il vient de passer en seed avec les liens pour le dl
 - Pour afficher les numéros de série le mot anglais que je cherchais pour créer la directive c'était digits genre digitsDisplay
 
+https://pythonhosted.org/transmissionrpc/reference/transmissionrpc.html
 https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt
 
 todo:
 - Catch l'event torrent-delete et rediriger le mec vers la dashboard si il est sur la page torrent
+- Bug lors de l'ajout d'un torrent, la dashboard n'est pas resync
+- Checker pourquoi le ratio ne se set pas correctement quand on ajoute le torrent
 
 done: 
 - Timestamp sur les liens de download pour l'expiration
