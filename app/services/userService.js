@@ -127,7 +127,7 @@ module.exports = ['UserService', (function(){
     * @return promise
     **/
     UserService.get = function(id){
-        return app.orm.User.find( { id: id } );    
+        return app.orm.User.find( { where: { id: id } } );    
     }
     
     return UserService;
