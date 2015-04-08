@@ -19,10 +19,6 @@ module.exports = function(app){
                 return respondError(res, -1, 'file not found', 500);   
             }
             
-            if(req.user.diskSpace <= req.user.diskUsage && user.roles < UserService.roles.ROLE_ADMIN){
-                return respondError(res, -3, 'Quotas exceeded', 403);
-            }
-            
             TorrentService.addTorrent(req.user, req.files.file).then(
                 function success(data){
                     res.json(data.dataValues);
@@ -42,9 +38,11 @@ module.exports = function(app){
                 return respondError(res, -1, 'link not found', 500);
             }
             
-            if(req.user.diskSpace <= req.user.diskUsage && user.roles < UserService.roles.ROLE_ADMIN){
+            /**
+            * Ne pas utiliser les data de la token c'est fucké
+            if(req.user.diskSpace <= req.user.diskUsage && req.user.roles < UserService.roles.ROLE_ADMIN){
                 return respondError(res, -3, 'Quotas exceeded', 403);
-            }
+            }*/
             
             TorrentService.addUrl(req.user, req.body.link).then(
                 function success(data){
