@@ -186,7 +186,7 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService.setRatioLimit = function(user, torrentHash){
-        console.log('TorrentService.setRatioLimit'.toUpperCase(), user.uploadRatio);
+        console.log('TorrentService.setRatioLimit'.toUpperCase(), user, user.uploadRatio);
         
         return app.api.torrents.set([torrentHash], { seedRatioLimit: user.uploadRatio });
     };

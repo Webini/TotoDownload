@@ -84,7 +84,7 @@ function($http, $q, Socket, User, $rootScope){
         console.log('change sync');
         
         if(!_this.data.states[torrent.hash]){
-            //insert torrent
+            //new torrent recv
             _this.data.torrents.push(torrent);
         }
         else{
@@ -104,9 +104,7 @@ function($http, $q, Socket, User, $rootScope){
         _this.data.lastChange = Date.now();
         
         _this.data.states[torrent.hash] = torrent.syncTag;
-        //no resync needed after one change notification
-        //Socket.setSyncTag({ hash: torrent.hash, sync: torrent.syncTag });
-        
+
         $rootScope.$broadcast('torrent-change', torrent);
     };
     

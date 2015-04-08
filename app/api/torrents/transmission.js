@@ -153,7 +153,7 @@ module.exports = function(config){
             }
             
             if(options['seedRatioLimit'])
-                options['seedRatioMode'] = 1; //seedRatioMode = Use global (0), torrent (1), or unlimited (2) limit. 
+                options['seedRatioMode'] = 1; //seedRatioMode = Use global (0), torrent (1), or unlimited (2) limit.  
             
             trans.set(ids, options, responseCallback);
             

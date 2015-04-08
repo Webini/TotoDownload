@@ -10,13 +10,13 @@ module.exports = ['TorrentsDownloadedService', (function(){
     * @return promise
     **/
     tdlService.addDownload = function(torrentId, userId){
-        return app.orm.TorrentsDownloaded.find({ torrentId: torrentId, userId: userId }).then(
+        return app.orm.TorrentsDownloaded.find({ where: { torrentId: torrentId, userId: userId } }).then(
             function(tdl){
                 if(tdl == null){ //create a new entry
                     return app.orm.TorrentsDownloaded.create({
                         userId: userId,
                         torrentId: torrentId,
-                        downloads: 0
+                        downloads: 1
                     });
                 }
                 else{ //update existing entry

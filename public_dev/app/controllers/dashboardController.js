@@ -12,7 +12,6 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService){
     
     var unbindTorrentsChange = $rootScope.$on('torrents-change', function($evt, torrents){
         $scope.torrents = torrents;
-        
         if(!$scope.$$phase)
             $scope.$apply();
     });

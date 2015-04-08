@@ -19,8 +19,6 @@ https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt
 
 todo:
 - Catch l'event torrent-delete et rediriger le mec vers la dashboard si il est sur la page torrent
-- Bug lors de l'ajout d'un torrent, la dashboard n'est pas resync
-- Checker pourquoi le ratio ne se set pas correctement quand on ajoute le torrent
 
 done: 
 - Timestamp sur les liens de download pour l'expiration

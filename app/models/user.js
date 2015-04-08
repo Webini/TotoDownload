@@ -56,7 +56,8 @@ module.exports = function(sequelize, DataTypes) {
                   nickname: this.nickname,
                   createdAt: this.createdAt,
                   updatedAt: this.updatedAt,
-                  roles: this.roles
+                  roles: this.roles,
+                  uploadRatio: this.uploadRatio
               };
           }
       },
