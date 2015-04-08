@@ -42,6 +42,14 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING(32)
       },
+      diskSpace: {
+        allowNull: false,
+        type: DataTypes.INTEGER.UNSIGNED
+      },
+      diskUsage: {
+        allowNull: false,
+        type: DataTypes.INTEGER.UNSIGNED
+      },
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE

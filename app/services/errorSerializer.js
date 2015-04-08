@@ -1,5 +1,4 @@
 module.exports = ['ErrorSerializer', (function(){
-    var app = require(__dirname + '/../app.js');
     var typeReg = /Validation ([a-zA-Z0-9]+) failed/i;
     
     return {

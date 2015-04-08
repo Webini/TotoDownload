@@ -46,6 +46,14 @@ module.exports = function(sequelize, DataTypes) {
     downloadHash: {
         allowNull: false,
         type: DataTypes.STRING(32)
+    },
+    diskSpace: {
+        allowNull: false,
+        type: DataTypes.INTEGER.UNSIGNED
+    }, 
+    diskUsage: {
+        allowNull: false,
+        type: DataTypes.INTEGER.UNSIGNED
     }
   }, 
   {
@@ -54,10 +62,10 @@ module.exports = function(sequelize, DataTypes) {
               return {
                   id: this.id,
                   nickname: this.nickname,
-                  createdAt: this.createdAt,
-                  updatedAt: this.updatedAt,
                   roles: this.roles,
-                  uploadRatio: this.uploadRatio
+                  uploadRatio: this.uploadRatio,
+                  diskSpace: this.diskSpace,
+                  diskUsage: this.diskUsage
               };
           }
       },

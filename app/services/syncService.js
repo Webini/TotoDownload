@@ -3,9 +3,9 @@ module.exports = ['SyncService', (function(){
     var $q              = require('q');
     var crc32           = require('crc').crc32;
     var _               = require('underscore');
+    var events          = require('events');
     
-    function SyncService(){
-    };
+    var SyncService = new events.EventEmitter;
     
     var stack = {};
     var childStack = {};
@@ -48,12 +48,26 @@ module.exports = ['SyncService', (function(){
     * @return promise
     **/
     SyncService.updateOne = function(torrent){
-        console.log('_updateOne');
+        console.log('SyncService.updateOne', torrent.name);
         
         if(!torrent.syncTag)
             torrent.syncTag = SyncService.generateSyncTag(torrent);
         
         return app.services.TorrentService._upsertTorrent(torrent)
+                                          .then(SyncService.onChange);
+    };
+    
+    /**
+    * Create a new torrent and return error if torrent allready exist
+    * @return promise
+    **/
+    SyncService.createNew = function(torrent){
+        console.log('Sync.createNew', torrent.hash);
+        
+        if(!torrent.syncTag)
+            torrent.syncTag = SyncService.generateSyncTag(torrent);
+        
+        return app.services.TorrentService._insertTorrent(torrent)
                                           .then(SyncService.onChange);
     };
     
@@ -79,7 +93,7 @@ module.exports = ['SyncService', (function(){
     
     /**
     * Update torrents status
-    * save them in database if there are change, and notify clients
+    * save them in database and if we detect modifications we notify clients
     * @param array object Torrents list
     **/
     SyncService.update = function(torrents){
@@ -91,8 +105,14 @@ module.exports = ['SyncService', (function(){
                 stack[torrents[i].hash].syncTag != torrents[i].syncTag){
                 
                 //first time we get this torrent
-                if(!stack[torrents[i].hash])
-                    SyncService.updateOne(torrents[i]);
+                if(!stack[torrents[i].hash]){
+                    //update the database value send dispatch new event
+                    SyncService.updateOne(torrents[i]).then(
+                        function(torrent){
+                            SyncService.emit('new', torrent);
+                        }
+                    );
+                }
                 else{ //else we stack the modification for a cron update
                     _.extend(stack[torrents[i].hash], torrents[i]);
                     stack[torrents[i].hash].needSync = true;
@@ -113,7 +133,10 @@ module.exports = ['SyncService', (function(){
             }
             
             if(!found){
+                //delete torrent from database
                 SyncService.onDeleted(stack[hash]);
+                //emit a deleted event
+                SyncService.emit('deleted', stack[hash]);
             }
         }
     };
@@ -141,6 +164,10 @@ module.exports = ['SyncService', (function(){
     * @return torrent
     **/
     SyncService.onChange = function(torrent){
+        //dispatch an event when the proprietary of the torrent change
+        if(!stack[torrent.hash] || stack[torrent.hash].userId != torrent.userId)
+            SyncService.emit('user-id-change', torrent);
+        
         stack[torrent.hash] = torrent;
         
         for(var sid in childStack){
@@ -164,7 +191,7 @@ module.exports = ['SyncService', (function(){
     * @return void
     **/
     SyncService.setSyncTag = function(socket, tag){
-        console.log('SyncService.setSyncTag', socket.id, tag);
+        console.log('SyncService.setSyncTag', tag.hash);
         childStack[socket.id].tags[tag.hash] = tag.sync;
         
         //if tag send by child is too old 
@@ -182,7 +209,7 @@ module.exports = ['SyncService', (function(){
     * @return void
     **/
     SyncService.setSyncTags = function(socket, tags){
-        console.log('SyncService.setSyncTags', socket.id, tags);
+        console.log('SyncService.setSyncTags', socket.id);
         for(var i = 0; i < tags.length; i++){
             SyncService.setSyncTag(socket, tags[i]);
         }

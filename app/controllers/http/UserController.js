@@ -1,4 +1,6 @@
 module.exports = function(app){
+    var _               = require('underscore');
+    
     return {
         onRegister: function(req, res){
             req.body.ip = req.ip;
@@ -22,9 +24,10 @@ module.exports = function(app){
                         });
                     }
                     
-                    var ouser = user.public;
-                    ouser['token'] = app.services.UserService.getToken(user);
-                    ouser['downloadHash'] = user.downloadHash;
+                    var ouser = _.extend(user.public, {
+                        token: app.services.UserService.getToken(user),
+                        downloadHash: user.downloadHash
+                    });
                     
                     res.json(ouser);
                 },

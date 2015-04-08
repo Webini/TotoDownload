@@ -1,5 +1,6 @@
 module.exports = function(app){
     var TorrentService = app.services.TorrentService;
+    var UserService = app.services.UserService;
     
     function respondError(res, code, message, status){
         if(!status)
@@ -16,6 +17,10 @@ module.exports = function(app){
         onUploadFiles: function(req, res){            
             if(!req.files || !req.files.file){
                 return respondError(res, -1, 'file not found', 500);   
+            }
+            
+            if(req.user.diskSpace <= req.user.diskUsage && user.roles < UserService.roles.ROLE_ADMIN){
+                return respondError(res, -3, 'Quotas exceeded', 403);
             }
             
             TorrentService.addTorrent(req.user, req.files.file).then(
@@ -35,6 +40,10 @@ module.exports = function(app){
         onUploadLink: function(req, res){
             if(!req.body.link || req.body.link.length <= 0){
                 return respondError(res, -1, 'link not found', 500);
+            }
+            
+            if(req.user.diskSpace <= req.user.diskUsage && user.roles < UserService.roles.ROLE_ADMIN){
+                return respondError(res, -3, 'Quotas exceeded', 403);
             }
             
             TorrentService.addUrl(req.user, req.body.link).then(

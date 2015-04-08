@@ -27,7 +27,21 @@
         </span>
         <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
     </div>
-    <div class="text-overflow">
+    <div class="text-overflow">        
+        <!-- start / pause button -->
+        <!-- STOPPED -->
+        <span ng-if="torrent.status == 0">
+            <i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSED' | translate }} -
+            <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
+                <a href="javascript:" ng-click="start($event)"><i class="fa fa-repeat small-text"></i>&nbsp;{{ 'START'|translate }}</a>
+            </span>
+        </span>
+        <!-- STARTED -->
+        <span ng-if="torrent.status == 4">
+            <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
+                <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
+            </span>
+        </span>
         <!-- ISOLATED -->
         <span ng-if="torrent.status == 7 && !torrent.error">
             {{ 'ISOLATED' | translate }}
@@ -43,9 +57,6 @@
         </span>
         <!-- DOWNLOADING -->
         <span ng-if="torrent.status == 4 && !torrent.error">
-            <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-                <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
-            </span>
             {{ 'DL_FROM' | translate:{to_us: torrent.peersSendingToUs, total: torrent.peersConnected} }}&nbsp;-&nbsp;
             <i class="fa fa-arrow-down small-text"></i>&nbsp;<unit-display size="torrent.rateDownload" suffix="/s"></unit-display>&nbsp;&nbsp;
             <i class="fa fa-arrow-up small-text"></i>&nbsp;<unit-display size="torrent.rateUpload" suffix="/s"></unit-display>
@@ -62,18 +73,9 @@
         <span ng-if="torrent.status == 1 && !torrent.error">
             {{ 'QUEUED_CHECK' | translate }}
         </span>
-        <!-- STOPPED -->
-        <span ng-if="torrent.status == 0 && !torrent.error">
-            <i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSED' | translate }}
-            <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-                &nbsp;-&nbsp;<a href="javascript:" ng-click="start($event)"><i class="fa fa-repeat small-text"></i>&nbsp;{{ 'START'|translate }}</a>
-            </span>
-        </span>
         <!-- ERROR -->
+        <span ng-if="torrent.error && (torrent.status == 4 || torrent.status == 0)">-</span>
         <span ng-if="torrent.error" class="text-red">
-            <span ng-if="(torrent.userId == user.id || user.is(roles.ADMIN)) && torrent.status != 0">
-                <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
-            </span>
             {{ torrent.errorString }}
         </span>
     </div>

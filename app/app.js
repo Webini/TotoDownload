@@ -48,6 +48,7 @@ var mApp = {
     torrents: torrents,
     services: {},
     api: {},
+    listeners: {},
     workers: {
         torrents: updtWorker,
         sync: syncWorker
@@ -62,9 +63,11 @@ mApp.api = {
 };
 
 mApp.services = require(__dirname + '/services/index.js');
-
 //notify services that all is ready
 mApp.services.ready();
+
+mApp.listeners = require(__dirname + '/eventListeners/index.js');
+mApp.listeners.ready();
 
 //define http routes
 httpRoutes(mApp);

@@ -20,6 +20,9 @@ https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt
 todo:
 - Catch l'event torrent-delete et rediriger le mec vers la dashboard si il est sur la page torrent
 
+bug:
+- Lorsqu'un torrent est delete puis remis il ne s'affiche plus.
+
 done: 
 - Timestamp sur les liens de download pour l'expiration
 - Faire une table configuration avec pour première data la durée de vie des liens

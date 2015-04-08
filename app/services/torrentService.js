@@ -11,6 +11,11 @@ module.exports = ['TorrentService', (function(){
     };
     
     
+    TorrentService.errors = {
+        upsertError: 'Cannot upsert torrent',
+        alreadyExist: 'Torrent already exist'
+    };
+    
     TorrentService.ready = function(){
         SyncService = app.services.SyncService;      
     };
@@ -38,7 +43,7 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService._addUrl = function(url, user){
-        console.log('_addLink'.toUpperCase());
+        console.log('TorrentService._addUrl');
         return app.api.torrents.addUrl(url).then(
             function success(torrent){
                 torrent.userId = user.id;
@@ -63,14 +68,14 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService._addFile = function(file, user){
-        console.log('_addFile'.toUpperCase());
+        console.log('TorrentService._addFile');
         return app.api.torrents.addFile(file.path).then(
             function success(torrent){
                 //set the torrent uid with our user id 
                 torrent.userId = user.id;
                 torrent.tid = torrent.id;
                 delete torrent.id;
-
+                
                 //don't need to wait for the response
                 TorrentService.setRatioLimit(user, torrent.hash);
                 
@@ -95,7 +100,7 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService._getTorrentName = function(torrent){
-        console.log('_getTorrentName'.toUpperCase(), TorrentService._addExtension(torrent.name));
+        console.log('TorrentService._getTorrentName', TorrentService._addExtension(torrent.name));
         
         return guessit.parse(TorrentService._addExtension(torrent.name)).then(
             function success(parsed){
@@ -123,7 +128,6 @@ module.exports = ['TorrentService', (function(){
                 return TorrentService._moviesdbParse(torrent);
             },
             function error(err){
-                console.log('GET NAME ERR => ', err);
                 return $q.resolve(torrent);      
             }
         );
@@ -134,7 +138,7 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService._moviesdbParse = function(torrent){
-        console.log('_moviesdbParse'.toUpperCase(), torrent.guessedTitle);
+        console.log('TorrentService._moviesdbParse', torrent.guessedTitle);
         var moviesdb = app.api.moviesdb;
 
         function err(e){ 
@@ -168,16 +172,61 @@ module.exports = ['TorrentService', (function(){
             torrent.keywords = TorrentService._getKeywordsFromTitle(torrent.name);
         }
         
+        if(torrent.id)
+            delete torrent.id;
+        
         return app.orm.Torrent.upsert(torrent).then(
             function success(ok){
                 return app.orm.Torrent.find({ where: { hash: torrent.hash } });
             },
             function err(e){
-                app.logger.log('Cannot add torrent', torrent, e);
-                return $q.reject('Cannot add torrent', torrent, e);
+                app.logger.log(TorrentService.errors.upsertError, torrent, e);
+                return $q.reject('upsertError', torrent, e);
             }
         );
     };
+    
+    /**
+    * Search if allready exist in database, if so return an error, else create a new torrent and
+    * return the model instance in promise
+    * @return promise
+    **/
+    TorrentService._insertTorrent = function(torrent){
+        if(!torrent.keywords){
+            torrent.keywords = TorrentService._getKeywordsFromTitle(torrent.name);
+        }
+        
+        return app.orm.Torrent.find({ where: { hash: torrent.hash } }).then(
+            function(inst){
+                if(inst){
+                    if(inst.userId) //if someone already own the torrent
+                        return $q.reject('alreadyExist');
+                    
+                    //else we add our data to the current torrent
+                    _.extend(inst, torrent);
+                    return inst.save();
+                }
+                
+                //if the torrent isn't in database yet
+                return app.orm.Torrent.create(torrent);
+            }
+        );
+    };
+    
+    /**
+    * Get disk space usage for the torrents of user @userID
+    * @return promise
+    ***/
+    TorrentService.getDiskSpaceUsage = function(userId){
+        console.log('TorrentService.getDiskSpaceUsage', userId);
+        
+        return app.orm.Torrent.sum('sizeWhenDone', { where: { userId: userId } }).then(function(sum){
+            if(!sum || isNaN(sum))
+                return 0;
+            return sum;
+        });
+    };
+    
     
     /**
     * Set the ratio configuration of the user for the given torrent
@@ -186,7 +235,7 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService.setRatioLimit = function(user, torrentHash){
-        console.log('TorrentService.setRatioLimit'.toUpperCase(), user, user.uploadRatio);
+        console.log('TorrentService.setRatioLimit');
         
         return app.api.torrents.set([torrentHash], { seedRatioLimit: user.uploadRatio });
     };
@@ -199,11 +248,11 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService.addTorrent = function(user, file){
-        console.log('addTorrent'.toUpperCase());
+        console.log('TorrentService.addTorrent');
         
         return TorrentService._addFile(file, user)
                              .then(TorrentService._getTorrentName)
-                             .then(SyncService.updateOne);
+                             .then(SyncService.createNew);
     };
     
     /**
@@ -222,11 +271,11 @@ module.exports = ['TorrentService', (function(){
     * @return promise
     **/
     TorrentService.addUrl = function(user, url){
-        console.log('addUrl'.toUpperCase());
+        console.log('TorrentService.addUrl');
 
         return TorrentService._addUrl(url, user)
                              .then(TorrentService._getTorrentName)
-                             .then(SyncService.updateOne);
+                             .then(SyncService.createNew);
     };
     
     /**

@@ -131,7 +131,7 @@ function($http, $q, $rootScope, UsersService){
                     for(var i = 0; i < response.data.length; i++){
                         _this._users[response.data[i].id] = response.data[i];
                     }
-                    
+                    console.debug('USERS => ',  _this._users);
                     return _this._users;
                 }
             );
