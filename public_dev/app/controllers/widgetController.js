@@ -1,6 +1,6 @@
 angular.module('totodl')
-       .controller('WidgetController', [ '$scope', '$location', 'User', 'TorrentsService', 'ngDialog', 
-function($scope, $location, User, TorrentsService, ngDialog){
+       .controller('WidgetController', [ '$scope', '$location', 'User', 'TorrentsService', 'ngDialog', '$sce', 
+function($scope, $location, User, TorrentsService, ngDialog, $sce){
     
     $scope.Math = Math;
     $scope.roles = User.roles;
@@ -12,6 +12,10 @@ function($scope, $location, User, TorrentsService, ngDialog){
             var path = '/torrent/' + $scope.torrent.hash + '/' + ($scope.torrent.guessedType != 'unknown' && $scope.torrent.guessedType ? 'preview' : 'files');
             $location.path(path);
         }
+    };
+    
+    $scope.raw = function(data){
+        return $sce.trustAsHtml(data);
     };
     
     //pause the torrent
@@ -49,4 +53,16 @@ function($scope, $location, User, TorrentsService, ngDialog){
         
         $evt.stopPropagation();
     };
+    
+    $scope.download = function($evt){
+        ngDialog.open({
+            template: '/app/views/popup/download.html',
+            className: 'ngdialog-theme-toto',
+            showClose: false,
+            controller: 'DownloadModalController',
+            data: $scope.torrent
+        });
+        
+        $evt.stopPropagation();
+    };    
 }]); 

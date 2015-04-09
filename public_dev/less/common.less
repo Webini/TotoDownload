@@ -66,6 +66,20 @@ ul {
         height: 111px;
     }
     
+    .widget-synopsis { 
+        margin: 3px 0px;
+        overflow: hidden;
+    }
+    
+    .widget-control {
+        margin-left: -50px;    
+    }
+    
+    .widget-title {
+        height: 23px;
+        margin-right: 50px;
+    }
+    
     .progress {
         width: 100%;     
         margin-bottom: 0px;
@@ -73,10 +87,21 @@ ul {
     
     .text-overflow {
         text-overflow: ellipsis;
-        word-break: break-all;
         overflow: hidden;
+        word-break: break-all;
         white-space: nowrap;
-    }  
+    }
+    
+    .content-widget {
+        display: bloc;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;  
+        
+        height: 60px;
+        line-height: 18px;
+        overflow: hidden;
+    }
     
     .text-lighter { color: #a6a6a6; }
     .small-text { font-size: 0.85em; }

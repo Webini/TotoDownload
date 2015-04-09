@@ -66,6 +66,8 @@ function($scope, $rootScope, User){
     $scope.__firstFilesCtrl = true;
     $scope.user = User.get();
     
+    console.log('FILEs => ', $scope.torrent);
+    
     $scope.extensionToCss = function(ext){
         if(extensions[ext])
             return extensions[ext];

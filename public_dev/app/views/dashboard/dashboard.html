@@ -6,6 +6,7 @@
 </section>
 
 <!-- Main content -->
-<section class="content">
-    <div class="box box-solid torrent" ng-repeat="torrent in torrents | orderBy:'-createdAt' track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
+<section class="content" ng-controller="SearchController as searchCtrl">
+    {{ search }}
+    <div class="box box-solid torrent" ng-repeat="torrent in torrents | filter:torrentsComparator | orderBy:'-createdAt' track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
 </section><!-- /.content -->

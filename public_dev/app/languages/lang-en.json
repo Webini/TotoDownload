@@ -101,5 +101,8 @@
     "REMOVE_CONFIRM": "Do you really want to remove <b>{{ name }}</b> ?",
     "DELETE": "Delete",
     "REMOVE_MODAL_TITLE": "Delete torrent",
-    "TRACKERS": "Trackers"
+    "TRACKERS": "Trackers",
+    "DOWNLOAD_MODAL_TITLE": "Download",
+    "CLOSE": "Close",
+    "FILESIZE": "Files size"
 }

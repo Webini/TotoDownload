@@ -1,0 +1,15 @@
+<div class="modal-dialog">
+    <div class="modal-content box">
+        <div ng-show="loading" class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>
+        </div>
+        <div class="modal-header">
+            <button type="button" class="close ngdialog-close" data-dismiss="modal" aria-label="Close"></button>
+            <h4 class="modal-title">{{ 'DOWNLOAD_MODAL_TITLE' | translate }}</h4>
+        </div>
+        <div class="modal-body" ng-include="'/app/views/torrent/files.html'"></div>
+        <div class="modal-footer text-center">
+            <button type="button" class="btn btn-primary" ng-click="closeThisDialog(1)" data-dismiss="modal">{{ 'CLOSE' | translate }}</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div>

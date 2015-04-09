@@ -29,17 +29,23 @@ module.exports = function(app){
         },
         
         onStart: function(req, res){
-            var torrent = req.torrent;
+            var torrent = TorrentService.getFromMemory(req.torrent.hash);
             
-            TorrentService.start(torrent.hash).then(
-                function(data){
-                    res.json(data);
-                },
-                function(err){
-                    res.status(403)
-                       .json(err);      
-                }
-            );
+            if(!torrent.isFinished){
+                TorrentService.start(torrent.hash).then(
+                    function(data){
+                        res.json(data);
+                    },
+                    function(err){
+                        res.status(403)
+                           .json(err);      
+                    }
+                );
+            }
+            else{
+                res.status(403)
+                   .json('Torrent already seeded');
+            }
         },
         
         onRemove: function(req, res){

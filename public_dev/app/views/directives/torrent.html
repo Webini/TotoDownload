@@ -15,7 +15,11 @@
 
 
 <div class="info-box-content">
-    <div class="info-box-number text-overflow">
+    <div class="widget-control pull-right">
+        <a href="javascript:" ng-click="download($event)" class="btn btn-default btn-xs"><i class="fa fa-download"></i></a>
+        <a href="javascript:alert('nop')" class="btn btn-default btn-xs"><i class="fa fa-caret-down"></i></a>
+    </div>
+    <div class="info-box-number widget-title text-overflow">
         <span ng-if="torrent.guessedTitle">
             {{ torrent.title ? torrent.title : torrent.guessedTitle }}
             <span ng-if="torrent.guessedEpisode || torrent.guessedSeason">
@@ -27,88 +31,98 @@
         </span>
         <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
     </div>
-    <div class="text-overflow">        
-        <!-- start / pause button -->
-        <!-- STOPPED -->
-        <span ng-if="torrent.status == 0">
-            <i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSED' | translate }} -
-            <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-                <a href="javascript:" ng-click="start($event)"><i class="fa fa-repeat small-text"></i>&nbsp;{{ 'START'|translate }}</a>
+    <div ng-if="!torrent.isFinished">
+        <div class="text-overflow">        
+            <!-- start / pause button -->
+            <!-- STOPPED -->
+            <span ng-if="torrent.status == 0">
+                <i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSED' | translate }} -
+                <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
+                    <a href="javascript:" ng-click="start($event)"><i class="fa fa-repeat small-text"></i>&nbsp;{{ 'START'|translate }}</a>
+                </span>
             </span>
-        </span>
-        <!-- STARTED -->
-        <span ng-if="torrent.status == 4">
-            <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-                <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
-            </span>
-        </span>
-        <!-- ISOLATED -->
-        <span ng-if="torrent.status == 7 && !torrent.error">
-            {{ 'ISOLATED' | translate }}
-        </span>
-        <!-- SEED -->
-        <span ng-if="torrent.status == 6 && !torrent.error">
-            {{ 'SEEDING_TO' | translate:{from_us: torrent.peersGettingFromUs, total: torrent.peersConnected} }}&nbsp;-&nbsp;
-            <i class="fa fa-arrow-up small-text"></i>&nbsp;<unit-display size="torrent.rateUpload" suffix="/s"></unit-display>
-        </span>
-        <!-- SEED WAIT -->
-        <span ng-if="torrent.status == 5 && !torrent.error">
-            {{ 'SEED_WAIT' | translate }}
-        </span>
-        <!-- DOWNLOADING -->
-        <span ng-if="torrent.status == 4 && !torrent.error">
-            {{ 'DL_FROM' | translate:{to_us: torrent.peersSendingToUs, total: torrent.peersConnected} }}&nbsp;-&nbsp;
-            <i class="fa fa-arrow-down small-text"></i>&nbsp;<unit-display size="torrent.rateDownload" suffix="/s"></unit-display>&nbsp;&nbsp;
-            <i class="fa fa-arrow-up small-text"></i>&nbsp;<unit-display size="torrent.rateUpload" suffix="/s"></unit-display>
-        </span>
-        <!-- DL_WAIT -->
-        <span ng-if="torrent.status == 3 && !torrent.error">
-            {{ 'DL_WAIT' | translate }}
-        </span>
-        <!-- CHECK FILES -->
-        <span ng-if="torrent.status == 2 && !torrent.error">
-            {{ 'CHECK_FILES' | translate }}
-        </span>
-        <!-- QUEUED TO CHECK FILES -->
-        <span ng-if="torrent.status == 1 && !torrent.error">
-            {{ 'QUEUED_CHECK' | translate }}
-        </span>
-        <!-- ERROR -->
-        <span ng-if="torrent.error && (torrent.status == 4 || torrent.status == 0)">-</span>
-        <span ng-if="torrent.error" class="text-red">
-            {{ torrent.errorString }}
-        </span>
-    </div>
-
-    <!-- la classe "active" causait de gros problemes de perf sur mon nux sans acceleration GPU --> 
-    <div class="progress progress-xs progress-striped" ng-if="torrent.status <= 4">
-        <div ng-class="{'progress-bar-aqua': !torrent.error, 'progress-bar-danger': torrent.error}" class="progress-bar progress-bar-striped" ng-style="{ 'width': ((torrent.sizeWhenDone - torrent.leftUntilDone) / torrent.sizeWhenDone) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-    </div>
-    <div class="progress progress-xs progress-striped progress-bar-aqua progress-bar-stripped" ng-if="torrent.status > 4">
-        <div ng-class="{'progress-bar-green': !torrent.error, 'progress-bar-red': torrent.error}" class="progress-bar progress-bar-striped" ng-style="{ 'width': (torrent.uploadRatio / torrent.seedRatioLimit) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
-    </div>
-
-    <div class="text-overflow">
-        <span ng-if="torrent.status <= 4">
-            <unit-display size="torrent.sizeWhenDone - torrent.leftUntilDone" suffix=""></unit-display> /
-            <unit-display size="torrent.sizeWhenDone" suffix=""></unit-display>
+            <!-- STARTED -->
             <span ng-if="torrent.status == 4">
-                &nbsp;-&nbsp;{{ 'ETA' | translate }}&nbsp;<time-display time="torrent.eta" type="min"></time-display>
+                <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
+                    <a href="javascript:" ng-click="pause($event)"><i class="glyphicon glyphicon-pause small-text"></i>&nbsp;{{ 'PAUSE' | translate }}</a>&nbsp;-&nbsp;
+                </span>
             </span>
-        </span>
-        <span ng-if="torrent.status > 4">
-            {{ 'SIZE' | translate }}
-            <unit-display size="torrent.sizeWhenDone" suffix=""></unit-display>&nbsp;-&nbsp;
-            {{ 'UPLOADED' | translate }}
-            <unit-display size="torrent.uploadedEver" suffix=""></unit-display>&nbsp;/&nbsp;
-            <unit-display size="torrent.sizeWhenDone * torrent.seedRatioLimit" suffix=""></unit-display>
-            <span ng-if="torrent.uploadRatio != -1">
-                ({{ 'UPLOAD_RATIO' | translate:{ ratio: Math.round(torrent.uploadedEver / torrent.sizeWhenDone * torrent.seedRatioLimit * 100) / 100, max: torrent.seedRatioLimit } }})
+            <!-- ISOLATED -->
+            <span ng-if="torrent.status == 7 && !torrent.error">
+                {{ 'ISOLATED' | translate }}
             </span>
-        </span>
+            <!-- SEED -->
+            <span ng-if="torrent.status == 6 && !torrent.error">
+                {{ 'SEEDING_TO' | translate:{from_us: torrent.peersGettingFromUs, total: torrent.peersConnected} }}&nbsp;-&nbsp;
+                <i class="fa fa-arrow-up small-text"></i>&nbsp;<unit-display size="torrent.rateUpload" suffix="/s"></unit-display>
+            </span>
+            <!-- SEED WAIT -->
+            <span ng-if="torrent.status == 5 && !torrent.error">
+                {{ 'SEED_WAIT' | translate }}
+            </span>
+            <!-- DOWNLOADING -->
+            <span ng-if="torrent.status == 4 && !torrent.error">
+                {{ 'DL_FROM' | translate:{to_us: torrent.peersSendingToUs, total: torrent.peersConnected} }}&nbsp;-&nbsp;
+                <i class="fa fa-arrow-down small-text"></i>&nbsp;<unit-display size="torrent.rateDownload" suffix="/s"></unit-display>&nbsp;&nbsp;
+                <i class="fa fa-arrow-up small-text"></i>&nbsp;<unit-display size="torrent.rateUpload" suffix="/s"></unit-display>
+            </span>
+            <!-- DL_WAIT -->
+            <span ng-if="torrent.status == 3 && !torrent.error">
+                {{ 'DL_WAIT' | translate }}
+            </span>
+            <!-- CHECK FILES -->
+            <span ng-if="torrent.status == 2 && !torrent.error">
+                {{ 'CHECK_FILES' | translate }}
+            </span>
+            <!-- QUEUED TO CHECK FILES -->
+            <span ng-if="torrent.status == 1 && !torrent.error">
+                {{ 'QUEUED_CHECK' | translate }}
+            </span>
+            <!-- ERROR -->
+            <span ng-if="torrent.error && (torrent.status == 4 || torrent.status == 0)">-</span>
+            <span ng-if="torrent.error" class="text-red">
+                {{ torrent.errorString }}
+            </span>
+        </div>
+
+        <!-- la classe "active" causait de gros problemes de perf sur mon nux sans acceleration GPU --> 
+        <div class="progress progress-xs progress-striped" ng-if="torrent.status <= 4">
+            <div ng-class="{'progress-bar-aqua': !torrent.error, 'progress-bar-danger': torrent.error}" class="progress-bar progress-bar-striped" ng-style="{ 'width': ((torrent.sizeWhenDone - torrent.leftUntilDone) / torrent.sizeWhenDone) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+        </div>
+        <div class="progress progress-xs progress-striped progress-bar-aqua progress-bar-stripped" ng-if="torrent.status > 4">
+            <div ng-class="{'progress-bar-green': !torrent.error, 'progress-bar-red': torrent.error}" class="progress-bar progress-bar-striped" ng-style="{ 'width': (torrent.uploadRatio / torrent.seedRatioLimit) * 100 + '%' }" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+        </div>
+
+        <div class="text-overflow">
+            <span ng-if="torrent.status <= 4">
+                <unit-display size="torrent.sizeWhenDone - torrent.leftUntilDone" suffix=""></unit-display> /
+                <unit-display size="torrent.sizeWhenDone" suffix=""></unit-display>
+                <span ng-if="torrent.status == 4">
+                    &nbsp;-&nbsp;{{ 'ETA' | translate }}&nbsp;<time-display time="torrent.eta" type="min"></time-display>
+                </span>
+            </span>
+            <span ng-if="torrent.status > 4">
+                {{ 'SIZE' | translate }}
+                <unit-display size="torrent.sizeWhenDone" suffix=""></unit-display>&nbsp;-&nbsp;
+                {{ 'UPLOADED' | translate }}
+                <unit-display size="torrent.uploadedEver" suffix=""></unit-display>&nbsp;/&nbsp;
+                <unit-display size="torrent.sizeWhenDone * torrent.seedRatioLimit" suffix=""></unit-display>
+                <span ng-if="torrent.uploadRatio != -1">
+                    ({{ 'UPLOAD_RATIO' | translate:{ ratio: Math.round(torrent.uploadedEver / torrent.sizeWhenDone * torrent.seedRatioLimit * 100) / 100, max: torrent.seedRatioLimit } }})
+                </span>
+            </span>
+        </div>
     </div>
-    
-    <div class="to-footer text-overflow">
+    <div ng-if="torrent.isFinished" class="paragraph-overflow content-widget" >
+        <div class="widget-synopsis" ng-if="torrent.synopsis" ng-bind-html="raw(torrent.synopsis)"></div>
+        <div ng-if="!torrent.synopsis" class="widget-synopsis">
+            {{ 'FILESIZE' | translate }} : <b><unit-display size="torrent.sizeWhenDone" suffix=""></unit-display></b><br />
+            {{ 'FILES' | translate }} : <b>{{ torrent.files.length }}</b><br />
+            <!-- a voir ce que j'en fais de ce truc -->
+            <button ng-show="0" class="btn btn-default btn-xs" ng-click="download($event)"><i class="fa fa-download"></i> Télécharger</button>
+        </div>
+    </div>
+    <div class="text-overflow" ng-class="{'to-footer': !torrent.isFinished}">
         <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
             <a href="javascript:" ng-click="remove($event)"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
             <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>
