@@ -4,7 +4,6 @@
   "description": "Frontend for seedbox",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
     "postinstall": "cd ./redist/guessit/ && python setup.py install --root ../../bin/"
   },
