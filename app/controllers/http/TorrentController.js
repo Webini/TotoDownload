@@ -1,6 +1,5 @@
 module.exports = function(app){
     var TorrentService = app.services.TorrentService;
-    var UserService = app.services.UserService;
     var DownloadService = app.services.DownloadService;
     
     return {
@@ -103,5 +102,5 @@ module.exports = function(app){
                 }
             );
         }
-    }
+    };
 };
