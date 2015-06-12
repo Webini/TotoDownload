@@ -62,7 +62,8 @@ module.exports = {
         "charset": "utf8",
         "collate": "utf8_general_ci"
     }).then(function(){
-        return migration.addIndex(
+       console.log("YOLOOOOO1");
+	 migration.addIndex(
             'Users',
             ['email'],
             {
@@ -71,7 +72,8 @@ module.exports = {
             }
         );
     }).then(function(){
-        return migration.addIndex(
+	console.log("YOLOOOO2");
+        migration.addIndex(
             'Users',
             ['nickname'],
             {

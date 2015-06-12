@@ -208,7 +208,7 @@ module.exports = {
         "charset": "utf8",
         "collate": "utf8_general_ci"
     }).then(function success(data){
-        return migration.addIndex(
+        migration.addIndex(
             'Torrents',
             ['hash'],
             {

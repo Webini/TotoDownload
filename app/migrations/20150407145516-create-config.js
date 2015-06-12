@@ -28,7 +28,7 @@ module.exports = {
         "charset": "utf8",
         "collate": "utf8_general_ci"
     }).then(function(){
-        return migration.addIndex(
+        migration.addIndex(
             'Configs',
             ['key'],
             {
@@ -38,7 +38,7 @@ module.exports = {
     }).then(function(){
         migration.sequelize.query("INSERT INTO Configs(`key`, `value`) values('downloadTTL', '172800');"); 
         migration.sequelize.query("INSERT INTO Configs(`key`, `value`) values('diskSpaceProtected', '50');"); 
-        migration.sequelize.query("INSERT INTO Configs(`key`, `value`) values('downloadDir', '/home/download');"); 
+        migration.sequelize.query("INSERT INTO Configs(`key`, `value`) values('downloadDir', '/home/downloads');"); 
     }).done(done);
   },
   down: function(migration, DataTypes, done) {

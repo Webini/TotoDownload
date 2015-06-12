@@ -6,24 +6,24 @@ module.exports = (function(){
     
     return {
         parse: function(filename){
-            var cwd = path.normalize(__dirname + '/../../bin/usr/local/bin/'); 
-            var pythonPath = path.normalize(cwd + '/../lib/python2.7/dist-packages/');
-            var guessitPath = path.normalize(cwd + '/guessit');
+            //var cwd = path.normalize(__dirname + '/../../bin/usr/local/bin/'); 
+            //var pythonPath = path.normalize(cwd + '/../lib/python2.7/dist-packages/');
+            //var guessitPath = path.normalize(cwd + '/guessit');
             var defer = $q.defer();
             
             var child = spawn(
-                'python', 
-                [ guessitPath, '-a', filename],
+                'guessit', 
+                [ '-a', filename],
                 {
-                    cwd: cwd, 
+                   /* cwd: cwd, 
                     env: {
                         'PYTHONPATH': pythonPath
-                    }
+                    }*/
                 }
             );
             
             child.stdout.on('data', function(response){
-                var data = response.toString()
+		var data = response.toString()
                                    .replace(/(\r\n|\n|\r)/gm, '')
                                    .match(/found: (\{.*\})/i);
                 if(data == null || data.length <= 1){
