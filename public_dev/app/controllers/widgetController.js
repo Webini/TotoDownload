@@ -68,8 +68,8 @@ function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService
     
     $scope.addFilter = function($evt){
         FilterService.add($scope.torrent.title, {
-            key: 'title',
-            value: $scope.torrent.title,
+            key: 'movieId',
+            value: $scope.torrent.movieId,
             enabled: true,
             removable: true
         });

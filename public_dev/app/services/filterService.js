@@ -70,7 +70,7 @@ angular.module('services')
 				}
 			}
 			
-			window.localStorage.setItem('_filters', JSON.stringify(cfilters));	
+			window.localStorage.setItem('_filters', angular.toJson(cfilters));	
 		},
 		
 		_calculateFoundSuccess: function(){
