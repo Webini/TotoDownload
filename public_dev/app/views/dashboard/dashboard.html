@@ -1,3 +1,10 @@
+<section class="head-filters">
+  <h4>{{ 'FILTERS' | translate }}&nbsp<i class="fa fa-filter"></i></h3>
+    
+  <filter-button ng-repeat="(name, data) in filters | orderDefault:false" name="data.name" data="data"></filter-button>
+       
+</section>
+
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
@@ -7,6 +14,5 @@
 
 <!-- Main content -->
 <section class="content" ng-controller="SearchController as searchCtrl">
-    {{ search }}
-    <div class="box box-solid torrent" ng-repeat="torrent in torrents | filter:torrentsComparator | orderBy:'-createdAt' track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
+    <div class="box box-solid torrent" ng-repeat="torrent in torrents | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
 </section><!-- /.content -->

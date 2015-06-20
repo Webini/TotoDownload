@@ -5,8 +5,19 @@ angular.module('totodl')
                 controller: 'DashboardController'
             });
        }])
-       .controller('DashboardController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', 'TorrentsService',
-function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService){
+       .controller('DashboardController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', 'TorrentsService', 'FilterService',
+function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, FilterService){
+    $scope.filters = FilterService.filters;
+    $scope.filtersComparator = FilterService.comparator;
+    
+    FilterService.setDefault([
+        { name: 'MOVIES', data: { key: 'guessedType', value: 'movie' }},
+        { name: 'SERIES', data: { key: 'guessedType', value: 'episode' }},
+        { name: 'OTHER_TYPES', data: { key: 'guessedType', value: 'unknown' }},
+        { name: '1080P', data: { key: 'screenSize', value: '1080p' }},
+        { name: '720P', data: { key: 'screenSize', value: '720p' }}
+    ]);
+    
     $scope.torrents = SyncService.data.torrents;
     //$scope.lastChange = SyncService.data.lastChange;
     

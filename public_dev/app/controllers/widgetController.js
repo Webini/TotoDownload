@@ -1,6 +1,6 @@
 angular.module('totodl')
-       .controller('WidgetController', [ '$scope', '$location', 'User', 'TorrentsService', 'ngDialog', '$sce', 
-function($scope, $location, User, TorrentsService, ngDialog, $sce){
+       .controller('WidgetController', [ '$scope', '$location', 'User', 'TorrentsService', 'ngDialog', '$sce', 'FilterService',
+function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService){
     
     $scope.Math = Math;
     $scope.roles = User.roles;
@@ -65,4 +65,15 @@ function($scope, $location, User, TorrentsService, ngDialog, $sce){
         
         $evt.stopPropagation();
     };    
+    
+    $scope.addFilter = function($evt){
+        FilterService.add($scope.torrent.title, {
+            key: 'title',
+            value: $scope.torrent.title,
+            enabled: true,
+            removable: true
+        });
+        
+        $evt.stopPropagation();
+    };
 }]); 

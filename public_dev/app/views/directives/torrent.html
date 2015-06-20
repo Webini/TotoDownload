@@ -17,7 +17,9 @@
 <div class="info-box-content">
     <div class="widget-control pull-right">
         <a href="javascript:" ng-click="download($event)" class="btn btn-default btn-xs"><i class="fa fa-download"></i></a>
-        <a href="javascript:alert('nop')" class="btn btn-default btn-xs"><i class="fa fa-caret-down"></i></a>
+        <a ng-show="(torrent.guessedType == 'episode')" title="{{ 'ADD_TO_FILTERS' | translate }}" ng-click="addFilter($event)" href="javascript:" class="btn btn-default btn-xs">
+            <i class="fa fa-filter"></i>
+        </a>
     </div>
     <div class="info-box-number widget-title text-overflow">
         <span ng-if="torrent.guessedTitle">

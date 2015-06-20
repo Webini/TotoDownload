@@ -130,4 +130,30 @@ ul {
     .completed { border-bottom: 1px solid #F5F5F5; margin-bottom: 4px; }
 }
 
+.head-filters {
+    background-color: #fff;
+    overflow: none;
+    border-bottom: 1px solid #d2d6de;
+    padding: 5px 15px;
+    
+    h4 { margin: 5px 0px 3px 0px; }
+    
+    .filter {
+        cursor: pointer;
+        display: inline-block;
+        padding: 6px 12px;
+        color: #333;
+        font-size: 14px;
+        margin: 2px 3px;
+    }
+    
+    .filter.disabled { opacity: 0.65; }
+    
+    .filter.enabled {
+        border-radius: 3px;
+        box-shadow: inset 0px 2px 6px #ccc;
+        background-color: #f8f8f8;
+    }
+}
+
 @import "modal.less";

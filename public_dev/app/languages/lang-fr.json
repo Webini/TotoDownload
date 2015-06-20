@@ -104,5 +104,12 @@
     "TRACKERS": "Trackers",
     "DOWNLOAD_MODAL_TITLE": "Télécharger",
     "CLOSE": "Fermer",
-    "FILESIZE": "Taille des fichiers"
+    "FILESIZE": "Taille des fichiers",
+    "FILTERS": "Filtres",
+    "MOVIES": "Films",
+    "SERIES": "Series",
+    "OTHER_TYPES": "Autres types",
+    "1080P": "1080p",
+    "720P": "720p",
+    "ADD_TO_FILTERS": "Ajouter aux filtres"
 }
