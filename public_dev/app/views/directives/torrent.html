@@ -110,7 +110,7 @@
                 <unit-display size="torrent.uploadedEver" suffix=""></unit-display>&nbsp;/&nbsp;
                 <unit-display size="torrent.sizeWhenDone * torrent.seedRatioLimit" suffix=""></unit-display>
                 <span ng-if="torrent.uploadRatio != -1">
-                    ({{ 'UPLOAD_RATIO' | translate:{ ratio: Math.round(torrent.uploadedEver / torrent.sizeWhenDone * torrent.seedRatioLimit * 100) / 100, max: torrent.seedRatioLimit } }})
+                    ({{ 'UPLOAD_RATIO' | translate:{ ratio: Math.round(torrent.uploadRatio * 100) / 100, max: torrent.seedRatioLimit } }})
                 </span>
             </span>
         </div>
