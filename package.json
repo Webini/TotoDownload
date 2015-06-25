@@ -15,6 +15,7 @@
     "crc": "^3.2.1",
     "express": "^4.12.3",
     "express-jwt": "^3.0.1",
+    "heapdump": "^0.3.6",
     "jsonwebtoken": "^5.0.2",
     "multer": "^0.1.8",
     "mysql": "^2.5.5",
