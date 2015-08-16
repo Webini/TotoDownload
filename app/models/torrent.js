@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       },
       filesJson: {
-        type: DataTypes.TEXT,
+        type: DataTypes.TEXT('MEDIUM'),
         allowNull: true
       },
       movieId: {
@@ -201,7 +201,16 @@ module.exports = function(sequelize, DataTypes) {
             return JSON.parse(this.trackersJson);
         },
         files: function(){
+          try{
             return JSON.parse(this.filesJson);    
+          }
+          catch(e){
+            return [ { 
+              'name': 'Limit exceeded',
+              'bytesCompleted': 0,
+              'length': 426976
+            } ];
+          }
         },
         public: function(){
             //maybe perf issues
