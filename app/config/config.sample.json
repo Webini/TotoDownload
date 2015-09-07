@@ -16,6 +16,12 @@
         "token": "md5 secret CHANGEME",
         "download": "md5 secret CHANGEME"
     },
+    "download": {
+        "useServer": true, //true if we are using a dedicated webserver for files download
+        "host": "localhost", //url generated will be like http[s]?://host:port/torrent.hash/TTLHash(expire+secret.download)/fileId/expiration/filePath
+        "port": 80,
+        "ssl": false  
+    },
     "sessionExpiration": 240,
     "torrents": {
         "api": "transmission", //only one supported right now

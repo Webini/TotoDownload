@@ -2,7 +2,6 @@ module.exports = ['DownloadService', (function(){
     var app             = require(__dirname + '/../app.js');
     var $q              = require('q');
     var path            = require('path');
-    var downloadToken   = app.config.download;
     
     function DownloadService(){}
     
@@ -39,7 +38,7 @@ module.exports = ['DownloadService', (function(){
     * @return string
     **/
     DownloadService._generateExpirationHash = function(expiration){
-        return app.services.CryptoService.createMd5Hash(expiration + app.config.download);
+        return app.services.CryptoService.createMd5Hash(expiration + app.config.secret.download);
     };
     
     /**
@@ -52,10 +51,21 @@ module.exports = ['DownloadService', (function(){
                 var linkTTLHash = DownloadService._generateExpirationHash(expiration);
                 var fileSegments = torrent.files[fileId].name.split('/');
                 
+                var segment = '/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/';
+                if(app.config.download.useServer){ //if we are using dedicated webserver
+                    var conf = app.config.download;
+                    segment = (conf.ssl ? 'https' : 'http') + '://' + 
+                              conf.host + ':' + conf.port + segment + 
+                              encodeURI(torrent.files[fileId].name);
+                }
+                else{ //else serve the files
+                    segment += encodeURIComponent(fileSegments[fileSegments.length-1]);  
+                }
+                
                 return {
                     torrent: torrent,
                     fileId: fileId,
-                    segment: '/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
+                    segment: segment, //'/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
                     user: user
                 };
             }
