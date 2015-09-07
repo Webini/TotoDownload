@@ -57,7 +57,7 @@ module.exports = ['ConfigService', (function(){
         return Config._getAll().then(
             function(data){
                 if(data[key]){
-                    return data[key];
+                    return data[key].dataValues;
                 }
                 return $q.reject('1 Configuration not found for ' + key);
             }
