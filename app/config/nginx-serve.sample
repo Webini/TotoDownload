@@ -1,0 +1,36 @@
+server {
+        listen 81;
+        listen [::]:81;
+
+        index index.html index.htm index.nginx-debian.html;
+        server_name MYHOST;
+
+        location ~ "^/[a-fA-F0-9]{32,64}/([a-zA-Z0-9=]+)/[0-9]+/([0-9]+)/(.*)$" {
+                set $md5 $1;
+                set $expires $2;
+                set $filepath $3;
+                secure_link $md5,$expires;
+                set $token "MYTOKEN";
+                secure_link_md5 "$expires$token";
+
+                if ($secure_link = "") {
+                        return 403;
+                }
+                if ($secure_link = "0") {
+                        return 403;
+                }
+
+                if ($filepath ~* "/?([^/]+)$"){
+                        set $filename $1;
+                }
+
+                add_header Content-Disposition "attachment; filename=$filename";
+                rewrite "^/[a-fA-F0-9]{32,64}/([a-zA-Z0-9=]+)/[0-9]+/([0-9]+)/(.*)$" /$3;
+        }
+
+        location / {
+                root ROOTDIR;
+                internal;
+        }
+
+}
