@@ -59,13 +59,13 @@ module.exports = ['DownloadService', (function(){
                               encodeURI(torrent.files[fileId].name);
                 }
                 else{ //else serve the files
-                    segment += encodeURIComponent(fileSegments[fileSegments.length-1]);  
+                    segment = '/torrents/download/raw' + segment + encodeURIComponent(fileSegments[fileSegments.length-1]);  
                 }
                 
                 return {
                     torrent: torrent,
                     fileId: fileId,
-                    segment: segment, //'/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
+                    uri: segment, //'/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
                     user: user
                 };
             }
@@ -98,7 +98,7 @@ module.exports = ['DownloadService', (function(){
         )
         .then(function(linkData){ //save the download in database
             app.services.TorrentsDownloadedService.addDownload(linkData.torrent.id, linkData.user.id);
-            return linkData.segment;
+            return linkData.uri;
         });       
     };
     

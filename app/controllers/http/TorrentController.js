@@ -73,7 +73,7 @@ module.exports = function(app){
                 req.params.fileId
             ).then(
                 function(location){
-                    res.redirect(302, '/torrents/download/raw' + location);    
+                    res.redirect(302, location);    
                 },
                 function (err){
                     res.status(404)
