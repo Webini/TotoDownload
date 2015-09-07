@@ -37,8 +37,12 @@ module.exports = ['DownloadService', (function(){
     * @param int expiration timestamp
     * @return string
     **/
-    DownloadService._generateExpirationHash = function(expiration){
-        return app.services.CryptoService.createMd5Hash(expiration + app.config.secret.download);
+    DownloadService._generateExpirationHash = function(expiration, useBase64){
+        if(!useBase64){
+            return app.services.CryptoService.createMd5Hash(expiration + app.config.secret.download);
+        }
+        
+        return app.services.CryptoService.createMd5HashInBase64(expiration + app.config.secret.download);
     };
     
     /**
@@ -47,15 +51,16 @@ module.exports = ['DownloadService', (function(){
     DownloadService._generatePublicLink = function(torrent, fileId, user){
         return app.services.ConfigService.get('downloadTTL').then(
             function(conf){
+                var downloadConf = app.config.download;
                 var expiration = (parseInt(Date.now() / 1000) + parseInt(conf.value)).toString();
-                var linkTTLHash = DownloadService._generateExpirationHash(expiration);
+                var linkTTLHash = encodeURIComponent(DownloadService._generateExpirationHash(expiration, downloadConf.useServer));
                 var fileSegments = torrent.files[fileId].name.split('/');
                 
                 var segment = '/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/';
-                if(app.config.download.useServer){ //if we are using dedicated webserver
-                    var conf = app.config.download;
-                    segment = (conf.ssl ? 'https' : 'http') + '://' + 
-                              conf.host + ':' + conf.port + segment + 
+                if(downloadConf.useServer){ //if we are using dedicated webserver
+                    
+                    segment = (downloadConf.ssl ? 'https' : 'http') + '://' + 
+                              downloadConf.host + ':' + downloadConf.port + segment + 
                               encodeURI(torrent.files[fileId].name);
                 }
                 else{ //else serve the files

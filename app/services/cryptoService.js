@@ -19,6 +19,14 @@ module.exports = ['CryptoService', (function(){
         return hash;
     };
     
+    Crypto.createMd5HashInBase64 = function(data){
+        var hash = crypt.createHash('md5')
+                        .update(data)
+                        .digest('base64');
+                        
+        return hash;
+    }
+    
     Crypto.random = function(length){
         var abc = 'abcdefghijklmnopqrstuvwxyz0123456789';
         var out = '';    
