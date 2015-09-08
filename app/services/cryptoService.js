@@ -24,7 +24,7 @@ module.exports = ['CryptoService', (function(){
                         .update(data)
                         .digest('base64');
                         
-        return hash;
+        return hash.replace('+', '-').replace('/', '_');
     }
     
     Crypto.random = function(length){
