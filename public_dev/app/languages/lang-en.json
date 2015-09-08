@@ -112,5 +112,8 @@
     "1080P": "1080p",
     "720P": "720p",
     "ADD_TO_FILTERS": "Add to filters",
-    "DISKUSAGE": "Disk usage"
+    "DISKUSAGE": "Disk usage",
+    "MY_UPLOADS": "My uploads",
+    "QUOTA_MODAL_TITLE": "Quota exceeded",
+    "QUOTA_EXCEEDED_MESSAGE": "You have exceeded your quota, we can't start the download of <b>{{ name }}</b>"
 }

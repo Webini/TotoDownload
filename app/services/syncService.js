@@ -231,6 +231,18 @@ module.exports = ['SyncService', (function(){
     };
     
     /**
+     * Prévient l'utilisateur qu'il a pété son quota
+     */
+    SyncService.quotaExceeded = function(user, torrent){
+        for(var sid in childStack){
+            if(childStack[sid].socket.decoded_token && 
+                childStack[sid].socket.decoded_token.id == user.id){
+                childStack[sid].socket.emit('quota-exceeded', torrent.name);
+            }
+        }
+    };
+    
+    /**
     * Get all torrents in stack
     * @return array
     **/

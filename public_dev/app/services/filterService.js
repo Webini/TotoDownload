@@ -117,7 +117,6 @@ angular.module('services')
 	catch(e){}
 	
 	return filters;
-	
 }]).filter('orderDefault', function () {
 	return function(items, reverse){
 		var filtered = [];

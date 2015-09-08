@@ -105,7 +105,7 @@ module.exports = ['UserService', (function(){
             downloadHash: crypto.createMd5Hash(crypto.random(32) + app.config.download),
             salt: salt,
             diskUsage: 0,
-            diskSpace: 50000 /* @todo */
+            diskSpace: 0
         }).then(function success(user){
             app.io.sockets.emit('new-user', user.public);
             deferred.resolve({ ok: 1 });

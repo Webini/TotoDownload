@@ -195,10 +195,15 @@ function($http, $q, Socket, User, $rootScope){
             $rootScope.$digest();
     };
     
+    this.onQuotaExceeded = function(torrentName){
+        $rootScope.$broadcast('quota-exceeded', torrentName);  
+    };
+    
     Socket.io.on('torrent-change', this.onChangeState);
     Socket.io.on('torrent-deleted', this.onDeleted);
     Socket.io.on('reconnect', this.resyncStates);
     Socket.io.on('update-user', this.updateUser);
+    Socket.io.on('quota-exceeded', this.onQuotaExceeded);
     
     this.data.loading = this._getAll();
     
