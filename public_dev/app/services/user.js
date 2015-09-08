@@ -16,9 +16,16 @@ function($http, $q, $rootScope, UsersService){
         * @return void
         **/        
         set: function(user){
-            this._loggedUser = user;
-            window.localStorage.setItem('_localUser', JSON.stringify(user));
-            this._defineFunctions(this._loggedUser);
+            console.debug(user, this._loggedUser);
+            if(this._loggedUser){
+                angular.extend(this._loggedUser, user);
+            }
+            else{
+                this._loggedUser = user;
+                this._defineFunctions(this._loggedUser);
+            }
+            
+            window.localStorage.setItem('_localUser', JSON.stringify(this._loggedUser));
         },
         
         /**

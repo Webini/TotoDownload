@@ -111,5 +111,6 @@
     "OTHER_TYPES": "Other types",
     "1080P": "1080p",
     "720P": "720p",
-    "ADD_TO_FILTERS": "Add to filters"
+    "ADD_TO_FILTERS": "Add to filters",
+    "DISKUSAGE": "Disk usage"
 }

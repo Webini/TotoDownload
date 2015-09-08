@@ -57,7 +57,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, 
   {
-      getterMethods   : {
+      getterMethods: {
           public: function(){
               return {
                   id: this.id,

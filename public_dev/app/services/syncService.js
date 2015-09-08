@@ -182,9 +182,23 @@ function($http, $q, Socket, User, $rootScope){
             $rootScope.$broadcast('torrent-change', torrent);
     };
     
+    /**
+     * When the current user is updated
+     * @param object user
+     * @retunr void
+     */
+    this.updateUser = function(user){
+        console.debug('SyncService.updateUser', user);  
+        User.set(user);
+        
+        if(!$rootScope.$$phase)
+            $rootScope.$digest();
+    };
+    
     Socket.io.on('torrent-change', this.onChangeState);
     Socket.io.on('torrent-deleted', this.onDeleted);
     Socket.io.on('reconnect', this.resyncStates);
+    Socket.io.on('update-user', this.updateUser);
     
     this.data.loading = this._getAll();
     

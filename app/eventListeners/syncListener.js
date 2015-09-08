@@ -15,11 +15,15 @@ module.exports = [ 'syncListener', (function(){
             
             UserService.updateDiskUsage(torrent.userId).then(
                 function(user){
+                    SyncService.updateCurrentUser(user);
                     /**
                     * @todo
                     * dans le cas d'un upload de masse de torrent, il y a des chances pour que le serveur ne soit pas suffisament réactif
                     * du coup il faudrait rechecker si le mec a pas pété son quota et lui supprimer le(s) torrent(s) 
                     **/
+                },
+                function(err){
+                    require('util').debug(err);
                 }
             );
         }

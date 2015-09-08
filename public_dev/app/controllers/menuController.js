@@ -6,6 +6,7 @@ function($scope, User, Socket, $location, $rootScope){
     $scope.user = User.get();
     $scope.roles = User.roles;
     $scope.socket = Socket;
+    $scope.Math = Math;
     
     $scope.submit = function(){
         if($scope.search)

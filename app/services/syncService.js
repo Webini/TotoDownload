@@ -4,6 +4,7 @@ module.exports = ['SyncService', (function(){
     var crc32           = require('crc').crc32;
     var _               = require('underscore');
     var events          = require('events');
+    var util            = require('util');
     
     var SyncService = new events.EventEmitter;
     
@@ -133,10 +134,10 @@ module.exports = ['SyncService', (function(){
             }
             
             if(!found){
-                //delete torrent from database
-                SyncService.onDeleted(stack[hash]);
                 //emit a deleted event
                 SyncService.emit('deleted', stack[hash]);
+                //delete torrent from database
+                SyncService.onDeleted(stack[hash]);
             }
         }
     };
@@ -215,6 +216,19 @@ module.exports = ['SyncService', (function(){
         }
     };
     
+    /**
+     * Update disk usage in user view
+     * @param object user User entity
+     * @return void
+     */
+    SyncService.updateCurrentUser = function(user){
+        for(var sid in childStack){
+            if(childStack[sid].socket.decoded_token && 
+                childStack[sid].socket.decoded_token.id == user.id){
+                childStack[sid].socket.emit('update-user', user.public);
+            }
+        }
+    };
     
     /**
     * Get all torrents in stack

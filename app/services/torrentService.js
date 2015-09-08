@@ -223,7 +223,7 @@ module.exports = ['TorrentService', (function(){
         return app.orm.Torrent.sum('sizeWhenDone', { where: { userId: userId } }).then(function(sum){
             if(!sum || isNaN(sum))
                 return 0;
-            return sum;
+            return parseInt(sum / 1024 / 1024);
         });
     };
     
