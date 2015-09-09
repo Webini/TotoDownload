@@ -28,6 +28,7 @@
     "emailUnique,unk": "You are already registered with this email address",
     "nicknameUnique,unk": "This nickname is already taken",
     
+    "UNKNOWN_ERROR": "Unknown error, please retry later",
     "CONNECTING": "Connecting...",
     "CONNECTED": "Connected",
     "OPTIONS": "OPTIONS",

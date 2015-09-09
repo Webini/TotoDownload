@@ -2,7 +2,13 @@
     <div class="box-header with-border">
         <h3 class="box-title">{{ 'TRAILER' | translate }}</h3>
     </div>
-    <div class="box-body">
-        <iframe frameborder="0" allowfullscreen="true" ng-src="{{ trusted(torrent.trailer) }}" class="allwidth trailer-iframe"></iframe>
+    <div class="box-body trailer-box" ng-init="getTrailer()">
+        <div ng-if="trailerError" class="text-center">
+            {{ 'UNKNOWN_ERROR' | translate }}       
+        </div>
+        <video controls autoplay class="allwidth" ng-if="!trailerError && !trailerLoading" ng-src="{{ trusted(trailer) }}"></video>
+        <div ng-show="trailerLoading" class="overlay ng-scope ng-hide">
+            <i class="fa fa-refresh fa-spin"></i>
+        </div>
     </div>
 </div>

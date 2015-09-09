@@ -25,6 +25,8 @@ module.exports = function(app){
     router.post('/torrents/pause', authenticateFilter, roleUploaderFilter, myFilter, torrentCtrl.onPause);
     router.post('/torrents/start', authenticateFilter, roleUploaderFilter, myFilter, torrentCtrl.onStart);
     
+    router.get('/torrents/trailer/:id([0-9]+)', authenticateFilter, torrentCtrl.onGetTrailer);
+    
     //when we start the download, this request will increment our downloads counter in database for userId XY
     router.get(
         '/torrents/download/:torrentHash([a-zA-Z0-9]+)/:userId([0-9]+)/:userHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:fileName',
@@ -38,7 +40,7 @@ module.exports = function(app){
         torrentCtrl.onRawDownload
     );
     
-    router.get('/torrents/all', authenticateFilter, torrentCtrl.onGetAll);
+    router.get('/torrents/all', torrentCtrl.onGetAll);
     
     app.http.use('/', router);
 };

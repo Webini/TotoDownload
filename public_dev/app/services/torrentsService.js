@@ -22,6 +22,19 @@ angular.module('services')
         },
         
         /**
+         * Retreive torrent trailer
+         * @param int trailerId
+         * @return promise
+         */
+        getTrailer: function(trailerId){
+            return $http.get('/torrents/trailer/' + trailerId).then(
+                function(response){
+                    return response.data;
+                }
+            );
+        },
+        
+        /**
         * Pause a torrent
         * @param string hash Torrent hash
         * @return promise

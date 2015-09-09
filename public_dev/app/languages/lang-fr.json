@@ -28,6 +28,7 @@
     "emailUnique,unk": "Vous êtes déjà enregistré avec cette adresse email",
     "nicknameUnique,unk": "Ce pseudo est déjà utilisé",
     
+    "UNKNOWN_ERROR": "Une erreur inconnue s'est produite. Veuillez réessayer plus tard.",
     "CONNECTING": "Connexion...",
     "CONNECTED": "Connecté",
     "OPTIONS": "OPTIONS",

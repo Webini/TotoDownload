@@ -13,6 +13,23 @@ module.exports = function(app){
             res.json(out);
         },
         
+        onGetTrailer: function(req, res){
+            if(!req.params.id){
+                return res.status(404);
+            }
+            
+            app.api.moviesdb.getTrailerLink(req.params.id).then(
+                function(data){
+                    res.json(data);
+                },
+                function(err){
+                    console.log(require('util').inspect(err));
+                    res.status(500)
+                       .end();
+                }
+            )
+        },
+        
         onPause: function(req, res){
             var torrent = req.torrent;
             
