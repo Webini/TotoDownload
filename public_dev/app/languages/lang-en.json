@@ -116,5 +116,9 @@
     "DISKUSAGE": "Disk usage",
     "MY_UPLOADS": "My uploads",
     "QUOTA_MODAL_TITLE": "Quota exceeded",
-    "QUOTA_EXCEEDED_MESSAGE": "You have exceeded your quota, we can't start the download of <b>{{ name }}</b>"
+    "QUOTA_EXCEEDED_MESSAGE": "You have exceeded your quota, we can't start the download of <b>{{ name }}</b>",
+    "TOP_DOWNLOADS": "Top Downloads",
+    "TOP_DOWNLOADS_MENU": "Top downloads",
+    "NO_RESULTS_FOUND": "No results found",
+    "RETRY_LATER": "Please retry later"
 }

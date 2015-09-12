@@ -10,11 +10,24 @@ function($http, $q, Socket, User, $rootScope){
         loading: false
     };
     
+    var getAllPromise = null; //$q.defer();
+    
     /**
     * Get all torrents from server
     **/
     this._getAll = function(){
-        return $http.get('/torrents/all').then(
+        if(getAllPromise){
+            if(getAllPromise.state === 0){
+                return getAllPromise.promise;
+            }
+            else{
+                return $q.when(this.data.torrents);
+            }
+        }
+        
+        getAllPromise = $q.defer();
+        
+        $http.get('/torrents/all').then(
             function(response){
                 _this.data.torrents = response.data;
                 
@@ -23,11 +36,24 @@ function($http, $q, Socket, User, $rootScope){
                 _this.updateStates(response.data);
                 $rootScope.$broadcast('torrents-change', _this.data.torrents);
                 
-                return _this.data.torrents;
+                getAllPromise.resolve(_this.data.torrents);
+            },
+            function(err){
+                getAllPromise.reject(err);
             }
         ).finally(function(){
             _this.data.loading = false;    
         });
+        
+        return getAllPromise.promise;
+    };
+    
+    /**
+     * Get all torrents
+     * @return promise
+     */
+    this.getAll = function(){
+        return this._getAll();  
     };
     
     /**
@@ -62,14 +88,22 @@ function($http, $q, Socket, User, $rootScope){
     
     /**
     * Retreive one torrent in memory
-    * @return object || null
+    * @return array || object || false
     **/
     this.__get = function(hash){
+        var isArray = (typeof hash == 'object');
+        var out = [];
+        
         for(var i = 0; i < this.data.torrents.length; i++){
-            if(this.data.torrents[i].hash == hash)
+            if(isArray && hash.indexOf(this.data.torrents[i].hash) !== -1){
+                out.push(this.data.torrents[i]);        
+            }
+            else if(!isArray && this.data.torrents[i].hash == hash){
                 return this.data.torrents[i];
+            }
         }
-        return false;
+        
+        return (isArray ? out : false);
     };
     
     /**

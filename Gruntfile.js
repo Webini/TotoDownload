@@ -26,7 +26,8 @@ module.exports = function(grunt) {
 				options: {
 					preserveComments: debug,
 					compress: !debug,
-					beautify: debug
+					beautify: debug,
+					mangle: !debug
 				}
 			}
 		},

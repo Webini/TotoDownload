@@ -1,5 +1,7 @@
 angular.module('services')
        .service('TorrentsService', [ '$http', '$q', function($http, $q){
+    //cache best dowloads
+    var bestDownloads = null;
     
     var TorrentsService = {
         /**
@@ -30,6 +32,23 @@ angular.module('services')
             return $http.get('/torrents/trailer/' + trailerId).then(
                 function(response){
                     return response.data;
+                }
+            );
+        },
+        
+        /**
+         * Retreive best downloads
+         * @return promise
+         */
+        getBestDownloads: function(){
+            if(bestDownloads !== null){
+                return $q.when(bestDownloads);
+            }
+            
+            return $http.get('/torrents/bestDownloads').then(
+                function(response){
+                    bestDownloads = response.data;
+                    return bestDownloads;
                 }
             );
         },

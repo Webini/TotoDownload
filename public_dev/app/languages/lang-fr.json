@@ -116,5 +116,9 @@
     "DISKUSAGE": "Utilisation disque",
     "MY_UPLOADS": "Mes uploads",
     "QUOTA_MODAL_TITLE": "Quota dépassé",
-    "QUOTA_EXCEEDED_MESSAGE": "Vous avez dépassé votre quota, le téléchargement de <b>{{ name }}</b> ne peut donc pas commencer."
+    "QUOTA_EXCEEDED_MESSAGE": "Vous avez dépassé votre quota, le téléchargement de <b>{{ name }}</b> ne peut donc pas commencer.",
+    "TOP_DOWNLOADS": "Meilleurs Téléchargements",
+    "TOP_DOWNLOADS_MENU": "Meilleurs téléchargements",
+    "NO_RESULTS_FOUND": "Aucun resultat trouvé",
+    "RETRY_LATER": "Veuillez réessayer plus tard"
 }

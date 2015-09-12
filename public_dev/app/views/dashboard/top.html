@@ -1,0 +1,128 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+  <h1>
+      {{ 'TOP_DOWNLOADS' | translate }}
+  </h1>
+</section>
+
+<!-- Main content -->
+<section class="content">    
+    <div class="tdgal">
+        <div class="tdvp">
+            
+            <div class="element" data-label="X-Men trolo">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/14/03/24/14/35/575642.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/14/03/24/14/35/575642.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            <div class="element" data-label="Dexter S01e02">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/210/032/21003280_20130504002100017.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/210/032/21003280_20130504002100017.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            <div class="element" data-label="Mr. ROBOT S01">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/15/05/06/16/13/020977.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/15/05/06/16/13/020977.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            <div class="element" data-label="Orange is the new black S01e02">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/15/06/10/10/15/094325.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/15/06/10/10/15/094325.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            <div class="element" data-label="Prout">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/90/71/79/20214705.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/90/71/79/20214705.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            <div class="element link" data-label="Notre jour viendra">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/78/20/39/19474488.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/78/20/39/19474488.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            <div class="element link" data-label="magnolia">
+                <div class="front applyHeight">
+                    <div class="image" style="background-image: url(http://images.allocine.fr/medias/04/66/25/046625_af.jpg)"></div>
+                    <div class="applyHeight">
+                        <div class="mirror" style="background-image: url(http://images.allocine.fr/medias/04/66/25/046625_af.jpg)"></div>
+                        <div class="shadow"></div>
+                    </div>
+                </div>
+                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
+            </div>
+            
+        </div>
+        <div class="tdlabel">
+            <div class="label-overflow">
+                <div class="text">Je</div>
+                <div class="text">vais</div>
+                <div class="text">voir</div>
+                <div class="text">si</div>
+                <div class="text">c'est</div>
+                <div class="text">fait</div>
+                <div class="text">de</div>
+                <div class="text">manière</div>
+                <div class="text">opérationnelle</div>
+                <div class="text">ou</div>
+                <div class="text">si</div>
+                <div class="text">c'est</div>
+                <div class="text">fucké</div>
+            </div>
+        </div>
+    </div>
+    <div class="callout callout-info" ng-if="noResults">
+        <h4>{{ 'NO_RESULTS_FOUND' | translate }}</h4>
+        <p>{{ 'RETRY_LATER'|translate }}</p>
+    </div>
+    
+    <div class="row" ng-if="loading">
+        <div class="col-xs-6 col-xs-offset-3">
+            <div class="box box-default err-margin">
+                <div class="box-header with-border">
+                  <h3 class="box-title">{{ 'LOADING' | translate }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ 'RETRIEVING_DATA' | translate }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-if="error">
+        <div class="col-xs-6 col-xs-offset-3 alert alert-danger alert-dismissable err-margin">
+            <h4>{{ 'ERROR' | translate }}</h4>
+            <p>{{ error | translate }}</p>
+            <p class="text-center"><button class="btn btn-default" type="button" onclick="window.history.back()"><i class="fa fa-arrow-circle-left"></i>&nbsp;{{ 'BACK'|translate }}</button></p>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</section><!-- /.content -->

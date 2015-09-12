@@ -26,6 +26,7 @@ module.exports = function(app){
     router.post('/torrents/start', authenticateFilter, roleUploaderFilter, myFilter, torrentCtrl.onStart);
     
     router.get('/torrents/trailer/:id([0-9]+)', authenticateFilter, torrentCtrl.onGetTrailer);
+    router.get('/torrents/bestDownloads', authenticateFilter, torrentCtrl.onGetBestDownloads);
     
     //when we start the download, this request will increment our downloads counter in database for userId XY
     router.get(

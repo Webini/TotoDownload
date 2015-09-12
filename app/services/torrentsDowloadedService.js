@@ -6,6 +6,51 @@ module.exports = ['TorrentsDownloadedService', (function(){
     
     
     /**
+     * Retreive best downloads 
+     * @param int userId User ID
+     * @param bool withPosterOnly if we retreive only torrents with poster
+     * @return promise
+     */
+    tdlService.getBestDownloads = function(userId, withPosterOnly, limit){
+        var parameters = {
+            userId: userId
+        };
+        
+        if(limit){
+            parameters.limit = limit;
+        }
+        
+        return app.orm.sequelize.query('                 \
+            SELECT                                       \
+                tdl.torrentId,                           \
+                Torrents.hash as hash,                    \
+                count(tdl.id) as downloaded              \
+            FROM                                         \
+                TorrentsDownloadeds AS tdl               \
+            LEFT JOIN                                    \
+                Torrents ON Torrents.id = tdl.torrentId  \
+            WHERE                                        \
+                (                                        \
+                    SELECT                               \
+                        mdl.torrentId                    \
+                    FROM                                 \
+                        TorrentsDownloadeds as mdl       \
+                    WHERE                                \
+                        mdl.userId = :userId AND         \
+                        mdl.torrentId = tdl.torrentID    \
+                    LIMIT 1                              \
+                ) IS NULL                                '
+            + (withPosterOnly ? ' AND Torrents.poster IS NOT NULL' : '') + '\
+            GROUP BY                                     \
+                tdl.torrentId                            \
+            ORDER BY                                     \
+                downloaded DESC,                         \
+                Torrents.year DESC                       '
+            + (limit ? ' LIMIT :limit' : ''), 
+            { replacements: parameters, type: app.orm.sequelize.QueryTypes.SELECT });
+    };
+    
+    /**
     * Add a download in database to userId for torrentId
     * @return promise
     **/

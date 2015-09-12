@@ -1,6 +1,7 @@
 module.exports = function(app){
-    var TorrentService = app.services.TorrentService;
-    var DownloadService = app.services.DownloadService;
+    var TorrentService             = app.services.TorrentService;
+    var DownloadService            = app.services.DownloadService;
+    var TorrentsDownloadedService  = app.services.TorrentsDownloadedService;
     
     return {
         onGetAll: function(req, res){
@@ -13,6 +14,18 @@ module.exports = function(app){
             res.json(out);
         },
         
+        onGetBestDownloads: function(req, res){
+            req.user
+            TorrentsDownloadedService.getBestDownloads(req.user.id, true, 20).then(
+                function(data){
+                    res.json(data).end();
+                },
+                function(err){
+                    res.status(500).end();
+                }
+            )
+        },
+        
         onGetTrailer: function(req, res){
             if(!req.params.id){
                 return res.status(404);
@@ -23,7 +36,6 @@ module.exports = function(app){
                     res.json(data);
                 },
                 function(err){
-                    console.log(require('util').inspect(err));
                     res.status(500)
                        .end();
                 }

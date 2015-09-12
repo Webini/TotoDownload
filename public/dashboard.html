@@ -91,6 +91,11 @@
                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
               </a>
             </li>
+            <li ng-class="{active: currentRoute == '/top' }">
+              <a href="#/top">
+                <i class="fa fa-star"></i> <span>{{ 'TOP_DOWNLOADS_MENU'|translate }}</span>
+              </a>
+            </li>
             <li ng-class="{active: currentRoute == '/dashboard/my-uploads' }">
               <a href="#/dashboard/my-uploads">
                 <i class="fa fa-cart-arrow-down"></i> <span>{{ 'MY_UPLOADS'|translate }}</span>

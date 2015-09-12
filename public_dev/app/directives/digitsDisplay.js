@@ -1,5 +1,19 @@
 angular.module('totodl')
-       .directive('digitsDisplay', function(){
+       .service('digitsDisplay', function(){
+    return function(data, length){
+        data = data.toString();                
+        var diff = length - data.length;
+        var prepend = '';
+        
+        for(;diff > 0; diff--){
+            prepend += '0';
+        }
+        
+        return prepend + data; 
+    };
+});
+       
+angular.module('totodl').directive('digitsDisplay', ['digitsDisplay', function(){
     return {
         restrict: 'E',
         scope: {
@@ -15,17 +29,8 @@ angular.module('totodl')
                 if(newVal == oldVal && $scope.digits !== null)
                     return;
                 
-                
-                var digits = $scope.number.toString();
-                var diff = $scope.length - digits.length;
-                var prepend = '';
-                
-                for(;diff > 0; diff--){
-                    prepend += '0';
-                }
-                
-                $scope.digits = prepend + digits; 
+                return digitsDisplay($scope.number, $scope.length);
             });
         }
     };
-});  
+}]);  
