@@ -44,7 +44,8 @@ angular.module('totodl', [
     'angular-loading-bar',
     'services',
     'flow',
-    'ngDialog'
+    'ngDialog',
+    'tdGal'
 ]).config(['$routeProvider', '$translateProvider', 'flowFactoryProvider', function($routeProvider, $translateProvider, flowFactoryProvider){
     $routeProvider.otherwise({redirectTo: '/dashboard'});
     languageSetup($routeProvider, $translateProvider);

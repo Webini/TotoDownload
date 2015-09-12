@@ -1,3 +1,7 @@
+<!-- gallery template -->
+<script type="text/ng-template" id="/gallery/backface.html">
+    <div class="fa fa-cloud-download"></div>
+</script>
 <!-- Content Header (Page header) -->
 <section class="content-header">
   <h1>
@@ -6,100 +10,14 @@
 </section>
 
 <!-- Main content -->
-<section class="content">    
-    <div class="tdgal">
-        <div class="tdvp">
-            
-            <div class="element" data-label="X-Men trolo">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/14/03/24/14/35/575642.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/14/03/24/14/35/575642.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            <div class="element" data-label="Dexter S01e02">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/210/032/21003280_20130504002100017.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/210/032/21003280_20130504002100017.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            <div class="element" data-label="Mr. ROBOT S01">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/15/05/06/16/13/020977.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/15/05/06/16/13/020977.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            <div class="element" data-label="Orange is the new black S01e02">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/pictures/15/06/10/10/15/094325.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/pictures/15/06/10/10/15/094325.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            <div class="element" data-label="Prout">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/90/71/79/20214705.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/90/71/79/20214705.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            <div class="element link" data-label="Notre jour viendra">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/78/20/39/19474488.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/medias/nmedia/18/78/20/39/19474488.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            <div class="element link" data-label="magnolia">
-                <div class="front applyHeight">
-                    <div class="image" style="background-image: url(http://images.allocine.fr/medias/04/66/25/046625_af.jpg)"></div>
-                    <div class="applyHeight">
-                        <div class="mirror" style="background-image: url(http://images.allocine.fr/medias/04/66/25/046625_af.jpg)"></div>
-                        <div class="shadow"></div>
-                    </div>
-                </div>
-                <div class="back applyHeight"><span class="fa fa-cloud-download"></span></div>
-            </div>
-            
-        </div>
-        <div class="tdlabel">
-            <div class="label-overflow">
-                <div class="text">Je</div>
-                <div class="text">vais</div>
-                <div class="text">voir</div>
-                <div class="text">si</div>
-                <div class="text">c'est</div>
-                <div class="text">fait</div>
-                <div class="text">de</div>
-                <div class="text">manière</div>
-                <div class="text">opérationnelle</div>
-                <div class="text">ou</div>
-                <div class="text">si</div>
-                <div class="text">c'est</div>
-                <div class="text">fucké</div>
-            </div>
-        </div>
-    </div>
+<section class="content"> 
+    <td-gal data="results"
+            height-ratio="1.333"
+            template-url="/gallery/backface.html"
+            controller="GalleryController"
+            class="gallery"
+            ng-if="results.length > 0">
+    </td-gal>
     <div class="callout callout-info" ng-if="noResults">
         <h4>{{ 'NO_RESULTS_FOUND' | translate }}</h4>
         <p>{{ 'RETRY_LATER'|translate }}</p>
@@ -125,4 +43,4 @@
         </div>
         <div class="clearfix"></div>
     </div>
-</section><!-- /.content -->
+</section><!-- /.content --> 

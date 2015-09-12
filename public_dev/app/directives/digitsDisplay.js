@@ -13,7 +13,7 @@ angular.module('totodl')
     };
 });
        
-angular.module('totodl').directive('digitsDisplay', ['digitsDisplay', function(){
+angular.module('totodl').directive('digitsDisplay', ['digitsDisplay', function(digitsDisplay){
     return {
         restrict: 'E',
         scope: {

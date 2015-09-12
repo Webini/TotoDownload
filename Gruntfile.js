@@ -16,6 +16,7 @@ module.exports = function(grunt) {
                         './bower_components/fusty-flow.js/src/fusty-flow-factory.js',
                         './bower_components/fusty-flow.js/src/fusty-flow.js',
                         './bower_components/ngDialog/js/ngDialog.js',
+						'./bower_components/TdGal/dist/js/tdgal.angular.standalone.js',
                         './public_dev/app/app.js',
                         './public_dev/app/controllers/registerController.js',
                         './public_dev/app/controllers/**/*.js',
@@ -42,6 +43,7 @@ module.exports = function(grunt) {
 					"./public/css/common.css": [ 
                         "./bower_components/ngDialog/css/ngDialog.css",
                         "./bower_components/angular-loading-bar/src/loading-bar.css", 
+						'./bower_components/TdGal/dist/css/tdgal.css',
                         "./public_dev/less/common.less"
                     ]
 				}
