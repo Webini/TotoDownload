@@ -6,7 +6,10 @@
         <div ng-if="trailerError" class="text-center">
             {{ 'UNKNOWN_ERROR' | translate }}       
         </div>
-        <video controls autoplay class="allwidth" ng-if="!trailerError && !trailerLoading" ng-src="{{ trusted(trailer) }}"></video>
+        
+        <video controls autoplay class="allwidth" ng-if="!trailerError && !trailerLoading && trailerAutoplay" ng-src="{{ trusted(trailer) }}"></video>
+        <video controls class="allwidth" ng-if="!trailerError && !trailerLoading && !trailerAutoplay" ng-src="{{ trusted(trailer) }}"></video>
+        
         <div ng-show="trailerLoading" class="overlay ng-scope ng-hide">
             <i class="fa fa-refresh fa-spin"></i>
         </div>

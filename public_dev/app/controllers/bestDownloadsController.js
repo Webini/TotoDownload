@@ -5,13 +5,32 @@ angular.module('totodl')
                 controller: 'BestDownloadsController'
             });
        }])
-       .controller('BestDownloadsController', [ '$scope', '$q', 'TorrentsService', 'SyncService', 'digitsDisplay', 
-function($scope, $q, TorrentsService, SyncService, digitsDisplay){
+       .controller('BestDownloadsController', [ '$scope', '$q', '$location', '$controller', 'TorrentsService', 'SyncService', 'digitsDisplay', 
+function($scope, $q, $location, $controller, TorrentsService, SyncService, digitsDisplay){
+    angular.extend(this, $controller('TrailerController', { $scope: $scope }));
+    $scope.trailerAutoplay = false;
+    
     $scope.loading = true;
     $scope.error = null;
     $scope.noResults = false;
     $scope.results = [];
+    $scope.resultsIndex = 0;
     $scope.relatResults = null;
+    $scope.torrent = null;
+    
+    /**
+     * Define the current torrent 
+     */
+    function setCurrentTorrent(torrent){
+        $scope.torrent = {
+            runtime: torrent.runtime,
+            screenSize: torrent.screenSize,
+            genre: torrent.genre,
+            year: torrent.year,
+            synopsis: torrent.synopsis,
+            trailer: torrent.trailer
+        };
+    }
     
     function handleError(err){
         if(err === false)
@@ -60,18 +79,31 @@ function($scope, $q, TorrentsService, SyncService, digitsDisplay){
                         name += (torrent.guessedSeason ? 'S' + digitsDisplay(torrent.guessedSeason, 2) : '');
                         name += (torrent.guessedEpisode ? 'E' + digitsDisplay(torrent.guessedEpisode, 2) : '');
                         
-                        $scope.results.push({
-                            label: name,
-                            image: torrent.poster,
-                            link: '/torrent/' + torrent.hash + '/' + (torrent.guessedType != 'unknown' && torrent.guessedType ? 'preview' : 'files')
-                        });
+                        torrent.label = name;
+                        torrent.image = torrent.poster;
+                        torrent.link = '/torrent/' + torrent.hash + '/' + (torrent.guessedType != 'unknown' && torrent.guessedType ? 'preview' : 'files');
+                        
+                        $scope.results.push(torrent);
                         return true;
                     }
                 })
             }
             
             $scope.relatResults = null;
+            setCurrentTorrent($scope.results[0]);
         },
         handleError
     );
+    
+    
+    $scope.$on('tdgal-focus', function($evt, data){
+        setCurrentTorrent(data);
+        $scope.getTrailer();
+        $scope.$apply();
+    });
+    
+    $scope.$on('tdgal-click', function($evt, data){
+        $location.path(data.link);
+        $scope.$apply();
+    });
 }]);   
