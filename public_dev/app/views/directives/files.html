@@ -1,8 +1,8 @@
-
 <div ng-repeat="(key, item) in items track by item.$$time" class="torrent-files">
     <!-- directories -->
     <div ng-if="key.substr(0,2) != '__'">
         <i class="fa fa-folder-open"></i>&nbsp;{{ key }}
+        <button type="button" class="btn btn-default btn-xs pull-right" clipboard text="getLinks(item)"><i class="fa fa-clipboard"></i>{{ 'COPY' | translate }}</button>
         <div ng-if="!item['$$empty']" ng-include="'/app/views/directives/files.html'" ng-init="items = item"></div>
     </div>
     <!-- files -->

@@ -89,6 +89,6 @@ module.exports = function(grunt) {
     * grunt.loadNpmTasks('grunt-ng-annotate');
 	**/
     grunt.registerTask('default', [ 'watch' ]);
-    grunt.registerTask('install-alte', [ 'copy' ]);
+    grunt.registerTask('install-alte', [ 'copy:alte' ]);
     grunt.registerTask('build', [ 'uglify', 'less' ]);
 };

@@ -1,6 +1,6 @@
 angular.module('totodl')
-       .controller('FilesController', [ '$scope', '$rootScope', 'User',  
-function($scope, $rootScope, User){
+       .controller('FilesController', [ '$scope', '$rootScope', '$location', 'User',  
+function($scope, $rootScope, $location, User){
     var types = {
         pic: 'fa-picture-o',    
         zip: 'fa-archive',
@@ -65,9 +65,31 @@ function($scope, $rootScope, User){
     $scope.Math = Math;
     $scope.__firstFilesCtrl = true;
     $scope.user = User.get();
+
+    var host = $location.protocol() + '://' + $location.host() + (($location.port() != 80) ? (':' + $location.port()) : '');
+
+    function linkifyItems(items){
+        var links = '';
+        for(var key in items){
+            if(key.substr(0, 2) != '__'){
+                links += linkifyItems(items[key]) + "\n";
+            }
+            else{
+                for(var fileKey in items[key]){
+                    var file = items[key][fileKey];
+                    if(file.raw.bytesCompleted == file.raw.length){
+                        links += $scope.getLink(file.raw, file.filename) + "\n";
+                    }
+                }
+            }
+        }
+        return links;
+    };
     
-    console.log('FILEs => ', $scope.torrent);
-    
+    $scope.getLinks = function(items){
+        return linkifyItems(items);
+    };
+        
     $scope.extensionToCss = function(ext){
         if(extensions[ext])
             return extensions[ext];
@@ -91,7 +113,7 @@ function($scope, $rootScope, User){
     };
     
     $scope.getLink = function(rawFile, fileName){
-        return '/torrents/download/' + $scope.torrent.hash + '/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + rawFile.id + '/' + encodeURIComponent(fileName);  
+        return host + '/torrents/download/' + $scope.torrent.hash + '/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + rawFile.id + '/' + encodeURIComponent(fileName);  
     };
     
     $scope.$watch('torrent.leftUntilDone', function(newVal, oldVal){
