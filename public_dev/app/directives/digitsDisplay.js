@@ -28,8 +28,8 @@ angular.module('totodl').directive('digitsDisplay', ['digitsDisplay', function(d
             $scope.$watch('number', function(newVal, oldVal){
                 if(newVal == oldVal && $scope.digits !== null)
                     return;
-                
-                return digitsDisplay($scope.number, $scope.length);
+                    
+                $scope.digits = digitsDisplay($scope.number, $scope.length);
             });
         }
     };
