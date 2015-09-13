@@ -16,11 +16,13 @@ module.exports = function(grunt) {
                         './bower_components/fusty-flow.js/src/fusty-flow-factory.js',
                         './bower_components/fusty-flow.js/src/fusty-flow.js',
                         './bower_components/ngDialog/js/ngDialog.js',
+						'./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
 						'./bower_components/TdGal/dist/js/tdgal.angular.standalone.js',
                         './public_dev/app/app.js',
                         './public_dev/app/controllers/registerController.js',
                         './public_dev/app/controllers/**/*.js',
                         './public_dev/app/services/**/*.js',
+                        './public_dev/app/filters/**/*.js',
                         './public_dev/app/directives/**/*.js'
 					]
 				},

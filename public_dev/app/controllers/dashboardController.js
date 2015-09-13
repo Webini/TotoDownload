@@ -9,6 +9,7 @@ angular.module('totodl')
 function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, FilterService){
     $scope.filters = FilterService.filters;
     $scope.filtersComparator = FilterService.comparator;
+    $scope.elementsShown = 20;
     
     FilterService.setDefault([
         { name: 'MOVIES', data: { key: 'guessedType', value: 'movie' }},
@@ -19,7 +20,11 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, F
     ]);
     
     $scope.torrents = SyncService.data.torrents;
-    //$scope.lastChange = SyncService.data.lastChange;
+    
+    $scope.addElementsShown = function(){
+        $scope.elementsShown += 20;    
+    }
+    
     
     var unbindTorrentsChange = $rootScope.$on('torrents-change', function($evt, torrents){
         $scope.torrents = torrents;

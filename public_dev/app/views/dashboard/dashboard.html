@@ -14,5 +14,12 @@
 
 <!-- Main content -->
 <section class="content" ng-controller="SearchController as searchCtrl">
-    <div class="box box-solid torrent" ng-repeat="torrent in torrents | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' track by torrent.syncTag" ng-controller="WidgetController" torrent-display></div>
+    <div infinite-scroll="addElementsShown()" 
+         infinite-scroll-distance="0.7">
+        <div class="box box-solid torrent" 
+            ng-repeat="torrent in torrents | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' | limitTo:elementsShown track by torrent.syncTag" 
+            ng-controller="WidgetController"
+            torrent-display>
+        </div>
+    </div>
 </section><!-- /.content -->

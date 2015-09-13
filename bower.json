@@ -32,6 +32,7 @@
     "fusty-flow.js": "~1",
     "ng-flow": "~2",
     "ngDialog": "~0.3.12",
-    "TdGal": "https://github.com/Webini/TdGal.git#master"
+    "TdGal": "https://github.com/Webini/TdGal.git#master",
+    "ngInfiniteScroll": "~1.2.1"
   }
 }
