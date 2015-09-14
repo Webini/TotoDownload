@@ -17,6 +17,9 @@
 https://pythonhosted.org/transmissionrpc/reference/transmissionrpc.html
 https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt
 
+
+Virer le service digitsDisplay, envoyer ca dans un filter
+
 todo:
 - Catch l'event torrent-delete et rediriger le mec vers la dashboard si il est sur la page torrent
 
