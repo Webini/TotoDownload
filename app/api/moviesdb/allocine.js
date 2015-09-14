@@ -123,7 +123,11 @@ module.exports = function(config){
         *   poster: string //movie poster link, separated by ", " can be null
         *   synopsis: string, //movie synopsis
         *   synopsisShort: string, //short synopsis
-        *   trailer: string, //link to trailer player, can be null
+        *   trailer: string, //trailer ID, can be null
+        *   directors: string, //movie directors nullable
+        *   actors: string, //movie small casting nullable
+        *   bluRayReleaseDate: date //blueray release date nullable
+        *   releaseDate: date //movie theaters release date nullable
         * }
         **/
         getMovie: function(id, type){
@@ -146,6 +150,7 @@ module.exports = function(config){
                 }
                 
                 var result = results[filter];
+                
                 var out = {
                     runtime: result.runtime ? result.runtime : null,
                     title: result.title,
@@ -155,8 +160,17 @@ module.exports = function(config){
                     synopsis: result.synopsis,
                     synopsisShort: result.synopsisShort,
                     trailer: result.trailer ? result.trailer.href : null,
+                    release: result.release ? new Date(result.release.releaseDate) : null,
+                    bluRayReleaseDate: result.bluRayReleaseDate ? new Date(result.bluRayReleaseDate) : null,
+                    directors: (result.castingShort ? result.castingShort.directors : null),
+                    actors: (result.castingShort ? result.castingShort.actors : null),
                     genre: ''
                 };
+                
+                var trailerId = null;
+                if(out.trailer && (trailerId = /([0-9]+)/.exec(out.trailer)) !== null){
+                    out.trailer = trailerId[1]
+                }
                 
                 //dsplay genders
                 for(var i = 0, len = result.genre.length; i < len; i++){

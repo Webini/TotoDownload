@@ -68,6 +68,22 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.STRING(255),
         allowNull: true
       },
+      release: {
+          type: DataTypes.DATEONLY,
+          allowNull: true
+      },
+      bluRayReleaseDate: {
+          type: DataTypes.DATEONLY,
+          allowNull: true  
+      },
+      directors: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+      },
+      actors: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+      },
       screenSize: {
         type: DataTypes.STRING(16),
         allowNull: true

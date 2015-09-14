@@ -26,6 +26,14 @@
                         <td>{{ 'YEAR'|translate }}</td>
                         <td>{{ torrent.year }}</td>
                     </tr>
+                    <tr ng-if="torrent.directors">
+                        <td>{{ 'DIRECTORS'|translate }}</td>
+                        <td>{{ torrent.directors }}</td>
+                    </tr>
+                    <tr ng-if="torrent.actors">
+                        <td>{{ 'ACTORS'|translate }}</td>
+                        <td>{{ torrent.actors }}</td>
+                    </tr>
                     <tr ng-if="torrent.synopsis">
                         <td>{{ 'SYNOPSIS'|translate }}</td>
                         <td ng-bind-html="raw(torrent.synopsis)"></td>

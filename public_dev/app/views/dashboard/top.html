@@ -10,20 +10,19 @@
 </section>
 
 <!-- Main content -->
-<section class="content"> 
+<div class="content" ng-if="results.length > 0"> 
     <td-gal data="results"
             index="resultsIndex"
             height-ratio="1.333"
             template-url="/gallery/backface.html"
-            class="gallery"
-            ng-if="results.length > 0">
+            class="gallery">
     </td-gal>
 </div>
 
-<div class="content">
-    <div class="row" ng-if="results.length > 0 && torrent !== null">
-        <div class="col-md-6"><div class="box box-primary" ng-include="'/app/views/torrent/preview.html'"></div></div>
+<div class="content" ng-if="results.length > 0 && torrent !== null">
+    <div class="row">
         <div class="col-md-6" ng-if="torrent.trailer"><div class="box box-primary" ng-include="'/app/views/torrent/trailer.html'"></div></div>
+        <div class="col-md-6"><div class="box box-primary" ng-include="'/app/views/torrent/preview.html'"></div></div>
     </div>
 </div>
 
