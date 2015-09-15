@@ -5,9 +5,10 @@ angular.module('totodl')
                 controller: 'BestDownloadsController'
             });
        }])
-       .controller('BestDownloadsController', [ '$scope', '$q', '$location', '$controller', 'TorrentsService', 'SyncService', 'digitsDisplay', 
-function($scope, $q, $location, $controller, TorrentsService, SyncService, digitsDisplay){
+       .controller('BestDownloadsController', [ '$scope', '$q', '$location', '$controller', '$filter', 'TorrentsService', 'SyncService', 
+function($scope, $q, $location, $controller, $filter, TorrentsService, SyncService){
     angular.extend(this, $controller('TrailerController', { $scope: $scope }));
+    var digitsDisplay = $filter('digitsDisplay');
     $scope.trailerAutoplay = false;
     
     $scope.loading = true;

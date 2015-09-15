@@ -1,8 +1,5 @@
-/**
- * https://github.com/omichelsen/angular-clipboard/blob/master/angular-clipboard.js
- */
 angular.module('totodl')
-       .directive('clipboard', ['$document', function ($document) {
+    .directive('clipboard', ['$document', function ($document) {
         return {
             restrict: 'A',
             scope: {
@@ -10,21 +7,12 @@ angular.module('totodl')
                 onError: '&',
                 text: '&'
             },
-            link: function (scope, element, attr) {
-                var asHtml = scope.$eval(attr.useHtml);
-                
+            link: function (scope, element) {
                 function createNode(text) {
-                    var node = $document[0].createElement(asHtml ? 'div' : 'textarea');
+                    var node = $document[0].createElement('textarea');
                     node.style.position = 'absolute';
                     node.style.left = '-10000px';
-                    
-                    if(asHtml){
-                        node.innerHTML = text;
-                    }
-                    else{
-                        node.textContent = text;
-                    }
-                    
+                    node.textContent = text;
                     return node;
                 }
 
@@ -34,11 +22,8 @@ angular.module('totodl')
 
                     var selection = $document[0].getSelection();
                     selection.removeAllRanges();
+                    node.select();
 
-                    var range = $document[0].createRange();
-                    range.selectNodeContents(node);
-                    selection.addRange(range);
-                        
                     $document[0].execCommand('copy');
                     selection.removeAllRanges();
 

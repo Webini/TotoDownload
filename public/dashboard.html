@@ -100,6 +100,11 @@
                 <i class="fa fa-cart-arrow-down"></i> <span>{{ 'MY_UPLOADS'|translate }}</span>
               </a>
             </li>
+            <li ng-show="user.is(roles.SUPER_ADMIN)" ng-class="{active: currentRoute == '/wishes' }">
+              <a href="#/wishes">
+                <i class="fa fa-magic"></i> <span>{{ 'MYWISHES'|translate }}</span>
+              </a>
+            </li>
             <li ng-show="user.is(roles.UPLOADER) && user.diskSpace > 0" ng-class="{active: currentRoute == '/upload' }">
               <a href="#/upload">
                 <i class="fa fa-upload"></i> <span>{{ 'UPLOAD'|translate }}</span>

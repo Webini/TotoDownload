@@ -65,10 +65,13 @@ function($scope, $rootScope, $location, User){
     $scope.Math = Math;
     $scope.__firstFilesCtrl = true;
     $scope.user = User.get();
-
+    $scope.filesSearch = {
+        keywords: ''
+    };
+    
     var host = $location.protocol() + '://' + $location.host() + (($location.port() != 80) ? (':' + $location.port()) : '');
 
-    function linkifyItems(items){
+    function linkifyItems(items, keywords){
         var links = '';
         for(var key in items){
             if(key.substr(0, 2) != '__'){
@@ -77,8 +80,10 @@ function($scope, $rootScope, $location, User){
             else{
                 for(var fileKey in items[key]){
                     var file = items[key][fileKey];
-                    if(file.raw.bytesCompleted == file.raw.length){
-                        links += $scope.getLink(file.raw, file.filename) + "\n";
+                    if($scope.filesComparator(file.keywords, $scope.filesSearch.keywords)){
+                        if(file.raw.bytesCompleted == file.raw.length){
+                            links += $scope.getLink(file.raw, file.filename) + "\n";
+                        }
                     }
                 }
             }

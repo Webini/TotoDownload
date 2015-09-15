@@ -1,5 +1,5 @@
 angular.module('totodl')
-       .service('digitsDisplay', function(){
+       .filter('digitsDisplay', function(){
     return function(data, length){
         data = data.toString();                
         var diff = length - data.length;
@@ -13,7 +13,7 @@ angular.module('totodl')
     };
 });
        
-angular.module('totodl').directive('digitsDisplay', ['digitsDisplay', function(digitsDisplay){
+angular.module('totodl').directive('digitsDisplay', ['$filter', function($filter){
     return {
         restrict: 'E',
         scope: {
@@ -24,6 +24,7 @@ angular.module('totodl').directive('digitsDisplay', ['digitsDisplay', function(d
         template: '<span>{{ digits }}</span>',
         link: function($scope, $elem, $attr){
             $scope.digits = null;
+            var digitsDisplay = $filter('digitsDisplay');
             
             $scope.$watch('number', function(newVal, oldVal){
                 if(newVal == oldVal && $scope.digits !== null)

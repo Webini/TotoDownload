@@ -123,5 +123,7 @@
     "RETRY_LATER": "Please retry later",
     "COPY": "Copy",
     "DIRECTORS": "Directors",
-    "ACTORS": "Actors"
+    "ACTORS": "Actors",
+    "MYWISHES": "Mes voeux",
+    "WISHES_HOW_DOES_IT_WORK": "You've just seen an amazing movie trailer ? You have no time for going to movie theater and it's the last film projection ? The movie isn't released in Bluray or DVD ? Waiting for a new episode of your favorite serie  ? Create a wishlist and let the server download the movie of your dream when available !"
 }

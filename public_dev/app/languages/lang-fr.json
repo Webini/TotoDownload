@@ -123,5 +123,7 @@
     "RETRY_LATER": "Veuillez réessayer plus tard",
     "COPY": "Copier",
     "DIRECTORS": "Réalisateurs",
-    "ACTORS": "Acteurs"
+    "ACTORS": "Acteurs",
+    "MYWISHES": "Mes voeux",
+    "WISHES_HOW_DOES_IT_WORK": "Vous avez vu une bande annonce du futur ? Vous n'avez pas le temps pour aller au cinéma et c'est la dernière séance ? Le film n'est pas encore disponible en BluRay ou DVD ? Vous attendez un nouvel épisode de votre série favorite ? Créez une liste de voeux et laisser le serveur télécharger le film de vos rêves dès qu'il sera en ligne !"
 }
