@@ -6,19 +6,22 @@
         <div ng-if="!item['$$empty']" ng-include="'/app/views/directives/files.html'" ng-init="items = item"></div>
     </div>
     <!-- files -->
-    <div ng-if="key.substr(0,2) == '__'" ng-repeat="file in item | filter:filesSearch:filesComparator">
-        <div ng-if="file.raw.bytesCompleted == file.raw.length" class="completed">
-            <a href="{{ getLink(file.raw, file.filename) }}" target="_blank">
+
+    <div ng-if="key.substr(0,2) == '__'">
+        <div ng-repeat="file in item | filter:filesSearch:filesComparator">
+            <div ng-if="file.raw.bytesCompleted == file.raw.length" class="completed">
+                <a href="{{ getLink(file.raw, file.filename) }}" target="_blank">
+                    <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
+                    <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
+                </a>
+            </div>
+            
+            <div ng-if="file.raw.bytesCompleted != file.raw.length">
                 <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
                 <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
-            </a>
-        </div>
-        
-        <div ng-if="file.raw.bytesCompleted != file.raw.length">
-            <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
-            <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
-            <div class="progress xxs">
-                <div class="progress-bar progress-bar-aqua" progress-done="file.raw.bytesCompleted" progress-total="file.raw.length" progress-width></div>
+                <div class="progress xxs">
+                    <div class="progress-bar progress-bar-aqua" progress-done="file.raw.bytesCompleted" progress-total="file.raw.length" progress-width></div>
+                </div>
             </div>
         </div>
     </div>
