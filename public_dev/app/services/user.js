@@ -6,7 +6,8 @@ function($http, $q, $rootScope, UsersService){
             LEETCHI: 0,
             UPLOADER: 1,
             ADMIN: 2,
-            SUPER_ADMIN: 4 
+            SUPER_ADMIN: 4,
+            TAGGER: 8
         },
         _users: null,
         _loggedUser: null,

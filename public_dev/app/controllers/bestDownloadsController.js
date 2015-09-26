@@ -97,14 +97,16 @@ function($scope, $q, $location, $controller, $filter, TorrentsService, SyncServi
     );
     
     
-    $scope.$on('tdgal-focus', function($evt, data){
+    $scope.itemFocus = function(data){
+    //$scope.$on('tdgal-focus', function($evt, data){
         setCurrentTorrent(data);
         $scope.getTrailer();
         $scope.$apply();
-    });
+    };
     
-    $scope.$on('tdgal-click', function($evt, data){
+    $scope.itemClick = function(data){
+    //$scope.$on('tdgal-click', function($evt, data){
         $location.path(data.link);
         $scope.$apply();
-    });
+    };
 }]);   

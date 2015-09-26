@@ -6,9 +6,11 @@ module.exports = function(app){
     var userCtrl            = require(__dirname + '/../controllers/http/UserController.js')(app);
     var uploadCtrl          = require(__dirname + '/../controllers/http/UploadController.js')(app);
     var torrentCtrl         = require(__dirname + '/../controllers/http/TorrentController.js')(app);
+    var tagCtrl             = require(__dirname + '/../controllers/http/TagController.js')(app);
     
     var authenticateFilter = jwt({ secret: app.config.secret.token });
-    var myFilter = myTorrentFilter(); //check if the torrent is our
+    var myFilter           = myTorrentFilter(); //check if the torrent is our
+    var myTaggerFilter     = myTorrentFilter(app.services.UserService.roles.TAGGER); //check if the torrent is our, or if we are role.TAGGER
     var roleUploaderFilter = roleFilter(app.services.UserService.roles.UPLOADER);
     
     router.post('/auth/register', userCtrl.onRegister);
@@ -41,7 +43,10 @@ module.exports = function(app){
         torrentCtrl.onRawDownload
     );
     
-    router.get('/torrents/all', torrentCtrl.onGetAll);
+    router.get('/torrents/all', authenticateFilter, torrentCtrl.onGetAll);
+    
+    router.post('/tag/search', authenticateFilter, tagCtrl.search);
+    router.post('/tag/set/:movieId([0-9]+)/:type([0-1]{1})', authenticateFilter, myTaggerFilter, tagCtrl.set);
     
     app.http.use('/', router);
 };

@@ -33,6 +33,10 @@
     "ng-flow": "~2",
     "ngDialog": "~0.3.12",
     "TdGal": "https://github.com/Webini/TdGal.git#master",
-    "ngInfiniteScroll": "~1.2.1"
+    "ngInfiniteScroll": "~1.2.1",
+    "angular": "1.4.6"
+  },
+  "resolutions": {
+    "angular": "1.4.6"
   }
 }

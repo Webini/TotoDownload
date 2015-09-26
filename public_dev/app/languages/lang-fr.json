@@ -125,5 +125,14 @@
     "DIRECTORS": "Réalisateurs",
     "ACTORS": "Acteurs",
     "MYWISHES": "Mes voeux",
-    "WISHES_HOW_DOES_IT_WORK": "Vous avez vu une bande annonce du futur ? Vous n'avez pas le temps pour aller au cinéma et c'est la dernière séance ? Le film n'est pas encore disponible en BluRay ou DVD ? Vous attendez un nouvel épisode de votre série favorite ? Créez une liste de voeux et laisser le serveur télécharger le film de vos rêves dès qu'il sera en ligne !"
+    "WISHES_HOW_DOES_IT_WORK": "Vous avez vu une bande annonce du futur ? Vous n'avez pas le temps pour aller au cinéma et c'est la dernière séance ? Le film n'est pas encore disponible en BluRay ou DVD ? Vous attendez un nouvel épisode de votre série favorite ? Créez une liste de voeux et laisser le serveur télécharger le film de vos rêves dès qu'il sera en ligne !",
+    "CHANGE_MOVIE_TAG": "Modifier le tag d'un film / serie",
+    "TORRENT_TAG_TYPE": "Type de torrent",
+    "TYPE_MOVIE": "Film",
+    "TYPE_SERIE": "Serie",
+    "CHANGE_TAG": "Changer le tag",
+    "MOVIE_SERIE_NAME": "Nom du film / serie",
+    "TORRENT_TAG_EXPLAIN": "Cet outil vous permet d'éditer le film / série associé avec le torrent.",
+    "TORRENT_TAG_CONFIRM": "Vous êtes sur le point de remplacer le tag du torrent par <b>{{ newName }}</b>. Continuer quand même ?",
+    "CONTINUE": "Continuer"
 }

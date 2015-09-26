@@ -1,0 +1,19 @@
+<div class="modal-dialog">
+    <div class="modal-content box">
+        <div ng-show="mdloading" class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>
+        </div>
+
+        <div class="modal-header">
+            <button type="button" class="close ngdialog-close" data-dismiss="modal" aria-label="Close"></button>
+            <h4 class="modal-title">{{ 'CHANGE_MOVIE_TAG' | translate }}</h4>
+        </div>
+        <div class="modal-body">
+            <p translate="TORRENT_TAG_CONFIRM" translate-values="{newName: getMovieName(ngDialogData)}"></p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default pull-left" ng-click="closeThisDialog(1)" data-dismiss="modal">{{ 'CANCEL' | translate }}</button>
+            <button type="button" class="btn btn-primary" ng-click="changeTag()">{{ 'CONTINUE' | translate }}</button>
+        </div>
+    </div><!-- /.modal-content -->
+</div>

@@ -22,7 +22,7 @@
         </a>
     </div>
     <div class="info-box-number widget-title text-overflow">
-        <span ng-if="torrent.guessedTitle">
+        <span ng-if="torrent.guessedTitle || torrent.title">
             {{ torrent.title ? torrent.title : torrent.guessedTitle }}
             <span ng-if="torrent.guessedEpisode || torrent.guessedSeason">
                 &nbsp;-&nbsp;

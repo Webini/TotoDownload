@@ -5,9 +5,12 @@ angular.module('totodl')
                 controller: 'TorrentController'
             });
        }])
-       .controller('TorrentController', [ '$scope', '$rootScope', '$routeParams', '$controller', 'SyncService', '$sce', 'FilesService', 
-function($scope, $rootScope, $routeParams, $controller, SyncService, $sce, FilesService){
+       .controller('TorrentController', [ '$scope', '$rootScope', '$routeParams', '$controller', 'User', 'SyncService', '$sce', 'FilesService', 
+function($scope, $rootScope, $routeParams, $controller, User, SyncService, $sce, FilesService){
     angular.extend(this, $controller('TrailerController', { $scope: $scope }));
+    
+    $scope.user = User.get();
+    $scope.roles = User.roles;
     
     $scope.smallView = '/app/views/directives/torrent.html';
     $scope.pageTemplate = '/app/views/torrent/' + $routeParams.page + '.html';

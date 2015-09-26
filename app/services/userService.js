@@ -8,7 +8,8 @@ module.exports = ['UserService', (function(){
         LEETCHI: 0,
         UPLOADER: 1,
         ADMIN: 2,
-        SUPER_ADMIN: 4
+        SUPER_ADMIN: 4,
+        TAGGER: 8
     };
         
     /**

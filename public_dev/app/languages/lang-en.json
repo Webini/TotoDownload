@@ -125,5 +125,14 @@
     "DIRECTORS": "Directors",
     "ACTORS": "Actors",
     "MYWISHES": "Mes voeux",
-    "WISHES_HOW_DOES_IT_WORK": "You've just seen an amazing movie trailer ? You have no time for going to movie theater and it's the last film projection ? The movie isn't released in Bluray or DVD ? Waiting for a new episode of your favorite serie  ? Create a wishlist and let the server download the movie of your dream when available !"
+    "WISHES_HOW_DOES_IT_WORK": "You've just seen an amazing movie trailer ? You have no time for going to movie theater and it's the last film projection ? The movie isn't released in Bluray or DVD ? Waiting for a new episode of your favorite serie  ? Create a wishlist and let the server download the movie of your dream when available !",
+    "CHANGE_MOVIE_TAG": "Edit movie / serie tag",
+    "TORRENT_TAG_TYPE": "Torrent type",
+    "TYPE_MOVIE": "Movie",
+    "TYPE_SERIE": "Serie",
+    "CHANGE_TAG": "Change tag",
+    "MOVIE_SERIE_NAME": "Movie / serie name",
+    "TORRENT_TAG_EXPLAIN": "This tool allow you to change the movie / serie associated with this torrent.",
+    "TORRENT_TAG_CONFIRM": "You are about to replace / set the torrent tag by <b>{{ newName }}</b>. Continue anyway ?",
+    "CONTINUE": "Continue"
 }

@@ -1,6 +1,89 @@
 ul {
     margin-bottom: 0px;   
 }
+
+
+/** radioboxes **/
+/* Cachons la case à cocher */
+[type="radio"]:not(:checked),
+[type="radio"]:checked {
+    position: absolute;
+    left: -9999px;
+}
+
+/* on prépare le label */
+[type="radio"]:not(:checked) + label,
+[type="radio"]:checked + label {
+    position: relative; /* permet de positionner les pseudo-éléments */
+    padding-left: 25px; /* fait un peu d'espace pour notre case à venir */
+    cursor: pointer;    /* affiche un curseur adapté */
+}
+
+
+
+/* Aspect des checkboxes */
+/* :before sert à créer la case à cocher */
+[type="radio"]:not(:checked) + label:before,
+[type="radio"]:checked + label:before {
+    content: '';
+    position: absolute;
+    left:0; top: 2px;
+    width: 16px; 
+    height: 16px; /* dim. de la case */
+    border-radius: 9px;
+    border: 1px solid #222d32; /*#367fa9;*/
+    background: #f8f8f8;
+}
+
+/* Aspect général de la coche */
+[type="radio"]:not(:checked) + label:after,
+[type="radio"]:checked + label:after {
+    content: ' ';
+    width: 10px;
+    height: 10px;
+    border-radius: 7px;
+    background-color: #00c0ef;
+    position: absolute;
+    top: 5px; left: 3px;
+    transition: all .2s; /* on prévoit une animation */
+}
+/* Aspect si "pas cochée" */
+[type="radio"]:not(:checked) + label:after {
+    opacity: 0; /* coche invisible */
+    transform: scale(0); /* mise à l'échelle à 0 */
+}
+/* Aspect si "cochée" */
+[type="radio"]:checked + label:after {
+    opacity: 1; /* coche opaque */
+    transform: scale(1); /* mise à l'échelle 1:1 */
+}
+
+.input-spinner-right { margin-right: 42px; }
+.visibility-hidden { visibility: hidden; }
+
+@keyframes fromRight {
+    from {
+        transform: translate3d(100%, 0, 0);
+    }
+    
+    to {
+        transform: none;
+    }
+}
+
+.animated.from-right {
+    animation-timing-function: ease-out;
+    animation-name: fromRight;
+}
+
+.animated {    
+    animation-duration: .25s;
+    animation-fill-mode: both;
+}
+
+
+.box { overflow: hidden; }
+
 .allwidth { width: 100%; }
 
 .layout-boxed {
@@ -166,5 +249,38 @@ ul {
 
 .nolr-padding { padding-left: 0px !important; padding-right: 0px !important; }
 
+
+/**
+* Tag module
+**/
+
+.tag {
+    .results {
+        margin: 15px auto;
+        width: 100%;
+        font-size: 16px;
+        
+        .content { cursor: pointer; }
+        .content:hover { box-shadow: 0px 0px 5px #0C6479; }
+        
+        .empty {
+            font-size: 6vw;
+            text-align: center;
+            padding: 2vw 0px;
+        }
+        
+        .poster {
+            width: 100%;
+        }
+        
+        .year {
+            font-size: 0.8em;
+            color: #a6a6a6;
+        }
+    }
+    
+}
+
 @import "modal.less";
 @import "gallery.less";
+@import "spinner.less";

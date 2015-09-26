@@ -5,6 +5,60 @@ module.exports = function(config){
     
     return {
          
+         /**
+          * Search a movie and get array of possibilities
+          * @param string keywords Movie / Serie keywords
+          * @param string type Movie type: "episode" || "movie"
+          * @param int limit Limit the results
+          * @return promise
+          * if success must return array of objects
+          * [{
+          *   id: int, // movieId
+          *   title: string, //movie title
+          *   originalTitle: string, //original movie title, can be null
+          *   year: int, //movie production year, can be null
+          *   poster: string //movie poster link, separated by ", " can be null
+          *   releaseDate: date //movie theaters release date nullable
+          * }, ...]
+          */
+        search: function(keywords, type, limit){
+            var defer = $q.defer();
+            var filter = (type == 'episode' ? 'tvseries' : 'movie');
+            
+            allocine.api('search', {
+                q: keywords,
+                count: limit,
+                filter: filter
+            },
+            function(error, results){
+                if(error){
+                    defer.reject('Api error');
+                    return;    
+                }
+                
+                if(results.feed.totalResults <= 0 || !results.feed[filter] || results.feed[filter].length <= 0){
+                    defer.resolve([]);
+                    return;
+                }
+                
+                for(var i = 0, sz = results.feed[filter].length; i < sz; i++){
+                    var elem = results.feed[filter][i];
+                    results.feed[filter][i] = {
+                        id: elem.code,
+                        title: elem.title,
+                        originalTitle: elem.originalTitle ? elem.originalTitle : null,
+                        releaseDate: elem.release ? new Date(elem.release.releaseDate) : null,
+                        poster: elem.poster ? elem.poster.href : null,
+                        year: elem.productionYear ? elem.productionYear : null,
+                    }; 
+                }
+                
+                defer.resolve(results.feed[filter]);
+            });
+            
+            return defer.promise;
+        },
+         
         /**
         * Search a movie and get informations about it
         * @param string name Movie / Serie name
@@ -22,7 +76,6 @@ module.exports = function(config){
             },
             function(error, results){
                 if(error){
-                    console.log(require('util').inspect(error));
                     defer.reject('Api error');
                     return;    
                 }
@@ -159,18 +212,13 @@ module.exports = function(config){
                     poster: result.poster ? result.poster.href : null,
                     synopsis: result.synopsis,
                     synopsisShort: result.synopsisShort,
-                    trailer: result.trailer ? result.trailer.href : null,
+                    trailer: result.trailer ? result.trailer.code : null,
                     release: result.release ? new Date(result.release.releaseDate) : null,
                     bluRayReleaseDate: result.bluRayReleaseDate ? new Date(result.bluRayReleaseDate) : null,
                     directors: (result.castingShort ? result.castingShort.directors : null),
                     actors: (result.castingShort ? result.castingShort.actors : null),
                     genre: ''
                 };
-                
-                var trailerId = null;
-                if(out.trailer && (trailerId = /([0-9]+)/.exec(out.trailer)) !== null){
-                    out.trailer = trailerId[1]
-                }
                 
                 //dsplay genders
                 for(var i = 0, len = result.genre.length; i < len; i++){

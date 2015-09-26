@@ -1,0 +1,49 @@
+<div ng-controller="TagController" class="tag">
+    <p>
+        {{ 'TORRENT_TAG_EXPLAIN' | translate }}
+    </p>
+    <div class="form-group">
+        <label>{{ 'TORRENT_TAG_TYPE' | translate }}</label><br />
+        <div class="row">
+            <div class="col-xs-3">
+                <input ng-change="getResults()" type="radio" id="cb_type_movie" ng-model="type" name="type" ng-value="0" />
+                <label for="cb_type_movie">{{ 'TYPE_MOVIE' | translate }}</label><br />
+            </div>
+            <div class="col-xs-3">
+                <input ng-change="getResults()" type="radio" id="cb_type_serie" ng-model="type" name="type" ng-value="1" />
+                <label for="cb_type_serie">{{ 'TYPE_SERIE' | translate }}</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="form-group has-feedback animated" ng-class="{'visibility-hidden': (type === null), 'from-right': (type !== null)}">
+        <label>{{ 'MOVIE_SERIE_NAME' | translate }}</label>
+        <input type="text" ng-change="getResults()" class="input-spinner-right form-control" ng-model="query" ng-model-options="{debounce:400}" placeholder="{{ 'SEARCH' | translate }}"/>
+        
+        <div ng-if="loading" class="spinner form-control-feedback">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+    
+    <div ng-if="results && results.length == 0" class="text-center results">
+        {{ 'NO_RESULTS_FOUND' | translate }}
+    </div>
+    
+    <div ng-if="results && results.length" class="results">
+        <div ng-repeat-start="movie in results" class="col-md-4 result">
+            <div ng-click="changeTagDialog(movie)" class="content">
+                <img ng-if="movie.poster" ng-src="{{ movie.poster }}" class="poster" />
+                <div ng-if="!movie.poster" class="bg-aqua empty">
+                    <i class="fa fa-film"></i>
+                </div>
+                <div class="title">
+                    {{ getMovieName(movie) }}
+                    <span ng-if="movie.year" class="year">({{ movie.year }})</span>
+                </div>
+            </div>
+        </div>
+        <div ng-repeat-end ng-if="(($index+1) % 3) == 0" class="clearfix"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>

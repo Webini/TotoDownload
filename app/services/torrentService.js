@@ -180,6 +180,7 @@ module.exports = ['TorrentService', (function(){
                 return app.orm.Torrent.find({ where: { hash: torrent.hash } });
             },
             function err(e){
+                console.log(torrent, e);
                 app.logger.log(TorrentService.errors.upsertError, torrent, e);
                 return $q.reject('upsertError', torrent, e);
             }
@@ -240,6 +241,34 @@ module.exports = ['TorrentService', (function(){
         return app.api.torrents.set([torrentHash], { seedRatioLimit: user.uploadRatio });
     };
     
+    /**
+     * Update torrent movies informations
+     * @param string hash Torrent hash
+     * @param int movieId Movie Id
+     * @param string type Movie type (episode / movie)
+     * @return promise
+     */
+     TorrentService.updateMovieId = function(hash, movieId, type){
+        console.log('TorrentService.updateMovieId', hash, movieId);
+        
+        var torrent = SyncService.get(hash);
+        if(!torrent){
+            return $q.reject('Torrent not found');
+        }
+        
+        torrent = torrent.dataValues;
+        
+        //retreive movie info
+        return app.api.moviesdb.getMovie(movieId, type).then(
+            function success(rtot){
+                torrent.guessedType = type;
+                torrent.movieId = movieId;
+                torrent.syncTag = null;
+                
+                return _.extend(torrent, rtot);
+            }
+        ).then(SyncService.updateOne);      
+     };
     
     /**
     * Add a torrent

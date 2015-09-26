@@ -39,6 +39,9 @@
                                 <li ng-class="{'active': (page == 'trackers') }">
                                     <a href="#/torrent/{{ torrent.hash }}/trackers"><i class="fa fa-share-alt"></i> {{ 'TRACKERS'|translate }}</a>
                                 </li>
+                                <li ng-show="user.is(roles.TAGGER) || user.id == torrent.userId" ng-class="{'active': (page == 'tag') }">
+                                    <a href="#/torrent/{{ torrent.hash }}/tag"><i class="fa fa-tag"></i> {{ 'CHANGE_TAG'|translate }}</a>
+                                </li>
                             </ul>
                         </div><!-- /.box-body -->
                     </div>
