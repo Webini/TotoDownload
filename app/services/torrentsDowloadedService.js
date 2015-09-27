@@ -30,7 +30,7 @@ module.exports = ['TorrentsDownloadedService', (function(){
             LEFT JOIN                                    \
                 Torrents ON Torrents.id = tdl.torrentId  \
             WHERE                                        '
-         + (moviesOnly ? 'tdl.guessedType = \'movie\' AND' : '') + ' \
+         + (moviesOnly ? 'Torrents.guessedType = \'movie\' AND' : '') + ' \
                 (                                        \
                     SELECT                               \
                         mdl.torrentId                    \
