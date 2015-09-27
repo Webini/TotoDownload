@@ -17,7 +17,7 @@ module.exports = function(app){
         
         onGetBestDownloads: function(req, res){
             req.user
-            TorrentsDownloadedService.getBestDownloads(req.user.id, true, 20).then(
+            TorrentsDownloadedService.getBestDownloads(req.user.id, true, true, 25).then(
                 function(data){
                     res.json(data)
                        .end();

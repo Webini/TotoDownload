@@ -11,7 +11,7 @@ module.exports = ['TorrentsDownloadedService', (function(){
      * @param bool withPosterOnly if we retreive only torrents with poster
      * @return promise
      */
-    tdlService.getBestDownloads = function(userId, withPosterOnly, limit){
+    tdlService.getBestDownloads = function(userId, withPosterOnly, moviesOnly, limit){
         var parameters = {
             userId: userId
         };
@@ -29,7 +29,8 @@ module.exports = ['TorrentsDownloadedService', (function(){
                 TorrentsDownloadeds AS tdl               \
             LEFT JOIN                                    \
                 Torrents ON Torrents.id = tdl.torrentId  \
-            WHERE                                        \
+            WHERE                                        '
+         + (moviesOnly ? 'tdl.guessedType = \'movie\' AND' : '') + ' \
                 (                                        \
                     SELECT                               \
                         mdl.torrentId                    \
