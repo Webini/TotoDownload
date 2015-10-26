@@ -13,24 +13,23 @@ angular.module('totodl')
     };
 });
        
-angular.module('totodl').directive('digitsDisplay', ['$filter', function($filter){
+angular.module('totodl').directive('digitsDisplay', ['$filter', '$parse', function($filter, $parse){
     return {
         restrict: 'E',
-        scope: {
-            length: '=length',
-            number: '=number'
-        },
         replace: true,
-        template: '<span>{{ digits }}</span>',
+        //template: '<span>{{ digits }}</span>',
         link: function($scope, $elem, $attr){
-            $scope.digits = null;
+            var length = $parse($attr.length)($scope);
             var digitsDisplay = $filter('digitsDisplay');
+            $elem.html('<span></span>');
+            var span = $elem.find('span');
             
-            $scope.$watch('number', function(newVal, oldVal){
+            $scope.digits = null;
+            $scope.$watch($attr.number, function(newVal, oldVal){
                 if(newVal == oldVal && $scope.digits !== null)
                     return;
-                    
-                $scope.digits = digitsDisplay($scope.number, $scope.length);
+                $scope.digits = digitsDisplay(newVal, length);
+                span.html($scope.digits);         
             });
         }
     };

@@ -37,7 +37,7 @@ angular.module('totodl')
             
             var labelType = ($scope.type.toLowerCase() == 'min' ? 0 : 1);
             
-            $scope.$watch('time', function(newVal, oldVal){
+            var unwatch = $scope.$watch('time', function(newVal, oldVal){
                 if(newVal == oldVal && $scope.label != -1)
                     return;
                 

@@ -26,11 +26,15 @@ module.exports = function(grunt) {
                         './public_dev/app/directives/**/*.js'
 					]
 				},
-				options: {
-					preserveComments: debug,
-					compress: !debug,
-					beautify: debug,
-					mangle: !debug
+				options: {       
+                    preserveComments: debug,
+                    compress: (!debug ? {
+                        drop_debugger: true,
+                        drop_console: true,
+                        angular: true
+                    } : false),
+                    beautify: debug,
+                    mangle: !debug
 				}
 			}
 		},

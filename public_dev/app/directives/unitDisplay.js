@@ -1,16 +1,26 @@
 angular.module('totodl')
-       .directive('unitDisplay', function(){
+       .directive('unitDisplay', [ '$translate', function($translate){
+    
+    function renderView($elem, unit, translations, label, suffix){
+        unit = (translations ? translations[unit] : '');
+        $elem.html(
+            label + ' ' + unit + suffix  
+        );
+    };
+           
     return {
         restrict: 'E',
-        scope: {
-            size: '=size',
-            suffix: '@suffix'
-        },
-        template: '{{ sizeLabel }} {{ sizeUnit | translate }}{{ suffix }}',
         link: function($scope, $elem, $attr){
             $scope.sizeLabel = -1;
+            $scope.suffix = ($attr.suffix ? $attr.suffix : '');
+            var translations = null;
             
-            $scope.$watch('size', function(newVal, oldVal){
+            $translate([ 'B', 'GB', 'MB', 'KB' ]).then(function(results){
+                translations = results;
+                renderView($elem, $scope.sizeUnit, translations, $scope.sizeLabel, $scope.suffix);
+            });
+            
+            var unwatch = $scope.$watch($attr.size, function(newVal, oldVal){
                 if(newVal == oldVal && $scope.sizeLabel != -1)
                     return;
                 
@@ -36,7 +46,9 @@ angular.module('totodl')
                         $scope.sizeUnit = 'B';
                     }
                 }
+                
+                renderView($elem, $scope.sizeUnit, translations, $scope.sizeLabel, $scope.suffix);
             });
         } 
     };
-}); 
+}]); 

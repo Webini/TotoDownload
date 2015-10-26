@@ -66,7 +66,7 @@ function($http, $q, $rootScope, UsersService){
                 return this._loggedUser;
             }
             else {
-                if(this._users[id])
+                if(this._users && this._users[id])
                     return this._users[id];
                 return null;
             }

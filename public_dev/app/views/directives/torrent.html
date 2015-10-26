@@ -29,9 +29,9 @@
                 <span ng-if="torrent.guessedSeason">S<digits-display number="torrent.guessedSeason" length="2"></digits-display></span>
                 <span ng-if="torrent.guessedEpisode">E<digits-display number="torrent.guessedEpisode" length="2"></digits-display></span>
             </span>
-            <span class="text-lighter small-text">&nbsp;-&nbsp;{{ torrent.name }}</span>
+            <span class="text-lighter small-text">&nbsp;-&nbsp;{{ ::torrent.name }}</span>
         </span>
-        <span ng-if="!torrent.guessedTitle">{{ torrent.name }}</span>
+        <span ng-if="!torrent.guessedTitle">{{ ::torrent.name }}</span>
     </div>
     <div ng-if="!torrent.isFinished">
         <div class="text-overflow">        
@@ -119,7 +119,7 @@
         <div class="widget-synopsis" ng-if="torrent.synopsis" ng-bind-html="raw(torrent.synopsis)"></div>
         <div ng-if="!torrent.synopsis" class="widget-synopsis">
             {{ 'FILESIZE' | translate }} : <b><unit-display size="torrent.sizeWhenDone" suffix=""></unit-display></b><br />
-            {{ 'FILES' | translate }} : <b>{{ torrent.files.length }}</b><br />
+            {{ 'FILES' | translate }} : <b>{{ ::torrent.files.length }}</b><br />
             <!-- a voir ce que j'en fais de ce truc -->
             <button ng-show="0" class="btn btn-default btn-xs" ng-click="download($event)"><i class="fa fa-download"></i> Télécharger</button>
         </div>
@@ -129,7 +129,7 @@
             <a href="javascript:" ng-click="remove($event)"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
             <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>
         </span>
-        <span ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: users.get(torrent.userId).nickname } }}</span>
+        <span ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: username } }}</span>
     </div>
 </div>
     

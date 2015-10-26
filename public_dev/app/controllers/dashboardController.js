@@ -28,8 +28,8 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, F
     
     var unbindTorrentsChange = $rootScope.$on('torrents-change', function($evt, torrents){
         $scope.torrents = torrents;
-        if(!$scope.$$phase)
-            $scope.$apply();
+        /*if(!$scope.$$phase)
+            $scope.$apply();*/
     });
     
     var unbindTorrentChange = $rootScope.$on('torrent-change', function($evt, torrent){
@@ -43,8 +43,8 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, F
             }
         }
         
-        if(!$scope.$$phase)
-            $scope.$apply();
+        /*if(!$scope.$$phase)
+            $scope.$apply();*/
     });
     
     $scope.$on("$destroy", function handler() {

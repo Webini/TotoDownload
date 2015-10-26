@@ -19,8 +19,7 @@
          infinite-scroll-distance="0.7">
         <div class="box box-solid torrent" 
             ng-repeat="torrent in torrents | filter:myTorrentsFilter | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' | limitTo:elementsShown track by torrent.syncTag" 
-            ng-controller="WidgetController"
-            torrent-display>
+            torrent-display="torrent">
         </div>
     </div>
 </section><!-- /.content -->

@@ -12,7 +12,7 @@ function($scope, $rootScope, $routeParams, $controller, User, SyncService, $sce,
     $scope.user = User.get();
     $scope.roles = User.roles;
     
-    $scope.smallView = '/app/views/directives/torrent.html';
+    //$scope.smallView = '/app/views/directives/torrent.html';
     $scope.pageTemplate = '/app/views/torrent/' + $routeParams.page + '.html';
     $scope.page = $routeParams.page;
     
