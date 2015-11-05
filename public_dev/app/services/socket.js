@@ -2,7 +2,7 @@ angular.module('services')
        .factory('Socket', [ '$http', '$location', '$q', 'User',
 function($http, $location, $q, User){
     
-    var socket = io.connect('http://' + $location.host() + ':' + $location.port(), {
+    var socket = io.connect($location.protocol() + '://' + $location.host() + ':' + $location.port(), {
       'query': 'token=' + User.get().token 
     }); 
 
