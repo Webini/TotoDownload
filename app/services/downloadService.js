@@ -60,8 +60,10 @@ module.exports = ['DownloadService', (function(){
                 if(downloadConf.useServer){ //if we are using dedicated webserver
                     
                     segment = (downloadConf.ssl ? 'https' : 'http') + '://' + 
-                              downloadConf.host + ':' + downloadConf.port + segment + 
-                              encodeURI(torrent.files[fileId].name);
+                              downloadConf.host + 
+                              (downloadConf['port'] !== undefined ? ':' + downloadConf.port : '') + 
+                              (downloadConf['basepath'] !== undefined ? ':' + path.normalize(downloadConf.basepath) : '')
+                              + segment + encodeURI(torrent.files[fileId].name);
                 }
                 else{ //else serve the files
                     segment = '/torrents/download/raw' + segment + encodeURIComponent(fileSegments[fileSegments.length-1]);  
