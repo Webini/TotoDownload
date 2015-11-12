@@ -67,7 +67,7 @@ TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/1969.La colli
     }
 );
 */
-
+/*
 TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/Satyricon.mkv', output: 'adel/Nouveau test/test' }).then(
     function(ffo){
         console.log('FOR => ',  '/media/nico/Nouveau nom/Films HD/Satyricon.mkv');
@@ -93,4 +93,113 @@ TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/Saty
         throw err;
         console.log('Transcode File Error', require('utils').inspect(err));
     }
+);*/
+/*
+TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/Exodus.Gods.and.Kings.2014.MULTi.1080p.BluRay.x264-itamma.mkv', output: 'adel/exodus' }).then(
+    function(ffo){
+        console.log('FOR => ',  '/media/nico/Nouveau nom/Films HD/Exodus.Gods.and.Kings.2014.MULTi.1080p.BluRay.x264-itamma.mkv');
+
+        ffo.on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });
+        
+        ffo.on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message); 
+            console.log("stdout:\n" + stdout);
+            console.log("stderr:\n" + stderr);
+        });
+        
+        ffo.on('end', function() {
+            console.log('Transcoding succeeded !');
+        });
+        console.log('RUN');
+        ffo.run();
+    },
+    function(err){
+        console.log('FUCK', err.stack);
+        throw err;
+        console.log('Transcode File Error', require('utils').inspect(err));
+    }
+);*/
+/*
+TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/Jurassic Park 3 - 1080p FR EN x264 ac3 mHDgz.mkv', output: 'adel/jura' }).then(
+    function(ffo){
+        console.log('FOR => ',  '/media/nico/Nouveau nom/Films HD/Jurassic Park 3 - 1080p FR EN x264 ac3 mHDgz.mkv');
+
+        ffo.on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });
+        
+        ffo.on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message); 
+            console.log("stdout:\n" + stdout);
+            console.log("stderr:\n" + stderr);
+        });
+        
+        ffo.on('end', function() {
+            console.log('Transcoding succeeded !');
+        });
+        console.log('RUN');
+        ffo.run();
+    },
+    function(err){
+        console.log('FUCK', err.stack);
+        throw err;
+        console.log('Transcode File Error', require('utils').inspect(err));
+    }
+);*/
+/*
+Qualitée qui prend chère =>*/
+TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/_Star.Trek.Into.Darkness.2013.MULTi.1080p.BluRay.x264-LOST_lost-startrekid.1080p.mkv', output: 'adel/trek' }).then(
+    function(ffo){
+        console.log('FOR => ',  '/media/nico/Nouveau nom/Films HD/_Star.Trek.Into.Darkness.2013.MULTi.1080p.BluRay.x264-LOST_lost-startrekid.1080p.mkv');
+
+        ffo.on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });
+        
+        ffo.on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message); 
+            console.log("stdout:\n" + stdout);
+            console.log("stderr:\n" + stderr);
+        });
+        
+        ffo.on('end', function() {
+            console.log('Transcoding succeeded !');
+        });
+        console.log('RUN');
+        ffo.run();
+    },
+    function(err){
+        console.log('FUCK', err.stack);
+        throw err;
+        console.log('Transcode File Error', require('utils').inspect(err));
+    }
 );
+/*
+TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/_The Lone Ranger 2013 MULTi TRUEFRENCH 1080p BluRay x264_The Lone Ranger 2013 MULTi TRUEFRENCH 1080p BluRay x264.mkv', output: 'adel/lone' }).then(
+    function(ffo){
+        console.log('FOR => ',  '/media/nico/Nouveau nom/Films HD/_The Lone Ranger 2013 MULTi TRUEFRENCH 1080p BluRay x264_The Lone Ranger 2013 MULTi TRUEFRENCH 1080p BluRay x264.mkv');
+
+        ffo.on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });
+        
+        ffo.on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message); 
+            console.log("stdout:\n" + stdout);
+            console.log("stderr:\n" + stderr);
+        });
+        
+        ffo.on('end', function() {
+            console.log('Transcoding succeeded !');
+        });
+        console.log('RUN');
+        ffo.run();
+    },
+    function(err){
+        console.log('FUCK', err.stack);
+        throw err;
+        console.log('Transcode File Error', require('utils').inspect(err));
+    }
+);*/

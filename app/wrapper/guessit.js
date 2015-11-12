@@ -23,7 +23,7 @@ module.exports = (function(){
             );
             
             child.stdout.on('data', function(response){
-		var data = response.toString()
+                var data = response.toString()
                                    .replace(/(\r\n|\n|\r)/gm, '')
                                    .match(/found: (\{.*\})/i);
                 if(data == null || data.length <= 1){

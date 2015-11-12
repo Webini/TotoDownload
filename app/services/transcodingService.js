@@ -4,7 +4,7 @@ module.exports = ['TranscodingService', (function(){
     var $q            = require('q');
     var path          = require('path');
     var _             = require('underscore');
-    
+    var fs            = require('fs')
     
     var config = {
         "enable": false,
@@ -120,9 +120,11 @@ module.exports = ['TranscodingService', (function(){
         if(audioTracks.length > 0){
             conf.map.audio = audioTracks[0];
             
-            //if requested audio is found, and if we have subtitles we try to incrust forced subtitle 
+            //if requested audio is found, and if we have subtitles we try to incrust forced subtitle  
             for(var i = 0; i < subTracks.length; i++){
-                if(subTracks[i].disposition.forced){
+                if(subTracks[i].disposition.forced || 
+                    subTracks[i].tags.NUMBER_OF_FRAMES && subTracks[i].tags.NUMBER_OF_FRAMES <= 50 ||  //mkvmerge provide data, we try to guess forced subtitle here
+                    /force/ig.test(subTracks[i].tags.title)){
                     conf.map.subtitle = subTracks[i];
                     break;
                 }
@@ -186,13 +188,15 @@ module.exports = ['TranscodingService', (function(){
             
             if(video.height >= cHeight){
                 var oQal = _.clone(config.qualities[i]);
-                oQal.width = Math.round(video.width / video.height * oQal.height); //-1; //auto width
+                oQal.width = Math.round(video.width / video.height * oQal.height); //auto width
+                oQal.width = ((oQal.width % 2) !== 0) ? oQal.width+1 : oQal.width; //must be divisible by 2
                 oQal.vbitrate = TranscodingService._getVideoBitrate(video, oQal.vbitrate);
                 qualities.push(oQal);
             }
             else if(video.width >= cWidth){
                 var oQal = _.clone(config.qualities[i]);
-                oQal.height = Math.round(video.height / video.width * oQal.width); //-1; //auto height
+                oQal.height = Math.round(video.height / video.width * oQal.width); //auto height
+                oQal.height = ((oQal.height % 2) !== 0) ? oQal.height+1 : oQal.height; //must be divisible by 2
                 oQal.vbitrate = TranscodingService._getVideoBitrate(video, oQal.vbitrate);
                 qualities.push(oQal);
             }
@@ -222,18 +226,22 @@ module.exports = ['TranscodingService', (function(){
     TranscodingService._extractSubtitle = function(conf){
         var defer = $q.defer();
         //a subtitle file is allready defined or if we haven't found any subtitles
+        console.log('TITLE=>', conf.map.subtitle);
         
-        if(conf.subtitle || !conf.map.subtitle || conf.map.subtitle.codec_name.toLowerCase() !== 'srt'){
+        if(conf.subtitle || !conf.map.subtitle || 
+            conf.map.subtitle.codec_name.toLowerCase() !== 'srt' && conf.map.subtitle.codec_name.toLowerCase() !== 'ass'){
             defer.resolve(conf);
             return defer.promise;
         }
         
         var ffo = ffmpeg(conf.input);
-        var output = path.join(config.output, conf.output + '.srt');
+        var codec = conf.map.subtitle.codec_name.toLowerCase();
+        var output = path.join(config.output, conf.output + '.' + codec);
+        //var temp = output + '.tmp';
         
-        ffo.format('srt')
+        ffo.format(codec)
            .outputOptions([
-               '-codec:s:0 srt',
+               '-codec:s:0 ' + codec,
                '-map 0:' + conf.map.subtitle.index,
                '-vn',
                '-threads 8',
@@ -249,8 +257,20 @@ module.exports = ['TranscodingService', (function(){
         });
         
         ffo.on('end', function() {
-            conf.subtitle = output;
-            defer.resolve(conf);
+            conf.subtitle = { codec: codec, file: output };
+            
+            //sometimes ffmpeg put NULL bytes when extracting ass file
+            fs.readFile(output, 'utf8', function (err,data) {
+                if (err) {
+                    defer.resolve(conf);
+                    return;
+                }
+                var result = data.replace('\x00', '');
+                
+                fs.writeFile(output, result, 'utf8', function (err) {
+                    defer.resolve(conf);
+                });
+            });
         });
         
         ffo.save(output);
@@ -288,23 +308,27 @@ module.exports = ['TranscodingService', (function(){
                 '-ss 00:01:00'
             ];
             
-            if(cQal.threads !== undefined){
+            if(cQal.threads){
                 options.push('-threads ' + cQal.threads);
+            }
+            
+            if(cQal.preset){
+                options.push('-preset ' + cQal.preset);
             }
             
             if(conf.map.audio){
                 options.push('-map 0:' + conf.map.audio.index);
             }
             
-            //incrust srt
+            //incrust srt && ass
             if(conf.subtitle){
                 filters.push({
-                    filter: 'subtitles',
+                    filter: (conf.subtitle.codec == 'ass' ? 'ass' : 'subtitles'),
                     inputs: 'out' + outId,
                     outputs: 'out' + (++outId),
                     options: {
                         //si: conf.map.subtitle.index,
-                        filename: conf.subtitle
+                        filename: conf.subtitle.file
                     }
                 });
             } //incrust dvdsub
@@ -328,7 +352,7 @@ module.exports = ['TranscodingService', (function(){
             options.push('-map [out' + outId + ']');
             
             
-            console.log('audio', parseInt(cQal.abitrate / 1000).toString() , 'vide', parseInt(cQal.vbitrate / 1000).toString(), options);
+            console.log('audio', parseInt(cQal.abitrate / 1000).toString() , 'video', parseInt(cQal.vbitrate / 1000).toString(), options);
             co.audioCodec(cQal.acodec)
               .audioBitrate(parseInt(cQal.abitrate / 1000).toString() + 'k')
               .audioChannels(cQal.channel)
