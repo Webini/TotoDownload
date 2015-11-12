@@ -2,17 +2,16 @@
 - Commentaire sur le torrents
 - Nombre de fois ou il a été dl ( > impact recherches / ou mise en avant ? )
 - Voter avec des étoiles ? pour juger le truc
-- Lien pour le dl qui pointe vers un controller qui permettra de soit faire un location vers le lien public ou rendre l'accès privé
 - checker les doublons a l'ajout des torrents, en proposant les torrents similaires a l'upload
 - Checker les derniers téléchargements des gars et leur proposer de les noter avec des *** ou poser un commentaire après re visite du site // mettre ca en notif
 - rss reader ?
 - Possibilitée strip meta movie
 - Hubic ?
-- Pouvoir generer un stack de liens soit le stack du torrent complet, soit a selectionner ?
 - Après upload du torrent demander a l'uploadeur si les meta de chez allociné sont valides
 - Ajouter un petit menu qui descend en haut à droite du widget torrent pour pouvoir l'ajouter aux futurs download ou le supprimer si c'est notre torrent
 - Alertes mail quand le download est dans la liste des download et qu'il vient de passer en seed avec les liens pour le dl
-- Pour afficher les numéros de série le mot anglais que je cherchais pour créer la directive c'était digits genre digitsDisplay
+- Proposer les torrents similaires durant le dl (filter: enlever ceux du torrentsDownloaded)
+- TRANSCODING MOTHERFUCKER
 
 https://pythonhosted.org/transmissionrpc/reference/transmissionrpc.html
 https://trac.transmissionbt.com/browser/trunk/extras/rpc-spec.txt
@@ -25,6 +24,7 @@ todo:
 
 bug:
 - Lorsqu'un torrent est delete puis remis il ne s'affiche plus.
+- unitDisplay a mal
 
 done: 
 - Timestamp sur les liens de download pour l'expiration

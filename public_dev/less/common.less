@@ -58,6 +58,8 @@ ul {
     transform: scale(1); /* mise à l'échelle 1:1 */
 }
 
+.typo-black { color: #444; }
+
 .input-spinner-right { margin-right: 42px; }
 .visibility-hidden { visibility: hidden; }
 
@@ -154,8 +156,31 @@ ul {
         overflow: hidden;
     }
     
+    .fa-thumb-tack.selected { 
+        -webkit-transform: rotate(90deg);
+           -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+             -o-transform: rotate(90deg);
+                transform: rotate(90deg);
+    }
+    
     .widget-control {
-        margin-left: -50px;    
+        margin-left: 0px;/* -50px;    */
+        
+        .btn-download .text { 
+            width: 0px; 
+            overflow: hidden; 
+            display: inline-block;    
+            -webkit-transition: all 0.3s ease-in;
+               -moz-transition: all 0.3s ease-in;
+                 -o-transition: all 0.3s ease-in;
+                    transition: all 0.3s ease-in;
+            vertical-align: top;
+        }
+        
+        .btn-download:hover .text {
+            width: 70px;
+        }
     }
     
     .widget-title {

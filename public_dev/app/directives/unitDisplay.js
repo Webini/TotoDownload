@@ -21,8 +21,9 @@ angular.module('totodl')
             });
             
             var unwatch = $scope.$watch($attr.size, function(newVal, oldVal){
-                if(newVal == oldVal && $scope.sizeLabel != -1)
+                /*if(newVal == oldVal && $scope.sizeLabel != -1)
                     return;
+                */
                 
                 if(!newVal){
                     $scope.sizeLabel = 0;

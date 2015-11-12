@@ -66,7 +66,19 @@ function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService
         $evt.stopPropagation();
     };    
     
+    $scope.isFilterEnabled = function(){
+        return FilterService.isEnabled($scope.torrent.title);
+    };
+    
     $scope.addFilter = function($evt){
+        $evt.stopPropagation();
+        
+        //si le filtre est deja actif on le desactive
+        if($scope.isFilterEnabled()){
+            FilterService.disable($scope.torrent.title);
+            return;
+        }
+        
         FilterService.add($scope.torrent.title, {
             key: 'movieId',
             value: $scope.torrent.movieId,
@@ -74,6 +86,5 @@ function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService
             removable: true
         });
         
-        $evt.stopPropagation();
     };
 }]); 

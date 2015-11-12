@@ -45,7 +45,14 @@ angular.module('services')
 				this._calculateFoundSuccess();
 			}
 		},
-		
+        
+        /**
+         * Check si le filtre est activé
+         */
+		isEnabled: function(name){
+            return (this.filters[name] && this.filters[name].enabled);
+        },
+        
 		enable: function(name){
 			if(this.filters[name]){
 				this.filters[name].enabled = true;

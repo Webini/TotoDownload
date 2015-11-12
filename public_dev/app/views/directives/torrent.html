@@ -16,9 +16,9 @@
 
 <div class="info-box-content">
     <div class="widget-control pull-right">
-        <a href="javascript:" ng-click="download($event)" class="btn btn-default btn-xs"><i class="fa fa-download"></i></a>
-        <a ng-show="(torrent.guessedType == 'episode')" title="{{ 'ADD_TO_FILTERS' | translate }}" ng-click="addFilter($event)" href="javascript:" class="btn btn-default btn-xs">
-            <i class="fa fa-filter"></i>
+        <a href="javascript:" ng-click="download($event)" class="btn typo-black btn-xs btn-download"><i class="fa fa-download"></i><i class="text">&nbsp;{{ 'DOWNLOAD' | translate }}</i></a>
+        <a class="pin btn btn-xs typo-black" ng-if="(torrent.guessedType == 'episode')" title="{{ 'ADD_TO_FILTERS' | translate }}" ng-click="addFilter($event)" href="javascript:">
+            <i class="fa fa-thumb-tack" ng-class="{selected: isFilterEnabled()}"></i>
         </a>
     </div>
     <div class="info-box-number widget-title text-overflow">
@@ -31,7 +31,7 @@
             </span>
             <span class="text-lighter small-text">&nbsp;-&nbsp;{{ ::torrent.name }}</span>
         </span>
-        <span ng-if="!torrent.guessedTitle">{{ ::torrent.name }}</span>
+        <span ng-if="!torrent.guessedTitle && !torrent.title">{{ ::torrent.name }}</span>
     </div>
     <div ng-if="!torrent.isFinished">
         <div class="text-overflow">        
@@ -120,8 +120,6 @@
         <div ng-if="!torrent.synopsis" class="widget-synopsis">
             {{ 'FILESIZE' | translate }} : <b><unit-display size="torrent.sizeWhenDone" suffix=""></unit-display></b><br />
             {{ 'FILES' | translate }} : <b>{{ ::torrent.files.length }}</b><br />
-            <!-- a voir ce que j'en fais de ce truc -->
-            <button ng-show="0" class="btn btn-default btn-xs" ng-click="download($event)"><i class="fa fa-download"></i> Télécharger</button>
         </div>
     </div>
     <div class="text-overflow" ng-class="{'to-footer': !torrent.isFinished}">

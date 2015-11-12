@@ -134,5 +134,6 @@
     "MOVIE_SERIE_NAME": "Movie / serie name",
     "TORRENT_TAG_EXPLAIN": "This tool allow you to change the movie / serie associated with this torrent.",
     "TORRENT_TAG_CONFIRM": "You are about to replace / set the torrent tag by <b>{{ newName }}</b>. Continue anyway ?",
-    "CONTINUE": "Continue"
+    "CONTINUE": "Continue",
+    "DOWNLOAD": "Download"
 }

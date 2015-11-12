@@ -1,5 +1,5 @@
 <section class="head-filters">
-  <h4>{{ 'FILTERS' | translate }}&nbsp<i class="fa fa-filter"></i></h3>
+  <h4>{{ 'FILTERS' | translate }}</h3>
     
   <filter-button ng-repeat="(name, data) in filters | orderDefault:false" name="data.name" data="data"></filter-button>
        

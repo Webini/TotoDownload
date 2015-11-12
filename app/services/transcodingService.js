@@ -26,6 +26,7 @@ module.exports = ['TranscodingService', (function(){
         throw new Error('Default quality not found in ffmpeg configuration');
     }
     
+    var forcedReg = /force/ig;
     var preferredLangReg = new RegExp(config.preferredLang, 'i');
     
     function TranscodingService(){
@@ -64,7 +65,11 @@ module.exports = ['TranscodingService', (function(){
      * Add a file to the transcode queue
      * 
      */
-    TranscodingService.transcodeFile = function(conf){
+    TranscodingService.transcode = function(conf){
+        if(!config.enable){
+            return $q.reject('Transcoder disabled');
+        }
+        
         return TranscodingService.getMetadata(conf)
                                  .then(TranscodingService._selectTracks)
                                  .then(TranscodingService._selectQualities)
@@ -102,6 +107,16 @@ module.exports = ['TranscodingService', (function(){
     }
     
     /**
+     * Check if @subtitle is force
+     * @return object
+     */
+    TranscodingService._isSubtitleForced = function(subtitle){
+        return (subtitle.disposition.forced || 
+                subtitle.tags.NUMBER_OF_FRAMES && subtitle.tags.NUMBER_OF_FRAMES <= 50 ||  //mkvmerge provide data, we try to guess forced subtitle here
+                forcedReg.test(subtitle.tags.title));
+    };
+    
+    /**
      * Select right audio & subtitles tracks
      * @return conf object with map option
      */
@@ -122,9 +137,7 @@ module.exports = ['TranscodingService', (function(){
             
             //if requested audio is found, and if we have subtitles we try to incrust forced subtitle  
             for(var i = 0; i < subTracks.length; i++){
-                if(subTracks[i].disposition.forced || 
-                    subTracks[i].tags.NUMBER_OF_FRAMES && subTracks[i].tags.NUMBER_OF_FRAMES <= 50 ||  //mkvmerge provide data, we try to guess forced subtitle here
-                    /force/ig.test(subTracks[i].tags.title)){
+                if(TranscodingService._isSubtitleForced(subTracks[i])){
                     conf.map.subtitle = subTracks[i];
                     break;
                 }
@@ -132,7 +145,7 @@ module.exports = ['TranscodingService', (function(){
         } 
         else if(subTracks.length > 0){ //audio with right language not found, we are going to incrust full subtitles
             for(var i = 0; i < subTracks.length; i++){
-                if(!subTracks[i].disposition.forced){
+                if(!TranscodingService._isSubtitleForced(subTracks[i])){
                     conf.map.subtitle = subTracks[i];
                     break;
                 }
@@ -213,7 +226,6 @@ module.exports = ['TranscodingService', (function(){
         }
         
         conf.qualities = qualities;
-        console.log('QUALITITES => ', conf.qualities);
         
         return conf;
     };
@@ -225,9 +237,8 @@ module.exports = ['TranscodingService', (function(){
      */
     TranscodingService._extractSubtitle = function(conf){
         var defer = $q.defer();
-        //a subtitle file is allready defined or if we haven't found any subtitles
-        console.log('TITLE=>', conf.map.subtitle);
         
+        //a subtitle file is allready defined or if we haven't found any subtitles
         if(conf.subtitle || !conf.map.subtitle || 
             conf.map.subtitle.codec_name.toLowerCase() !== 'srt' && conf.map.subtitle.codec_name.toLowerCase() !== 'ass'){
             defer.resolve(conf);
@@ -244,30 +255,26 @@ module.exports = ['TranscodingService', (function(){
                '-codec:s:0 ' + codec,
                '-map 0:' + conf.map.subtitle.index,
                '-vn',
-               '-threads 8',
                '-an'
            ]);
-        
-        ffo.on('progress', function(progress) {
-            console.log('Processing subtitles: ' + progress.percent + '% done');
-        });
-        
+
         ffo.on('error', function(err, stdout, stderr) {
             defer.resolve(conf);
         });
         
         ffo.on('end', function() {
-            conf.subtitle = { codec: codec, file: output };
+            conf.subtitle = { codec: codec, file: output, extracted: true };
             
             //sometimes ffmpeg put NULL bytes when extracting ass file
-            fs.readFile(output, 'utf8', function (err,data) {
-                if (err) {
+            fs.readFile(output, 'utf8', function(err, data){
+                if(err){
                     defer.resolve(conf);
                     return;
                 }
+                
                 var result = data.replace('\x00', '');
                 
-                fs.writeFile(output, result, 'utf8', function (err) {
+                fs.writeFile(output, result, 'utf8', function(err){
                     defer.resolve(conf);
                 });
             });
@@ -285,13 +292,9 @@ module.exports = ['TranscodingService', (function(){
     TranscodingService._toffmpegObject = function(conf){
         var ffo = ffmpeg(conf.input);
         
-                console.log('MAP => ', require('util').inspect(conf.map));
-        console.log('QUALITIES => ', require('util').inspect(conf.qualities));
-        
         for(var i = 0; i < conf.qualities.length; i++){
             var cQal = conf.qualities[i];
             var co = ffo.output(path.join(config.output, conf.output + cQal.name));
-            console.log('OUTPUT => ', path.join(config.output, conf.output + cQal.name));
             
             var outId = 0;
             var filters = [ { 
@@ -302,11 +305,14 @@ module.exports = ['TranscodingService', (function(){
             } ];
             
             var options = [
-                '-maxrate ' + parseInt(cQal.maxbitrate / 1000).toString() + 'k',
-                '-bufsize ' + parseInt(cQal.maxbitrate * 4 / 1000).toString() + 'k',
-                '-t 60',
-                '-ss 00:01:00'
+                '-maxrate ' + parseInt(cQal.maxbitrate / 1024).toString() + 'k',
+                '-bufsize ' + parseInt(cQal.maxbitrate * 4 / 1024).toString() + 'k'
             ];
+            
+            if(config.debug){
+                options.push('-t 60');
+                options.push('-ss 00:01:00');
+            }
             
             if(cQal.threads){
                 options.push('-threads ' + cQal.threads);
@@ -351,20 +357,22 @@ module.exports = ['TranscodingService', (function(){
             
             options.push('-map [out' + outId + ']');
             
-            
-            console.log('audio', parseInt(cQal.abitrate / 1000).toString() , 'video', parseInt(cQal.vbitrate / 1000).toString(), options);
             co.audioCodec(cQal.acodec)
-              .audioBitrate(parseInt(cQal.abitrate / 1000).toString() + 'k')
+              .audioBitrate(parseInt(cQal.abitrate / 1024).toString() + 'k')
               .audioChannels(cQal.channel)
               .videoCodec(cQal.vcodec)
-              .videoBitrate(parseInt(cQal.vbitrate / 1000).toString() + 'k')
+              .videoBitrate(parseInt(cQal.vbitrate / 1024).toString() + 'k')
               .complexFilter(filters) //bug https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/issues/464
               .format('mp4')
               .outputOptions(options);
         }
         
+        delete conf.map;
+        delete conf.qualities;
+        delete conf.metadata;
         
-        return ffo;
+        conf.ffo = ffo;
+        return conf;
     };
 
     return TranscodingService;
