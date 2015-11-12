@@ -1,6 +1,28 @@
 var $q = require('q');
 
 
+function a(opt){
+   var defer = $q.defer();
+   defer.resolve('A:' + opt + ' resolved');
+   return defer.promise; 
+}
+
+
+a('first').then(function(data){
+    console.log(data);
+    return a('second');
+}).then(function(value){
+    console.log(value);
+});
+
+
+
+
+
+
+
+
+
 (function(){
     var def = $q.defer();
     

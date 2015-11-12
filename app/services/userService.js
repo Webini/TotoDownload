@@ -100,7 +100,7 @@ module.exports = ['UserService', (function(){
             nickname: data.nickname,
             email: data.email,
             ip: data.ip,
-            roles: this.roles.UPLOADER,
+            roles: this.roles.LEETCHI,
             passwordC: data.password,
             password: crypto.hashPassword(data.password, salt),
             downloadHash: crypto.createMd5Hash(crypto.random(32) + app.config.download),

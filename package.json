@@ -4,8 +4,7 @@
   "description": "Frontend for seedbox",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "postinstall": "cd ./redist/guessit/ && python setup.py install --root ../../bin/"
+    "start": "node server.js"
   },
   "author": "Nicolas GASPARINI",
   "license": "ISC",
@@ -15,6 +14,7 @@
     "crc": "^3.2.1",
     "express": "^4.12.3",
     "express-jwt": "^3.0.1",
+    "fluent-ffmpeg": "^2.0.1",
     "heapdump": "^0.3.6",
     "jsonwebtoken": "^5.0.2",
     "multer": "^0.1.8",

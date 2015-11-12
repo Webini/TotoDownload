@@ -7,9 +7,9 @@ module.exports = [ 'syncListener', (function(){
     
 
     /**
-        * Update user disk usage
-        * @param Torrent model
-        */
+    * Update user disk usage
+    * @param Torrent model
+    */
     function updateDiskUsage(torrent){
         if(!torrent.userId)
             return null;

@@ -105,6 +105,7 @@ module.exports = ['SyncService', (function(){
             if(!stack[torrents[i].hash] || 
                 stack[torrents[i].hash].syncTag != torrents[i].syncTag){
                 
+                
                 //first time we get this torrent
                 if(!stack[torrents[i].hash]){
                     //update the database value send dispatch new event
@@ -114,11 +115,19 @@ module.exports = ['SyncService', (function(){
                         }
                     );
                 }
-                else{ //else we stack the modification for a cron update
+                else{ 
+                    //if the download is complete and wasn't before
+                    var notifyDownloadComplete = (stack[torrents[i].hash].leftUntilDone > 0 && torrents[i].leftUntilDone <= 0);
+                    
+                    //we stack the modification for a cron update
                     _.extend(stack[torrents[i].hash], torrents[i]);
                     stack[torrents[i].hash].needSync = true;
 
                     SyncService.onChange(stack[torrents[i].hash]);
+                    
+                    if(notifyDownloadComplete){
+                        SyncService.emit('download-complete', stack[torrents[i].hash]);
+                    }
                 }
             }
         }
