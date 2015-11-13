@@ -231,29 +231,21 @@ TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Series/Darede
     }
 );*/
 
-TranscodingService.transcode({ input: '/home/nico/Téléchargements/The.100.S02E13.FASTSUB.VOSTFR.1080p.WEB-DL.DD5.1.H.264-KiNGS.mkv', output: 'adel/dare' }).then(
-    function(conf){
+TranscodingService.prepare({ 
+    input: '/home/nico/Téléchargements/The.100.S02E13.FASTSUB.VOSTFR.1080p.WEB-DL.DD5.1.H.264-KiNGS.mkv', 
+    output: 'adel/dare' 
+}).then(
+    function(object){
         console.log('FOR => ',  '/home/nico/Téléchargements/The.100.S02E13.FASTSUB.VOSTFR.1080p.WEB-DL.DD5.1.H.264-KiNGS.mkv');
-
-        conf.ffo.on('progress', function(progress) {
-            console.log('Processing: ' + progress.percent + '% done');
-        });
-        
-        conf.ffo.on('error', function(err, stdout, stderr) {
-            console.log('Cannot process video: ' + err.message); 
-            console.log("stdout:\n" + stdout);
-            console.log("stderr:\n" + stderr);
-        });
-        
-        conf.ffo.on('end', function() {
-            console.log('Transcoding succeeded !');
-        });
-        console.log('RUN');
-        conf.ffo.run();
+        object.transcode()
+              .then(function(result){
+                  console.log('RESULT => ', result);
+              },
+              function(err, a, b){
+                  console.log('Err => ', err, a, b); 
+              });
     },
     function(err){
-        console.log('FUCK', err.stack);
-        throw err;
         console.log('Transcode File Error', require('utils').inspect(err));
     }
 );

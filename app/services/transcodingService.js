@@ -29,6 +29,78 @@ module.exports = ['TranscodingService', (function(){
     var forcedReg = /force/ig;
     var preferredLangReg = new RegExp(config.preferredLang, 'i');
     
+    /**
+     * This object is used for controlling the transcoding process
+     */
+    function TranscoderObject(conf){
+        this._conf = conf;
+        this._conf.processing = null;
+        this.killed = false;
+    };
+    
+    /**
+     * Transcode this object
+     * @return promise
+     */
+    TranscoderObject.prototype.transcode = function(){
+        var self = this;
+        this.killed = false;
+        
+        try{
+            var output = path.join(config.output, this._conf.output);
+            fs.mkdirSync(path.dirname(output));
+        }
+        catch(e){}
+        
+        return TranscodingService._extractSubtitle(this._conf)
+                                 .then(TranscodingService._toffmpegObject)
+                                 .then(function(conf){ self._startTranscoding(conf); });
+    };
+    
+    /**
+     * Internal function that handle ffo transcoding
+     */
+    TranscoderObject.prototype._startTranscoding = function(conf){
+        var defer = $q.defer();
+        //skip the transcoding, if kill order is given during the extraction of subtitles
+        if(this.killed){
+            return $q.reject('killed process');
+        }
+        
+        this._conf = conf;
+        /*this._conf.ffo.on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });*/
+        
+        this._conf.ffo.on('error', function(err, stdout, stderr) {
+            conf._processing = null;
+            defer.reject(err, stdout, stderr);
+        });
+        
+        this._conf.ffo.on('end', function() {
+            conf._processing = null;
+            defer.resolve(conf.return);
+        });
+        
+        this._conf.ffo.run();
+        this._conf._processing = conf.ffo;
+        
+        return defer.promise;
+    };
+    
+    /**
+     * Kill the current transcoding if any
+     * @return bool
+     */
+    TranscoderObject.prototype.kill = function(){
+        if(this._conf._processing){
+            this.killed = true;
+            this._conf._processing.kill('SIGKILL');
+            return true;
+        }
+        return false;
+    }
+    
     function TranscodingService(){
     };
     
@@ -62,10 +134,10 @@ module.exports = ['TranscodingService', (function(){
     };
     
     /**
-     * Add a file to the transcode queue
-     * 
+     * Prepare an new object for transcoding
+     * @return promise with first param => TranscoderObject
      */
-    TranscodingService.transcode = function(conf){
+    TranscodingService.prepare = function(conf){
         if(!config.enable){
             return $q.reject('Transcoder disabled');
         }
@@ -73,8 +145,11 @@ module.exports = ['TranscodingService', (function(){
         return TranscodingService.getMetadata(conf)
                                  .then(TranscodingService._selectTracks)
                                  .then(TranscodingService._selectQualities)
-                                 .then(TranscodingService._extractSubtitle)
-                                 .then(TranscodingService._toffmpegObject);
+                                 .then(function(conf){
+                                     return new TranscoderObject(conf); 
+                                 });
+                                 /*.then(TranscodingService._extractSubtitle)
+                                 .then(TranscodingService._toffmpegObject);*/
     };
     
     /**
@@ -245,10 +320,10 @@ module.exports = ['TranscodingService', (function(){
             return defer.promise;
         }
         
-        var ffo = ffmpeg(conf.input);
         var codec = conf.map.subtitle.codec_name.toLowerCase();
         var output = path.join(config.output, conf.output + '.' + codec);
-        //var temp = output + '.tmp';
+        
+        var ffo = ffmpeg(conf.input);
         
         ffo.format(codec)
            .outputOptions([
@@ -259,10 +334,12 @@ module.exports = ['TranscodingService', (function(){
            ]);
 
         ffo.on('error', function(err, stdout, stderr) {
-            defer.resolve(conf);
+            conf._processing = null;
+            defer.reject(err, stdout, stderr);
         });
         
         ffo.on('end', function() {
+            conf._processing = null;
             conf.subtitle = { codec: codec, file: output, extracted: true };
             
             //sometimes ffmpeg put NULL bytes when extracting ass file
@@ -281,6 +358,7 @@ module.exports = ['TranscodingService', (function(){
         });
         
         ffo.save(output);
+        conf._processing = ffo;
         
         return defer.promise;
     };
@@ -291,10 +369,15 @@ module.exports = ['TranscodingService', (function(){
      */
     TranscodingService._toffmpegObject = function(conf){
         var ffo = ffmpeg(conf.input);
+        conf.return = {};
         
         for(var i = 0; i < conf.qualities.length; i++){
             var cQal = conf.qualities[i];
-            var co = ffo.output(path.join(config.output, conf.output + cQal.name));
+            var outFile = path.join(config.output, conf.output + '.' + cQal.name);
+            var co = ffo.output(outFile);
+        
+            //object that will be returned with paths & qualities informations
+            conf.return[cQal.name] = { fullPath: outFile, path: conf.output + '.' + cQal.name };
             
             var outId = 0;
             var filters = [ { 
