@@ -11,15 +11,13 @@ module.exports = {
       torrentId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        references: 'Torrents',
-        referenceKey: 'id',
+        references: { model: 'Torrents', key: 'id' },
         onDelete: 'cascade'
       },
       userId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        references: 'Users',
-        referenceKey: 'id',
+        references: { model: 'Users', key: 'id' },
         onDelete: 'cascade'
       },
       vote: {

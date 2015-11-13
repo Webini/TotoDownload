@@ -9,6 +9,15 @@ module.exports = ['TorrentsTranscoderService', (function(){
     function TorrentsTranscoderService(){
     };
     
+    TorrentsTranscoderService.states = {
+        WAITING:        0,
+        UNTRANSCODABLE: 1,
+        TRANSCODABLE:   2,
+        QUEUED:         4,
+        TRANSCODING:    8,
+        TRANSCODED:     16  
+    };
+    
     TorrentsTranscoderService.ready = function(){
         TranscodingService = app.services.TranscodingService;      
     };

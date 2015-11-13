@@ -203,6 +203,7 @@ TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Films HD/_The
         console.log('Transcode File Error', require('utils').inspect(err));
     }
 );*/
+/*
 TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Series/Daredevil/Marvels.Daredevil.S01E01.VOSTFR.720p.WEBRip.x264.AC3-MuskeTeerS.mkv', output: 'adel/dare' }).then(
     function(ffo){
         console.log('FOR => ',  '/media/nico/Nouveau nom/Series/Daredevil/Marvels.Daredevil.S01E01.VOSTFR.720p.WEBRip.x264.AC3-MuskeTeerS.mkv');
@@ -222,6 +223,33 @@ TranscodingService.transcodeFile({ input: '/media/nico/Nouveau nom/Series/Darede
         });
         console.log('RUN');
         ffo.run();
+    },
+    function(err){
+        console.log('FUCK', err.stack);
+        throw err;
+        console.log('Transcode File Error', require('utils').inspect(err));
+    }
+);*/
+
+TranscodingService.transcode({ input: '/home/nico/Téléchargements/The.100.S02E13.FASTSUB.VOSTFR.1080p.WEB-DL.DD5.1.H.264-KiNGS.mkv', output: 'adel/dare' }).then(
+    function(conf){
+        console.log('FOR => ',  '/home/nico/Téléchargements/The.100.S02E13.FASTSUB.VOSTFR.1080p.WEB-DL.DD5.1.H.264-KiNGS.mkv');
+
+        conf.ffo.on('progress', function(progress) {
+            console.log('Processing: ' + progress.percent + '% done');
+        });
+        
+        conf.ffo.on('error', function(err, stdout, stderr) {
+            console.log('Cannot process video: ' + err.message); 
+            console.log("stdout:\n" + stdout);
+            console.log("stderr:\n" + stderr);
+        });
+        
+        conf.ffo.on('end', function() {
+            console.log('Transcoding succeeded !');
+        });
+        console.log('RUN');
+        conf.ffo.run();
     },
     function(err){
         console.log('FUCK', err.stack);

@@ -11,8 +11,7 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER.UNSIGNED,
         allowNull: true,
-        references: 'Users',
-        referenceKey: 'id',
+        references: { model: 'Users', key: 'id'},
         onDelete: 'restrict' //if we want to delete an user, we have to clean his torrents first
       },
       movieId: {

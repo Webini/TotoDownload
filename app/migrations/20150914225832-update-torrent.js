@@ -1,15 +1,7 @@
 'use strict';
 
-/**
- * 
-                    release: result.release ? new Date(result.release.releaseDate) : null,
-                    bluRayReleaseDate: result.bluRayReleaseDate ? new Date(result.bluRayReleaseDate) : null,
-                    directors: (result.castingShort ? result.castingShort.directors : null),
-                    actors: (result.castingShort ? result.castingShort.actors : null),
- */
-
 module.exports = {
-    up: function(migration, DataTypes, done) {
+    up: function(migration, DataTypes) {
         return migration.addColumn(
             'Torrents',
             'release',
@@ -47,7 +39,7 @@ module.exports = {
         });
     },
     
-    down: function(migration, DataTypes, done) {
+    down: function(migration, DataTypes) {
         return migration.removeColumn(
             'Torrents',
             'release'

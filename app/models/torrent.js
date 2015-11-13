@@ -156,6 +156,11 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: true
       },
+      transcoding: {
+          type: DataTypes.INTEGER.UNSIGNED,
+          allowNull: false,
+          defaultValue: 0
+      },
       magnetLink: {
         type: DataTypes.STRING(2048),
         allowNull: true
@@ -247,7 +252,12 @@ module.exports = function(sequelize, DataTypes) {
         files: function(data){
             this.filesJson = JSON.stringify(data);    
         }
+    },
+    associate: function(models){
+        this.hasMany(models['TranscodedFiles'], { as: 'TranscodedFiles', onDelete: 'cascade', hooks: true })
     }
   });
+  
+  
   return Torrent;
 };
