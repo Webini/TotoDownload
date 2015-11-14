@@ -15,6 +15,7 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.DATE
         }
     }, {
+        timestamps: false,
         classMethods: {
             associate: function(models) {
                 TranscodedFiles.belongsTo(models.Torrent, {
