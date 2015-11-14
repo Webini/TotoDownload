@@ -83,11 +83,36 @@ module.exports = ['TorrentsTranscoderService', (function(){
      * @return void
      */
     TorrentsTranscoderService.deleteTranscodedFiles = function(torrent){
-        if(torrent.transcodableState & (states.TRANSCODING | states.TRANSCODED)){
-            rmiraf(path.join(config.output, torrent.hash), function(err){
-                app.logger.log('Delete transcoded files error', err);
-            });
+        if(!(torrent.transcodableState & (states.TRANSCODABLE | states.TRANSCODING | states.TRANSCODED))){
+            return;
         }
+        
+        if(torrent.transcodableState & (states.TRANSCODABLE | states.TRANSCODING)){
+            //remove this torrent from transcoding queue
+            for(var i = 0; i < queue.length; i++){
+                if(queue[i] == torrent.hash){
+                    queue.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        
+        //if torrent is transcoding, we are going to kill ffmpeg instance 
+        if(torrent.transcodableState == states.TRANSCODING){
+            for(var i = 0; i < transcoders.length; i++){
+                if(transcoders[i].torrent == torrent.hash){
+                    if(transcoders[i].transObj){
+                        transcoders[i].transObj.kill();
+                    }
+                    break;
+                }
+            }
+        }   
+            
+        rmiraf(path.join(config.output, torrent.hash), function(err){
+            app.logger.log('Delete transcoded files error', err);
+        });
+
     };
     
     /**
@@ -153,7 +178,10 @@ module.exports = ['TorrentsTranscoderService', (function(){
                                         .then(function(torrent) { return TorrentsTranscoderService._removeTranscodedFiles(torrent, transcoder); })
                                         .then(TorrentsTranscoderService._transcodeNextFile)
                                         .then(TorrentsTranscoderService._finalizeTranscoding)
-                                        .then(TorrentsTranscoderService.process);  
+                                        .then(function(){
+                                            //to avoid callstack problems
+                                            setImmediate(TorrentsTranscoderService.process);
+                                        });  
     };
     
     /**
@@ -161,7 +189,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
      * @return promise
      */
     TorrentsTranscoderService._transcodeNextFile = function(transcoder){
-        if(transcoder.files.length <= 0){
+        if(transcoder.files.length <= 0 || transcoder.killed){
             return $q.resolve(transcoder); //TorrentsTranscoderService._finalizeTranscoding(transcoder);
         }
         
@@ -206,6 +234,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
      * Transcode object and add transcoded file in database
      */
     TorrentsTranscoderService._onTranscoderObjectReady = function(transObj, transcoder){
+        transcoder.transObj = transObj;
         return transObj.transcode().then(
             function(result){
                 var defer = $q.defer();
@@ -228,6 +257,11 @@ module.exports = ['TorrentsTranscoderService', (function(){
             function(err, stdout, stderr){
                 app.logger.log('Transcoding error', util.inspect(err), stdout, stderr);
                 console.log('Transcoding error', util.inspect(err), stdout, stderr);
+                
+                if(err == 'killed'){
+                    transcoder.killed = true;
+                }
+                
                 return transcoder;  
             }
        );
@@ -239,17 +273,24 @@ module.exports = ['TorrentsTranscoderService', (function(){
      * @return transcoder
      */
     TorrentsTranscoderService._finalizeTranscoding = function(transcoder){
-        var state = states.TRANSCODED;
-        
-        if(transcoder.done.length <= 0){
-            state = states.TRANSCODING_ERR;    
+        if(!transcoder.killed){
+            var state = states.TRANSCODED;
+            
+            if(transcoder.done.length <= 0){
+                state = states.TRANSCODING_ERR;    
+            }
+            
+            var torrent = TorrentService.getFromMemory(transcoder.torrent);
+            console.log('TorrentsTranscoderService._finalizeTranscoding', torrent.name, state);
+            
+            TorrentsTranscoderService._updateState(torrent, state);
+        }
+        else{
+            console.log('TorrentsTranscoderService._finalizeTranscoding instance killed');
         }
         
-        var torrent = TorrentService.getFromMemory(transcoder.torrent);
-        console.log('TorrentsTranscoderService._finalizeTranscoding', torrent.name, state);
-        
-        TorrentsTranscoderService._updateState(torrent, state);
-        
+        delete transcoder.transObj;
+        delete transcoder.killed;
         delete transcoder.files;
         delete transcoder.done;
         delete transcoder.original;
@@ -342,7 +383,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
     };
     
     /**
-     * Find an empty queue 
+     * Find an empty transcoder processor 
      * @return object or null if not found
      */
     TorrentsTranscoderService._findInactiveTranscoder = function(){

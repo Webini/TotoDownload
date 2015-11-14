@@ -72,7 +72,7 @@ function($scope, $rootScope, $location, User, TorrentsService){
     };
     
     function updateStreamingFiles(){
-        if(!$scope.torrent){
+        if(!$scope.torrent || $scope.torrent.transcodableState != 8){
             return;
         }
         
@@ -82,8 +82,6 @@ function($scope, $rootScope, $location, User, TorrentsService){
             }
         );
     }
-    
-    updateStreamingFiles();
     
     var host = $location.protocol() + '://' + $location.host() + (($location.port() != 80) ? (':' + $location.port()) : '');
 
