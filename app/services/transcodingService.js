@@ -5,11 +5,10 @@ module.exports = ['TranscodingService', (function(){
     var path          = require('path');
     var _             = require('underscore');
     var fs            = require('fs')
+    var mkdir         = require('mkdirp');
     
     var config = {
-        "enable": false,
         "maxSimult": 1,
-        "output": "/var/tmp",
         "preferredLang": "^fr.*",
         "qualities": []
     };
@@ -22,11 +21,12 @@ module.exports = ['TranscodingService', (function(){
         }
     }
     
-    if(config.enable && !defaultQuality){
+    if(!defaultQuality){
         throw new Error('Default quality not found in ffmpeg configuration');
     }
     
-    var forcedReg = /force/ig;
+    var forcedReg = /force/ig; //to find forced subtitles 
+    var killedReg = /killed/ig; //to find error when process is killed
     var preferredLangReg = new RegExp(config.preferredLang, 'i');
     
     /**
@@ -34,7 +34,7 @@ module.exports = ['TranscodingService', (function(){
      */
     function TranscoderObject(conf){
         this._conf = conf;
-        this._conf.processing = null;
+        this._conf._processing = null;
         this.killed = false;
     };
     
@@ -46,16 +46,56 @@ module.exports = ['TranscodingService', (function(){
         var self = this;
         this.killed = false;
         
+        /** Create asked directory  **/
         try{
-            var output = path.join(config.output, this._conf.output);
-            fs.mkdirSync(path.dirname(output));
+            //var output = path.join(config.output, this._conf.output);
+            mkdir.sync(path.dirname(this._conf.output));
         }
         catch(e){}
         
+        /**
+         * When SIGINT kill ffmpeg
+         */
+        var killTranscoding = function(){
+            self.kill();
+        }
+        //cleanly unbind once transcoding is done
+        var removeProcessBinding = function(){
+            process.removeListener('exit', killTranscoding);
+        }
+        
+        process.on('exit', killTranscoding);
+        
         return TranscodingService._extractSubtitle(this._conf)
                                  .then(TranscodingService._toffmpegObject)
-                                 .then(function(conf){ self._startTranscoding(conf); });
+                                 .then(function(conf){ return self._startTranscoding(conf); })
+                                 .catch(function(err, stdout, stderr){
+                                     if(typeof err == 'string' && killedReg.test(err) || 
+                                         err instanceof Error && killedReg.test(err.message)){
+                                         return $q.reject('killed');
+                                     }
+                                
+                                     return $q.reject(err, stdout, stderr); 
+                                 })
+                                 .finally(function(){
+                                     self._removeSubtitles();
+                                     removeProcessBinding(); 
+                                 });
     };
+    
+    /**
+     * Delete subtitles if they are generated 
+     * @return void
+     */
+    TranscoderObject.prototype._removeSubtitles = function(){
+        if(!this._conf.subtitle || !this._conf.subtitle.extracted){
+            return;
+        }
+        //trying to remove file if exists
+        try{
+            fs.unlinkSync(this._conf.subtitle.file);
+        }catch(e){}
+    }
     
     /**
      * Internal function that handle ffo transcoding
@@ -114,8 +154,7 @@ module.exports = ['TranscodingService', (function(){
         
         ffmpeg.ffprobe(conf.input, function(err, metadata){
             if(err !== null){
-                defer.reject(err);
-                return;
+                return defer.reject(err);
             }    
             
             conf.metadata = metadata;
@@ -126,22 +165,11 @@ module.exports = ['TranscodingService', (function(){
     };
     
     /**
-     * Is transcodingService enable ?
-     * @return boolean
-     */
-    TranscodingService.isEnabled = function(){
-        return config.enable;
-    };
-    
-    /**
      * Prepare an new object for transcoding
+     * { input: input file, output: output file, subtitles: }
      * @return promise with first param => TranscoderObject
      */
-    TranscodingService.prepare = function(conf){
-        if(!config.enable){
-            return $q.reject('Transcoder disabled');
-        }
-        
+    TranscodingService.prepare = function(conf){        
         return TranscodingService.getMetadata(conf)
                                  .then(TranscodingService._selectTracks)
                                  .then(TranscodingService._selectQualities)
@@ -321,8 +349,7 @@ module.exports = ['TranscodingService', (function(){
         }
         
         var codec = conf.map.subtitle.codec_name.toLowerCase();
-        var output = path.join(config.output, conf.output + '.' + codec);
-        
+        var output = conf.output + '.' + codec;
         var ffo = ffmpeg(conf.input);
         
         ffo.format(codec)
@@ -365,7 +392,7 @@ module.exports = ['TranscodingService', (function(){
     
     /**
      * Create ffmpeg object for conversion
-     * @todo faire un truc pour les subtitles
+     * @return conf object
      */
     TranscodingService._toffmpegObject = function(conf){
         var ffo = ffmpeg(conf.input);
@@ -373,8 +400,13 @@ module.exports = ['TranscodingService', (function(){
         
         for(var i = 0; i < conf.qualities.length; i++){
             var cQal = conf.qualities[i];
-            var outFile = path.join(config.output, conf.output + '.' + cQal.name);
+            var outFile = conf.output + '.' + cQal.name;
             var co = ffo.output(outFile);
+        
+            //trying to remove file if exists
+            try{
+                fs.unlinkSyn(outFile);
+            }catch(e){}
         
             //object that will be returned with paths & qualities informations
             conf.return[cQal.name] = { fullPath: outFile, path: conf.output + '.' + cQal.name };
@@ -393,7 +425,7 @@ module.exports = ['TranscodingService', (function(){
             ];
             
             if(config.debug){
-                options.push('-t 60');
+                options.push('-t 195');
                 options.push('-ss 00:01:00');
             }
             

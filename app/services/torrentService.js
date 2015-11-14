@@ -10,6 +10,14 @@ module.exports = ['TorrentService', (function(){
     function TorrentService(){
     };
     
+    TorrentService.transcodableStates = {
+        WAITING:         0,
+        UNTRANSCODABLE:  1,
+        TRANSCODABLE:    2,
+        TRANSCODING:     4,
+        TRANSCODED:      8, 
+        TRANSCODING_ERR: 16
+    };
     
     TorrentService.errors = {
         upsertError: 'Cannot upsert torrent',
@@ -316,10 +324,22 @@ module.exports = ['TorrentService', (function(){
     
     /**
     * Retreive torrents from database
-    * @todo
+    * @return promise
     **/
     TorrentService.getAllFromDb = function(){
         return app.orm.Torrent.all();
+    };
+    
+    /**
+     * Retreive all torrents with a specific transcodable state
+     * This query use &  
+     * @return promise
+     */
+    TorrentService.getAllTranscodableFromDb = function(states, includeZero){
+        return app.orm.Torrent.findAll({ 
+            where: ['((transcodableState & ?) > 0)' + (includeZero ? ' OR transcodableState = 0' : ''), states ],
+            order: 'transcodableState DESC, createdAt DESC'
+        });
     };
     
     /**

@@ -238,14 +238,20 @@ TranscodingService.prepare({
     function(object){
         console.log('FOR => ',  '/home/nico/Téléchargements/The.100.S02E13.FASTSUB.VOSTFR.1080p.WEB-DL.DD5.1.H.264-KiNGS.mkv');
         object.transcode()
-              .then(function(result){
-                  console.log('RESULT => ', result);
-              },
-              function(err, a, b){
-                  console.log('Err => ', err, a, b); 
-              });
+              .then(
+                function(result){
+                    console.log('RESULT => ', result);
+                },
+                function(err, a, b){
+                    console.log('Err => ', err.stack, require('util').inspect(err), typeof err, err.code, b); 
+                }
+              );
+              
+             /* setTimeout(function(){
+                object.kill();    
+              }, 10000);*/
     },
     function(err){
-        console.log('Transcode File Error', require('utils').inspect(err));
+        console.log('Transcode File Error', err);
     }
 );

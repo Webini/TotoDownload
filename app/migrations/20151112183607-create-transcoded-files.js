@@ -15,7 +15,7 @@ module.exports = {
         references: { model: 'Torrents', key: 'id' },
         onDelete: 'cascade'
       },
-      file: {
+      name: {
         type: Sequelize.STRING(4096),
         allowNull: false
       },
@@ -26,10 +26,6 @@ module.exports = {
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     },{
         "charset": "utf8",
@@ -37,7 +33,7 @@ module.exports = {
     }).then(function(){  
         return queryInterface.addColumn(
             'Torrents',
-            'transcoding',
+            'transcodableState',
             {
                 type: Sequelize.INTEGER.UNSIGNED,
                 allowNull: true,
@@ -50,7 +46,7 @@ module.exports = {
     return queryInterface.dropTable('TranscodedFiles').then(function(){
         return Sequelize.removeColumn(
             'Torrents',
-            'transcoding'
+            'transcodableState'
         );
     });
   }

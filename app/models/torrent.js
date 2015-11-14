@@ -156,7 +156,7 @@ module.exports = function(sequelize, DataTypes) {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: true
       },
-      transcoding: {
+      transcodableState: {
           type: DataTypes.INTEGER.UNSIGNED,
           allowNull: false,
           defaultValue: 0
@@ -215,6 +215,11 @@ module.exports = function(sequelize, DataTypes) {
   }, {
     classMethods: {
       associate: function(models) {
+        Torrent.hasMany(models['TranscodedFiles'], { 
+            onDelete: 'cascade', 
+            hooks: true,
+            foreignKey: 'torrentId' 
+        });
       }
     },
     getterMethods: {
@@ -252,12 +257,8 @@ module.exports = function(sequelize, DataTypes) {
         files: function(data){
             this.filesJson = JSON.stringify(data);    
         }
-    },
-    associate: function(models){
-        this.hasMany(models['TranscodedFiles'], { as: 'TranscodedFiles', onDelete: 'cascade', hooks: true })
     }
   });
-  
   
   return Torrent;
 };

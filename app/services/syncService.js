@@ -18,6 +18,8 @@ module.exports = ['SyncService', (function(){
             for(var i = 0; i < data.length; i++){
                 stack[data[i].hash] = data[i];                
             }
+            
+            SyncService.emit('ready');
         });
     };
     
@@ -30,7 +32,8 @@ module.exports = ['SyncService', (function(){
                      torrent.leftUntilDone + torrent.error + torrent.movieId + 
                      torrent.peersSendingToUs + torrent.peersGettingFromUse +
                      torrent.rateDownload + torrent.rateUpload + torrent.eta +
-                     torrent.activityDate + torrent.isFinished + torrent.isStalled);
+                     torrent.activityDate + torrent.isFinished + torrent.isStalled + 
+                     torrent.transcodingState);
     };
     
     /**
