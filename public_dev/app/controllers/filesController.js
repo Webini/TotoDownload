@@ -72,7 +72,7 @@ function($scope, $rootScope, $location, User, TorrentsService){
     };
     
     function updateStreamingFiles(){
-        if(!$scope.torrent.hash){
+        if(!$scope.torrent){
             return;
         }
         
