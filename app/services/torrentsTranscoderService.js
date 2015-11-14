@@ -12,7 +12,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
     var states                 = {};
     
     var config = {
-        "enable": true,
+        "enable": false,
         "types": [ "avi", "mkv", "mp4" ],
         "maxSimult": 1,
         "output": "/var/tmp"
