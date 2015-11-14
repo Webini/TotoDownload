@@ -83,9 +83,11 @@ module.exports = ['TorrentsTranscoderService', (function(){
      * @return void
      */
     TorrentsTranscoderService.deleteTranscodedFiles = function(torrent){
-        rmiraf(path.join(config.output, torrent.hash), function(err){
-            app.logger.log('Delete transcoded files error', err);
-        });
+        if(torrent.transcodableState & (states.TRANSCODING | states.TRANSCODED)){
+            rmiraf(path.join(config.output, torrent.hash), function(err){
+                app.logger.log('Delete transcoded files error', err);
+            });
+        }
     };
     
     /**
