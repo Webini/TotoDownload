@@ -4,7 +4,8 @@ angular.module('totodl')
     return {
         restrict: 'E',
         scope: {
-            items: '=items'
+            items: '=items',
+            streamFiles: '=streamFiles'
         },
         replace: true,
         templateUrl: '/app/views/directives/files.html'

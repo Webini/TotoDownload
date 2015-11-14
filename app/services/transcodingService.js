@@ -10,6 +10,7 @@ module.exports = ['TranscodingService', (function(){
     var config = {
         "maxSimult": 1,
         "preferredLang": "^fr.*",
+        "debug": false,
         "qualities": []
     };
     _.extend(config, app.config.ffmpeg);

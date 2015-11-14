@@ -7,6 +7,7 @@ module.exports = function(app){
     var uploadCtrl          = require(__dirname + '/../controllers/http/UploadController.js')(app);
     var torrentCtrl         = require(__dirname + '/../controllers/http/TorrentController.js')(app);
     var tagCtrl             = require(__dirname + '/../controllers/http/TagController.js')(app);
+    var streamCtrl          = require(__dirname + '/../controllers/http/StreamingController.js')(app);
     
     var authenticateFilter = jwt({ secret: app.config.secret.token });
     var myFilter           = myTorrentFilter(); //check if the torrent is our
@@ -29,6 +30,8 @@ module.exports = function(app){
     
     router.get('/torrents/trailer/:id([0-9]+)', authenticateFilter, torrentCtrl.onGetTrailer);
     router.get('/torrents/bestDownloads', authenticateFilter, torrentCtrl.onGetBestDownloads);
+    
+    router.get('/torrents/:torrentHash([a-zA-Z0-9]+)/stream/files', authenticateFilter, streamCtrl.onGetFiles);
     
     //when we start the download, this request will increment our downloads counter in database for userId XY
     router.get(

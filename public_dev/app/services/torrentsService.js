@@ -2,6 +2,7 @@ angular.module('services')
        .service('TorrentsService', [ '$http', '$q', function($http, $q){
     //cache best dowloads
     var bestDownloads = null;
+    var streamCache = {};
     
     var TorrentsService = {
         /**
@@ -34,6 +35,23 @@ angular.module('services')
                     return response.data;
                 }
             );
+        },
+        
+        /**
+         * Retreive files availables for streaming
+         * @return promise
+         */
+        getStreamingFiles: function(torrentHash){
+            if(streamCache[torrentHash]){
+                return $q.resolve(streamCache);
+            }
+            
+            return $http.get('/torrents/' + encodeURIComponent(torrentHash) + '/stream/files').then(
+                function(response){
+                    streamCache[torrentHash] = response.data;
+                    return response.data;
+                }
+            )
         },
         
         /**

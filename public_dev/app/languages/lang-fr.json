@@ -135,5 +135,6 @@
     "TORRENT_TAG_EXPLAIN": "Cet outil vous permet d'éditer le film / série associé avec le torrent.",
     "TORRENT_TAG_CONFIRM": "Vous êtes sur le point de remplacer le tag du torrent par <b>{{ newName }}</b>. Continuer quand même ?",
     "CONTINUE": "Continuer",
-    "DOWNLOAD": "Télécharger"
+    "DOWNLOAD": "Télécharger",
+    "STREAMING_AVAILABLE": "Disponible en streaming"
 }

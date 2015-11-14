@@ -128,6 +128,7 @@
             <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>
         </span>
         <span ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: username } }}</span>
+        <span ng-if="torrent.transcodableState == 8" class="streaming label label-info pull-right"><i class="fa fa-play"></i>&nbsp;&nbsp;{{ 'STREAMING_AVAILABLE' | translate }}</span>
     </div>
 </div>
     
