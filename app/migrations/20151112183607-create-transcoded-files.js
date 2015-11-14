@@ -19,7 +19,7 @@ module.exports = {
         type: Sequelize.STRING(4096),
         allowNull: false
       },
-      transcoded: {
+      transcodedJson: {
           type: Sequelize.TEXT,
           allowNull: false
       },
