@@ -145,10 +145,6 @@ function($scope, $rootScope, $location, User, TorrentsService){
             $scope.files.apply($scope.torrent.files);
     });
     
-    $scope.$watch('torrent.transcodableState', function(newVal, oldVal){
-        if(newVal != oldVal && newVal == 8){
-            updateStreamingFiles();
-        }
-    })
+    $scope.$watch('torrent.transcodableState', updateStreamingFiles);
     
 }]); 
