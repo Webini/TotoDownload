@@ -72,6 +72,10 @@ function($scope, $rootScope, $location, User, TorrentsService){
     };
     
     function updateStreamingFiles(){
+        if(!$scope.torrent.hash){
+            return;
+        }
+        
         TorrentsService.getStreamingFiles($scope.torrent.hash).then(
             function(data){
                 $scope.streamFiles = data;

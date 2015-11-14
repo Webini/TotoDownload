@@ -43,7 +43,7 @@ angular.module('services')
          */
         getStreamingFiles: function(torrentHash){
             if(streamCache[torrentHash]){
-                return $q.resolve(streamCache);
+                return $q.resolve(streamCache[torrentHash]);
             }
             
             return $http.get('/torrents/' + encodeURIComponent(torrentHash) + '/stream/files').then(
