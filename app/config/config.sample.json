@@ -32,6 +32,58 @@
         "password": "password",
         "url": "/transmission/rpc"
     },
+    "transcoder": {
+        "enable": true, 
+        "types": [ "avi", "mkv", "mp4" ], //extension accepted for transcoding
+        "maxSimult": 2, //max transcoding movie simultaneous 
+        "output": "outputPath" //output for transcoded movies
+    },
+    "ffmpeg": {
+        "preferredLang": "^fr.*", //regex for matching languages in subtitle & audio tracks
+        "debug": true, //if debug => the movie will not be fully transcoded (only ~1 min)
+        "qualities": [
+            {
+                "default": true, //reference configuration
+                "name": "480p",
+                "vcodec": "libx264",
+                "vbitrate": 516096,
+                "maxbitrate": 516096,
+                "acodec": "libfaac",
+                "abitrate": 98304,
+                "channel": 2,
+                "threads": 4,
+                "width": 720,
+                "height": 480,
+                "preset": "slow"
+            },
+            {
+                "name": "720p",
+                "vcodec": "libx264",
+                "vbitrate": 890880,
+                "maxbitrate": 890880,
+                "acodec": "libfaac",
+                "abitrate": 131072,
+                "channel": 2,
+                "threads": 4,
+                "width": 1280,
+                "height": 720,
+                "preset": "slow"
+            },
+            {
+                "name": "1080p",
+                "vcodec": "libx264",
+                "vbitrate": 1884160,
+                "maxbitrate": 1884160,
+                "acodec": "libfaac",
+                "abitrate": 163840,
+                "channel": 2,
+                "threads": 4,
+                "width": 1920, 
+                "height": 1080,
+                "preset": "slow"
+            }
+        ]
+    },
     "moviesdb":{
         "api": "allocine" //only one supported right now
     },
