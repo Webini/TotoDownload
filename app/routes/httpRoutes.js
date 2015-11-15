@@ -38,6 +38,10 @@ module.exports = function(app){
         streamCtrl.onDownload
     );
     router.get(
+        '/torrents/stream/hls/:torrentHash([a-zA-Z0-9]+)/file/:userId([0-9]+)/:userHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:quality([a-zA-Z0-9]+)/:fileName.m3u8',
+        streamCtrl.onDownloadHlsPlaylist
+    );
+    router.get(
         '/torrents/stream/download/raw/:torrentHash([a-zA-Z0-9]+)/:ttlHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:quality([a-zA-Z0-9]+)/:ttl([0-9]+)/:fileName',
         streamCtrl.onRawDownload
     );

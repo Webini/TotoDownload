@@ -22,7 +22,8 @@
         "port": 80, //not required
         "ssl": false, 
         "dlBasepath": "lalal/lulu", //not required only used when useServer => true
-        "streamBasepath": "lalal/lulu" //not required only used when useServer => true
+        "streamBasepath": "lalal/lulu", //not required ( basepath for downloading transocded files )
+        "hlsBasepath": "lalal/lulu" //base path for HLS playlist
     },
     "sessionExpiration": 240,
     "torrents": {

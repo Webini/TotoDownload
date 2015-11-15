@@ -76,6 +76,30 @@ module.exports = function(app){
             );
         },
         
+        onDownloadHlsPlaylist: function(req, res){
+            if(!req.params.torrentHash || !req.params.userId || !req.params.userHash || 
+                !req.params.fileId || !req.params.fileName || !req.params.quality)
+                return res.status(404).end();
+            
+            DownloadService.getStreamLink(
+                req.params.torrentHash, 
+                req.params.userId, 
+                req.params.userHash, 
+                req.params.fileId,
+                req.params.quality,
+                true
+            ).then(
+                function(location){
+                    res.redirect(302, location);    
+                },
+                function (err, code){
+                    res.status(code ? code : 500)
+                       .json(err)
+                       .end();
+                }
+            );
+        },
+        
         onGetPlaylist: function(req, res){
             var torrent = null;
             if(!req.params.torrentHash || !req.params.fileId || !req.params.userId || !req.params.userHash ||

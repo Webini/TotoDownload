@@ -12,7 +12,8 @@ module.exports = ['DownloadService', (function(){
         "port": 80, 
         "ssl": false, 
         "dlBasepath": null, 
-        "streamBasepath": null
+        "streamBasepath": null,
+        "hlsBasepath": null
     };
     
     _.extend(config, app.config.download);
@@ -127,7 +128,7 @@ module.exports = ['DownloadService', (function(){
     * Generate the public stream link
     * @return promise
     **/
-    DownloadService._generatePublicStreamLink = function(torrent, file, quality, user){
+    DownloadService._generatePublicStreamLink = function(torrent, file, quality, user, hls){
         if(!file.transcoded[quality]){
             return $q.reject('Quality not found', 404);
         }
@@ -139,12 +140,13 @@ module.exports = ['DownloadService', (function(){
                 
                 var segment = '/' + torrent.hash + '/' + linkTTLHash + '/' + file.id + '/' + quality + '/' + expiration + '/';
                 if(config.useServer){ //if we are using dedicated webserver
+                    var basepath = (hls ? config.hlsBasepath : config.streamBasepath);
                     
                     segment = (config.ssl ? 'https' : 'http') + '://' + 
                               config.host + 
                               (config.port == 80 ? '' : ':' + config.port) + 
-                              (config.streamBasepath ? path.normalize('/' + config.streamBasepath) : '')
-                              + segment + encodeURI(file.name);
+                              (basepath ? path.normalize('/' + basepath) : '')
+                              + segment + encodeURI(file.name) + (hls ? '.m3u8' : '');
                 }
                 else{ //else serve the files
                     var fileSegments = file.name.split('/');
@@ -165,7 +167,7 @@ module.exports = ['DownloadService', (function(){
     * Retreive the download link for a stream file
     * @return promise
     **/
-    DownloadService.getStreamLink = function(torrentHash, userId, userHash, fileId, quality){
+    DownloadService.getStreamLink = function(torrentHash, userId, userHash, fileId, quality, hls){
         return app.services.UserService.get(userId).then(
             //check if this user is valid
             function success(user){
@@ -180,7 +182,7 @@ module.exports = ['DownloadService', (function(){
                     
                     return torrent.getTranscodedFile(fileId)
                                   .then(function(file){
-                                      return DownloadService._generatePublicStreamLink(torrent, file, quality, user);
+                                      return DownloadService._generatePublicStreamLink(torrent, file, quality, user, hls);
                                   }); 
                 }
                 else
