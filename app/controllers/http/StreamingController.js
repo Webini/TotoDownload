@@ -74,6 +74,34 @@ module.exports = function(app){
                        .end();
                 }
             );
+        },
+        
+        onGetPlaylist: function(req, res){
+            var torrent = null;
+            if(!req.params.torrentHash || !req.params.fileId || !req.params.userId || !req.params.userHash ||
+                !(torrent = TorrentService.getFromMemory(req.params.torrentHash))){
+                return res.status(404).end();
+            } 
+            
+            torrent.getTranscodedFile(req.params.fileId).then(
+                function(file){
+                    var out = "#EXTM3U\n";
+                    var transcoded = file.transcoded;
+                    for(var quality in transcoded){
+                        out += '#EXT-X-STREAM-INF:PROGRAM-ID=1,' +
+                               'BANDWIDTH=' + transcoded[quality].bandwidth + ',' + 
+                               'RESOLUTION=' + transcoded[quality].resolution + ',' + 
+                               'CODECS="' + transcoded[quality].audio_codec + ',' + transcoded[quality].video_codec + '",' + 
+                               'NAME="' + quality + "\"\n";
+                        out += '/torrents/stream/download/' + torrent.hash + '/file/' + req.params.userId + '/' + req.params.userHash + '/' + file.id + '/' + quality + '/' + encodeURIComponent(file.name) + ".m3u8\n";
+                    }
+
+                    res.send(out).end();
+                }
+            ).catch(function(e){
+                res.json(e.stack);
+                res.status(500).end(); 
+            });         
         }
     };
 };

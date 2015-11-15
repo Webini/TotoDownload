@@ -246,7 +246,9 @@ module.exports = ['TorrentsTranscoderService', (function(){
      */
     TorrentsTranscoderService._onTranscoderObjectReady = function(transObj, transcoder){
         transcoder.transObj = transObj;
-        return transObj.transcode().then(
+        return transObj.transcode()
+                       .then(TorrentsTranscoderService._fillWithCodecInformations)
+                       .then(
             function(result){
                 var defer = $q.defer();
                 console.log('TorrentsTranscoderService._onTranscoderObjectReady');
@@ -278,21 +280,67 @@ module.exports = ['TorrentsTranscoderService', (function(){
     };
     
     /**
+     * Retreive codec informations
+     */
+    TorrentsTranscoderService._fillWithCodecInformations = function(result){
+        console.log('TorrentsTranscoderService._fillWithCodecInformations');
+        var promises = [];
+        
+        for(var quality in result){
+            promises.push(TranscodingService.getMetadata({ input: result[quality].fullPath, quality: quality }).then(function(data){
+                //cf http://www.wowza.com/forums/content.php?210-How-to-add-resolution-and-codec-metadata-to-iOS-streams
+                var bandwidth = 0;
+                var streams = data.metadata.streams;
+                for(var i = 0; i < streams.length; i++){
+                    if(streams[i].codec_type.toLowerCase() == 'audio' && !result[data.quality].audio_codec){
+                        result[data.quality].audio_codec = streams[i].codec_tag_string + '.40.' + (streams[i].profile == 'HE' ? 5 : 2);
+                        bandwidth += streams[i].bit_rate;
+                    }   
+                    else if(streams[i].codec_type.toLowerCase() == 'video' && !result[data.quality].video_codec){
+                        var profile = streams[i].profile.toLowerCase();
+                        if(profile == 'high'){
+                            profile = 100;
+                        }
+                        else if(profile == 'main'){
+                            profile = 77;
+                        }
+                        else if(profile == 'baseline'){
+                            profile = 66;
+                        }
+                        else{
+                            profile = 0;
+                        }
+                        
+                        result[data.quality].video_codec = streams[i].codec_tag_string + '.' + profile + '.' + streams[i].level;
+                        result[data.quality].resolution = streams[i].width + 'x' + streams[i].height;
+                        bandwidth += streams[i].bit_rate;
+                    }
+                }
+                
+                result[data.quality].bandwidth = bandwidth;
+                result[data.quality].fullPath = data.input;
+            }));
+        }
+        
+        return $q.all(promises).then(
+            function(){
+                return result;
+            }
+        );
+    };
+    
+    /**
      * Transformat absolute path from TranscodingService results to relative path
      * @return result array
      */
     TorrentsTranscoderService._convertToRelativePath = function(result){ 
         console.log('TorrentsTranscoderService._convertToRelativePath => ', result);
-        var out = {};
-        
         for(var quality in result){
-            out[quality] = { 
-                fullPath: result[quality].fullPath,
-                path: result[quality].fullPath.substr(config.output.length) 
-            };
+            result[quality].path = result[quality].fullPath.substr(config.output.length);
+            delete result[quality].fullPath;
         }
         
-        return out;
+        return result;
     }
     
     /**

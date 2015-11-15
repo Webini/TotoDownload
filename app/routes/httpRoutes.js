@@ -41,6 +41,10 @@ module.exports = function(app){
         '/torrents/stream/download/raw/:torrentHash([a-zA-Z0-9]+)/:ttlHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:quality([a-zA-Z0-9]+)/:ttl([0-9]+)/:fileName',
         streamCtrl.onRawDownload
     );
+    router.get(
+        '/torrents/stream/playlist/:torrentHash([a-zA-Z0-9]+)/file/:userId([0-9]+)/:userHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:fileName.m3u8',
+        streamCtrl.onGetPlaylist
+    );
     
     //when we start the download, this request will increment our downloads counter in database for userId XY
     router.get(
