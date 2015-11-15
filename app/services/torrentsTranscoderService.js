@@ -177,6 +177,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         transcoder.done = [];
         transcoder.processing = true;
         transcoder.original = {
+            id: torrent.id,
             files: _.clone(torrent.files),
             path: torrent.downloadDir
         };
@@ -248,11 +249,10 @@ module.exports = ['TorrentsTranscoderService', (function(){
         return transObj.transcode().then(
             function(result){
                 var defer = $q.defer();
-                var torrent = TorrentService.getFromMemory(transcoder.torrent);
                 console.log('TorrentsTranscoderService._onTranscoderObjectReady');
                 
                 app.orm.TranscodedFiles.create({
-                    torrentId: torrent.id,
+                    torrentId: transcoder.original.id,
                     name: transcoder.transcoding.name,
                     transcoded: TorrentsTranscoderService._convertToRelativePath(result),
                     createdAt: new Date()
