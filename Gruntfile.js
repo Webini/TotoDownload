@@ -18,6 +18,7 @@ module.exports = function(grunt) {
                         './bower_components/ngDialog/js/ngDialog.js',
 						'./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
 						'./bower_components/TdGal/dist/js/tdgal.angular.standalone.js',
+                        './bower_components/hls.js/dist/hls.js',
                         './public_dev/app/app.js',
                         './public_dev/app/controllers/registerController.js',
                         './public_dev/app/controllers/**/*.js',

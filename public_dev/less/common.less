@@ -127,6 +127,12 @@ ul {
 
 .torrent.nomargin { margin-bottom: 0px; }
 
+.text-overflow {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-break: break-all;
+    white-space: nowrap;
+}
 
 .torrent {
     min-height: 111px !important;
@@ -192,13 +198,6 @@ ul {
     .progress {
         width: 100%;     
         margin-bottom: 0px;
-    }
-    
-    .text-overflow {
-        text-overflow: ellipsis;
-        overflow: hidden;
-        word-break: break-all;
-        white-space: nowrap;
     }
     
     .content-widget {
@@ -309,6 +308,8 @@ ul {
     
 }
 
+
 @import "modal.less";
 @import "gallery.less";
 @import "spinner.less";
+@import "video-player.less";

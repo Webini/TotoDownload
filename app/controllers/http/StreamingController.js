@@ -76,7 +76,7 @@ module.exports = function(app){
             );
         },
         
-        onDownloadHlsPlaylist: function(req, res){
+        onGetFilePlaylist: function(req, res){
             if(!req.params.torrentHash || !req.params.userId || !req.params.userHash || 
                 !req.params.fileId || !req.params.fileName || !req.params.quality)
                 return res.status(404).end();
@@ -100,7 +100,7 @@ module.exports = function(app){
             );
         },
         
-        onGetPlaylist: function(req, res){
+        onGetMasterPlaylist: function(req, res){
             var torrent = null;
             if(!req.params.torrentHash || !req.params.fileId || !req.params.userId || !req.params.userHash ||
                 !(torrent = TorrentService.getFromMemory(req.params.torrentHash))){

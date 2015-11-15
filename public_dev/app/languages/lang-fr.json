@@ -136,5 +136,7 @@
     "TORRENT_TAG_CONFIRM": "Vous êtes sur le point de remplacer le tag du torrent par <b>{{ newName }}</b>. Continuer quand même ?",
     "CONTINUE": "Continuer",
     "DOWNLOAD": "Télécharger",
-    "STREAMING_AVAILABLE": "Disponible en streaming"
+    "STREAMING_AVAILABLE": "Disponible en streaming",
+    "PLAYER_NOT_AVAILABLE": "Le player n'est pas disponible sur ce navigateur",
+    "PLAY": "Play"
 }

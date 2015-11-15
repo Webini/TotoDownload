@@ -136,5 +136,7 @@
     "TORRENT_TAG_CONFIRM": "You are about to replace / set the torrent tag by <b>{{ newName }}</b>. Continue anyway ?",
     "CONTINUE": "Continue",
     "DOWNLOAD": "Download",
-    "STREAMING_AVAILABLE": "Streaming available"
+    "STREAMING_AVAILABLE": "Streaming available",
+    "PLAYER_NOT_AVAILABLE": "Player not available for this browser",
+    "PLAY": "Play"
 }

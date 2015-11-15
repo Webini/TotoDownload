@@ -34,7 +34,8 @@
     "ngDialog": "~0.3.12",
     "TdGal": "https://github.com/Webini/TdGal.git#master",
     "ngInfiniteScroll": "~1.2.1",
-    "angular": "1.4.6"
+    "angular": "1.4.6",
+    "hls.js": "https://github.com/dailymotion/hls.js.git#~0.2.4"
   },
   "resolutions": {
     "angular": "1.4.6"

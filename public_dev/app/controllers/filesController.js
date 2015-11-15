@@ -1,6 +1,6 @@
 angular.module('totodl')
-       .controller('FilesController', [ '$scope', '$rootScope', '$location', 'User', 'TorrentsService',
-function($scope, $rootScope, $location, User, TorrentsService){
+       .controller('FilesController', [ '$scope', '$rootScope', '$location', 'User', 'TorrentsService', 'VideoService',
+function($scope, $rootScope, $location, User, TorrentsService, VideoService){
     var types = {
         pic: 'fa-picture-o',    
         zip: 'fa-archive',
@@ -139,6 +139,14 @@ function($scope, $rootScope, $location, User, TorrentsService){
         return host + '/torrents/stream/download/' + $scope.torrent.hash + '/file/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + fileId + '/' + quality + '/' + encodeURIComponent(fileName); 
     };
     
+    /**
+     * Démarre la lecture
+     */
+    $scope.play = function(streamFile, name){
+        streamFile.name = name;
+        VideoService.play($scope.torrent, streamFile);
+    };
+    
     $scope.$watch('torrent.leftUntilDone', function(newVal, oldVal){
         if(newVal == oldVal && $scope.__firstFilesCtrl)
             return;
@@ -150,5 +158,4 @@ function($scope, $rootScope, $location, User, TorrentsService){
     });
     
     $scope.$watch('torrent.transcodableState', updateStreamingFiles);
-    
 }]); 
