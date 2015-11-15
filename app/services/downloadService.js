@@ -105,7 +105,7 @@ module.exports = ['DownloadService', (function(){
                     segment = (config.ssl ? 'https' : 'http') + '://' + 
                               config.host + 
                               (config.port == 80 ? '' : ':' + config.port) + 
-                              (config.dlBasepath ? path.normalize('/' + config.basepath) : '')
+                              (config.dlBasepath ? path.normalize('/' + config.dlBasepath) : '')
                               + segment + encodeURI(torrent.files[fileId].name);
                 }
                 else{ //else serve the files
@@ -143,7 +143,7 @@ module.exports = ['DownloadService', (function(){
                     segment = (config.ssl ? 'https' : 'http') + '://' + 
                               config.host + 
                               (config.port == 80 ? '' : ':' + config.port) + 
-                              (config.dlBasepath ? path.normalize('/' + config.basepath) : '')
+                              (config.streamBasepath ? path.normalize('/' + config.streamBasepath) : '')
                               + segment + encodeURI(file.name);
                 }
                 else{ //else serve the files
