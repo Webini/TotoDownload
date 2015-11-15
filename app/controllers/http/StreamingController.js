@@ -93,7 +93,7 @@ module.exports = function(app){
                                'RESOLUTION=' + transcoded[quality].resolution + ',' + 
                                'CODECS="' + transcoded[quality].audio_codec + ',' + transcoded[quality].video_codec + '",' + 
                                'NAME="' + quality + "\"\n";
-                        out += '/torrents/stream/download/' + torrent.hash + '/file/' + req.params.userId + '/' + req.params.userHash + '/' + file.id + '/' + quality + '/' + encodeURIComponent(file.name) + ".m3u8\n";
+                        out += '/torrents/stream/hls/' + torrent.hash + '/file/' + req.params.userId + '/' + req.params.userHash + '/' + file.id + '/' + quality + '/' + encodeURIComponent(file.name) + ".m3u8\n";
                     }
 
                     res.send(out).end();
