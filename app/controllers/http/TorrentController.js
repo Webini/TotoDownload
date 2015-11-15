@@ -113,8 +113,8 @@ module.exports = function(app){
                 function(location){
                     res.redirect(302, location);    
                 },
-                function (err){
-                    res.status(404)
+                function (err, code){
+                    res.status(code ? code : 500)
                        .json(err)
                        .end();
                 }

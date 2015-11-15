@@ -135,6 +135,10 @@ function($scope, $rootScope, $location, User, TorrentsService){
         return host + '/torrents/download/' + $scope.torrent.hash + '/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + rawFile.id + '/' + encodeURIComponent(fileName);  
     };
     
+    $scope.getStreamLink = function(fileId, fileName, quality){
+        return host + '/torrents/stream/download/' + $scope.torrent.hash + '/file/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + fileId + '/' + quality + '/' + encodeURIComponent(fileName); 
+    };
+    
     $scope.$watch('torrent.leftUntilDone', function(newVal, oldVal){
         if(newVal == oldVal && $scope.__firstFilesCtrl)
             return;

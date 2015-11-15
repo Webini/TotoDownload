@@ -1,7 +1,8 @@
 "use strict";
 module.exports = function(sequelize, DataTypes) {
-  var _ = require('underscore');
-    
+  var _  = require('underscore');
+  var $q = require('q');
+  
   var Torrent = sequelize.define("Torrent", {
       userId: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -214,13 +215,28 @@ module.exports = function(sequelize, DataTypes) {
       trackers: DataTypes.VIRTUAL
   }, {
     classMethods: {
-      associate: function(models) {
-        Torrent.hasMany(models['TranscodedFiles'], { 
-            onDelete: 'cascade', 
-            hooks: true,
-            foreignKey: 'torrentId' 
-        });
-      }
+        associate: function(models) {
+            Torrent.hasMany(models['TranscodedFiles'], { 
+                onDelete: 'cascade', 
+                hooks: true,
+                foreignKey: 'torrentId' 
+            });
+        },
+    },
+    instanceMethods: {
+        getTranscodedFile: function(id){
+            return this.getTranscodedFiles().then(
+                function(data){
+                    for(var i = 0; i < data.length; i++){
+                        if(data[i].id == id){
+                            return data[i];
+                        }
+                    }
+                    
+                    return $q.reject('Not found', 404);
+                }
+            );
+        }
     },
     getterMethods: {
         trackers: function(){

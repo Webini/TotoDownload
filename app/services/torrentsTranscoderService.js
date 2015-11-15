@@ -59,6 +59,16 @@ module.exports = ['TorrentsTranscoderService', (function(){
     };
     
     /**
+     * Retreive full path for the @transcodedFilePath
+     * @param string transcodedFilePath relative path
+     * @return string
+     */
+    TorrentsTranscoderService.getFullPath = function(transcodedFilePath){
+        return path.join(config.output, transcodedFilePath);
+    };
+    
+    
+    /**
      * Check if torrent is transcodable
      * @return boolean
      */
@@ -244,7 +254,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 app.orm.TranscodedFiles.create({
                     torrentId: torrent.id,
                     name: transcoder.transcoding.name,
-                    transcoded: result,
+                    transcoded: TorrentsTranscoderService._convertToRelativePath(result),
                     createdAt: new Date()
                 }).then(function(file){
                     transcoder.done.push(file);
@@ -266,6 +276,24 @@ module.exports = ['TorrentsTranscoderService', (function(){
             }
        );
     };
+    
+    /**
+     * Transformat absolute path from TranscodingService results to relative path
+     * @return result array
+     */
+    TorrentsTranscoderService._convertToRelativePath = function(result){ 
+        console.log('TorrentsTranscoderService._convertToRelativePath => ', result);
+        var out = {};
+        
+        for(var quality in result){
+            out[quality] = { 
+                fullPath: result[quality].fullPath,
+                path: result[quality].fullPath.substr(config.output.length) 
+            };
+        }
+        
+        return out;
+    }
     
     /**
      * Finilize transcoding
@@ -322,6 +350,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         variants.push(name + '.srt');
         variants.push(name + '.ssa'); //ASS format  | ))
         console.log('TorrentsTranscoderService._findSubtitle try variants => ', variants.join(', '));
+        
         for(var i = 0; i < files.length; i++){
             if(variants.indexOf(files[i].name.toLowerCase()) > -1){
                 return files[i];

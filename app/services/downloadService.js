@@ -1,10 +1,28 @@
 module.exports = ['DownloadService', (function(){
-    var app             = require(__dirname + '/../app.js');
-    var $q              = require('q');
-    var path            = require('path');
+    var app                       = require(__dirname + '/../app.js');
+    var $q                        = require('q');
+    var path                      = require('path');
+    var _                         = require('underscore');
+    var TranscodingService        = null;
+    var TorrentsTranscoderService = null;
+    
+    var config = {
+        "useServer": false,
+        "host": "localhost", 
+        "port": 80, 
+        "ssl": false, 
+        "dlBasepath": null, 
+        "streamBasepath": null
+    };
+    
+    _.extend(config, app.config.download);
     
     function DownloadService(){}
     
+    DownloadService.ready = function(){
+        TranscodingService        = app.services.TranscodingService;
+        TorrentsTranscoderService = app.services.TorrentsTranscoderService;
+    };
     
     /**
     * Retreive the filepath for a give torrent's file
@@ -12,7 +30,7 @@ module.exports = ['DownloadService', (function(){
     * @return void
     **/
     DownloadService.getLocalPath = function(torrentHash, hashTTL, ttl, fileId, callback){
-        var defer = $q.defer();
+        var defer = $q.defer(); //<= LOL
         var assertTTLHash = this._generateExpirationHash(ttl);
         
         if(assertTTLHash != hashTTL)
@@ -29,7 +47,34 @@ module.exports = ['DownloadService', (function(){
             torrent.downloadDir,
             torrent.files[fileId].name
         ));
+    };
+    
+    /**
+     * Retreive local stream path
+     * @return promise
+     */
+    DownloadService.getStreamLocalPath = function(torrentHash, hashTTL, ttl, fileId, quality){
+        var assertTTLHash = this._generateExpirationHash(ttl);
         
+        if(assertTTLHash != hashTTL)
+            return $q.reject('Invalid TTL', 404);
+        
+        var torrent = app.services.TorrentService.getFromMemory(torrentHash);
+        if(!torrent)
+            return $q.reject('Torrent not found', 404);
+        
+        return torrent.getTranscodedFile(fileId)
+                      .then(function(file){
+                          var fileInfos = file.transcoded[quality];
+                          if(!fileInfos){
+                              return $q.reject('Quality not found', 403);
+                          }
+                            
+                          return {
+                              path: TorrentsTranscoderService.getFullPath(fileInfos.path),
+                              name: file.name + '.' + quality + '.mp4'
+                          };
+                      });       
     };
     
     /**
@@ -51,21 +96,20 @@ module.exports = ['DownloadService', (function(){
     DownloadService._generatePublicLink = function(torrent, fileId, user){
         return app.services.ConfigService.get('downloadTTL').then(
             function(conf){
-                var downloadConf = app.config.download;
                 var expiration = (parseInt(Date.now() / 1000) + parseInt(conf.value)).toString();
-                var linkTTLHash = encodeURIComponent(DownloadService._generateExpirationHash(expiration, downloadConf.useServer));
-                var fileSegments = torrent.files[fileId].name.split('/');
+                var linkTTLHash = encodeURIComponent(DownloadService._generateExpirationHash(expiration, config.useServer));
                 
                 var segment = '/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/';
-                if(downloadConf.useServer){ //if we are using dedicated webserver
+                if(config.useServer){ //if we are using dedicated webserver
                     
-                    segment = (downloadConf.ssl ? 'https' : 'http') + '://' + 
-                              downloadConf.host + 
-                              (downloadConf['port'] !== undefined ? ':' + downloadConf.port : '') + 
-                              (downloadConf['basepath'] !== undefined ? ':' + path.normalize(downloadConf.basepath) : '')
+                    segment = (config.ssl ? 'https' : 'http') + '://' + 
+                              config.host + 
+                              (config.port == 80 ? '' : ':' + config.port) + 
+                              (config.dlBasepath ? path.normalize('/' + config.basepath) : '')
                               + segment + encodeURI(torrent.files[fileId].name);
                 }
                 else{ //else serve the files
+                    var fileSegments = torrent.files[fileId].name.split('/');
                     segment = '/torrents/download/raw' + segment + encodeURIComponent(fileSegments[fileSegments.length-1]);  
                 }
                 
@@ -80,6 +124,76 @@ module.exports = ['DownloadService', (function(){
     };
     
     /**
+    * Generate the public stream link
+    * @return promise
+    **/
+    DownloadService._generatePublicStreamLink = function(torrent, file, quality, user){
+        if(!file.transcoded[quality]){
+            return $q.reject('Quality not found', 404);
+        }
+        
+        return app.services.ConfigService.get('downloadTTL').then(
+            function(conf){
+                var expiration = (parseInt(Date.now() / 1000) + parseInt(conf.value)).toString();
+                var linkTTLHash = encodeURIComponent(DownloadService._generateExpirationHash(expiration, config.useServer));
+                
+                var segment = '/' + torrent.hash + '/' + linkTTLHash + '/' + file.id + '/' + quality + '/' + expiration + '/';
+                if(config.useServer){ //if we are using dedicated webserver
+                    
+                    segment = (config.ssl ? 'https' : 'http') + '://' + 
+                              config.host + 
+                              (config.port == 80 ? '' : ':' + config.port) + 
+                              (config.dlBasepath ? path.normalize('/' + config.basepath) : '')
+                              + segment + encodeURI(file.name);
+                }
+                else{ //else serve the files
+                    var fileSegments = file.name.split('/');
+                    segment = '/torrents/stream/download/raw' + segment + encodeURIComponent(fileSegments[fileSegments.length-1]);  
+                }
+                
+                return {
+                    torrent: torrent,
+                    file: file,
+                    uri: segment, //'/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
+                    user: user
+                };
+            }
+        );
+    };   
+    
+    /**
+    * Retreive the download link for a stream file
+    * @return promise
+    **/
+    DownloadService.getStreamLink = function(torrentHash, userId, userHash, fileId, quality){
+        return app.services.UserService.get(userId).then(
+            //check if this user is valid
+            function success(user){
+                if(user.downloadHash == userHash && user.id == userId){
+                    var torrent = app.services.TorrentService.getFromMemory(torrentHash);
+                    if(!torrent)
+                        return $q.reject('Torrent not found', 404);
+                        
+                    if(!TranscodingService.qualityExists(quality)){
+                        return $q.rejec('Quality not found', 404);
+                    }
+                    
+                    return torrent.getTranscodedFile(fileId)
+                                  .then(function(file){
+                                      return DownloadService._generatePublicStreamLink(torrent, file, quality, user);
+                                  }); 
+                }
+                else
+                    return $q.reject('Invalid userHash', 403);
+            }
+        )
+        .then(function(linkData){ //save the download in database
+            app.services.TorrentsDownloadedService.addDownload(linkData.torrent.id, linkData.user.id);
+            return linkData.uri;
+        });        
+    };
+    
+    /**
     * Retreive the download link 
     * Set in database that the torrent was downloaded
     * @return promise
@@ -91,16 +205,16 @@ module.exports = ['DownloadService', (function(){
                 if(user.downloadHash == userHash && user.id == userId){
                     var torrent = app.services.TorrentService.getFromMemory(torrentHash);
                     if(!torrent || !torrent.files[fileId])
-                        return $q.reject('Torrent not found');
+                        return $q.reject('Torrent not found', 404);
                     
                     if(torrent.files[fileId].length !== torrent.files[fileId].bytesCompleted)
-                        return $q.reject('File not finished');
+                        return $q.reject('File not finished', 403);
                         
                     //if ok we retreive the download link
                     return DownloadService._generatePublicLink(torrent, fileId, user);
                 }
                 else
-                    return $q.reject('Invalid userHash');
+                    return $q.reject('Invalid userHash', 403);
             }
         )
         .then(function(linkData){ //save the download in database

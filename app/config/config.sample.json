@@ -21,7 +21,8 @@
         "host": "localhost", //url generated will be like http[s]?://host:port/torrent.hash/TTLHash(expire+secret.download)/fileId/expiration/filePath
         "port": 80, //not required
         "ssl": false, 
-	"basepath": "lalal/lulu" //not required
+        "dlBasepath": "lalal/lulu", //not required only used when useServer => true
+        "streamBasepath": "lalal/lulu" //not required only used when useServer => true
     },
     "sessionExpiration": 240,
     "torrents": {
@@ -34,7 +35,7 @@
     },
     "transcoder": {
         "enable": true, 
-        "types": [ "avi", "mkv", "mp4" ], //extension accepted for transcoding
+        "types": [ "avi", "mkv", "mp4", "mov", "mpg", "mpeg" ], //extension accepted for transcoding
         "maxSimult": 2, //max transcoding movie simultaneous 
         "output": "outputPath" //output for transcoded movies
     },
@@ -44,7 +45,7 @@
         "qualities": [
             {
                 "default": true, //reference configuration
-                "name": "480p",
+                "name": "480p", //characters allowed [a-zA-Z0-9]
                 "vcodec": "libx264",
                 "vbitrate": 516096,
                 "maxbitrate": 516096,

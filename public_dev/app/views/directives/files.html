@@ -10,12 +10,12 @@
     <div ng-if="key.substr(0,2) == '__'">
         <div ng-repeat="file in item | filter:filesSearch:filesComparator">
             <div ng-if="file.raw.bytesCompleted == file.raw.length" class="completed">
-                <a href="{{ getLink(file.raw, file.filename) }}" target="_blank">
+                <a ng-href="{{ ::getLink(file.raw, file.filename) }}" target="_blank">
                     <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
                     <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
                 </a>
                 <span ng-if="streamFiles[file.raw.name] != undefined">
-                    <a href="javascript:alert('todo')" ng-repeat="quality in streamFiles[file.raw.name]" class="quality-btn btn btn-xs btn-info">
+                    <a ng-href="{{ ::getStreamLink(streamFiles[file.raw.name].id, file.filename, quality) }}" ng-repeat="quality in streamFiles[file.raw.name].qualities" class="quality-btn btn btn-xs btn-info">
                         {{ quality }}
                     </a>
                     

@@ -146,6 +146,19 @@ module.exports = ['TranscodingService', (function(){
     };
     
     /**
+     * Check if quality @quality is defined
+     * @return bool
+     */
+    TranscodingService.qualityExists = function(quality){
+        for(var i = 0; i < config.qualities.length; i++){
+            if(config.qualities[i].name === quality){
+                return true;
+            }
+        }
+        return false;
+    };
+    
+    /**
      * Retreive metadata for file @file
      * @param object conf Object with field input => Full path to string
      * @return promise 
@@ -410,7 +423,7 @@ module.exports = ['TranscodingService', (function(){
             }catch(e){}
         
             //object that will be returned with paths & qualities informations
-            conf.return[cQal.name] = { fullPath: outFile, path: conf.output + '.' + cQal.name };
+            conf.return[cQal.name] = { fullPath: outFile };
             
             var outId = 0;
             var filters = [ { 
@@ -426,7 +439,7 @@ module.exports = ['TranscodingService', (function(){
             ];
             
             if(config.debug){
-                options.push('-t 195');
+                options.push('-t 10');
                 options.push('-ss 00:01:00');
             }
             

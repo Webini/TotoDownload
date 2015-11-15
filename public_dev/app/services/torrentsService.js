@@ -46,7 +46,7 @@ angular.module('services')
                 return $q.resolve(streamCache[torrentHash]);
             }
             
-            return $http.get('/torrents/' + encodeURIComponent(torrentHash) + '/stream/files').then(
+            return $http.get('/torrents/stream/' + encodeURIComponent(torrentHash) + '/files').then(
                 function(response){
                     streamCache[torrentHash] = response.data;
                     return response.data;

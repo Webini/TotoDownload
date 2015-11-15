@@ -31,7 +31,16 @@ module.exports = function(app){
     router.get('/torrents/trailer/:id([0-9]+)', authenticateFilter, torrentCtrl.onGetTrailer);
     router.get('/torrents/bestDownloads', authenticateFilter, torrentCtrl.onGetBestDownloads);
     
-    router.get('/torrents/:torrentHash([a-zA-Z0-9]+)/stream/files', authenticateFilter, streamCtrl.onGetFiles);
+    router.get('/torrents/stream/:torrentHash([a-zA-Z0-9]+)/files', authenticateFilter, streamCtrl.onGetFiles);
+    //    return host + '/torrents/stream/' + $scope.torrent.hash + '/file/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + fileId + '/' + quality + '/' + encodeURIComponent(fileName); 
+    router.get(
+        '/torrents/stream/download/:torrentHash([a-zA-Z0-9]+)/file/:userId([0-9]+)/:userHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:quality([a-zA-Z0-9]+)/:fileName',
+        streamCtrl.onDownload
+    );
+    router.get(
+        '/torrents/stream/download/raw/:torrentHash([a-zA-Z0-9]+)/:ttlHash([a-zA-Z0-9]+)/:fileId([0-9]+)/:quality([a-zA-Z0-9]+)/:ttl([0-9]+)/:fileName',
+        streamCtrl.onRawDownload
+    );
     
     //when we start the download, this request will increment our downloads counter in database for userId XY
     router.get(
