@@ -138,5 +138,6 @@
     "DOWNLOAD": "Download",
     "STREAMING_AVAILABLE": "Streaming available",
     "PLAYER_NOT_AVAILABLE": "Player not available for this browser",
-    "PLAY": "Play"
+    "PLAY": "Play",
+    "STREAMING": "Streaming"
 }

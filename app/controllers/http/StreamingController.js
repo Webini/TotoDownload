@@ -9,6 +9,13 @@ module.exports = function(app){
         }
         return ret;
     };
+    
+    function getDuration(file){
+        for(var key in file.transcoded){
+            return file.transcoded[key].duration;
+        }
+        return 0;
+    }
         
     return {
         onGetFiles: function(req, res){
@@ -21,7 +28,12 @@ module.exports = function(app){
                 function(files){
                     var out = {};
                     for(var i = 0; i < files.length; i++){
-                        out[files[i].name] = { qualities: formatQualities(files[i]), id: files[i].id };
+                        out[files[i].name] = { 
+                            qualities: formatQualities(files[i]), 
+                            id: files[i].id, 
+                            duration: getDuration(files[i]),
+                            name: files[i].name
+                        };
                     }
                     
                     res.json(out).end();

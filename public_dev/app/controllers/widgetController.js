@@ -1,7 +1,7 @@
 angular.module('totodl')
-       .controller('WidgetController', [ '$scope', '$location', 'User', 'TorrentsService', 'ngDialog', '$sce', 'FilterService',
-function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService){
-    
+       .controller('WidgetController', [ '$scope', '$location', 'User', 'TorrentsService', 'ngDialog', '$sce', 'FilterService', 'VideoService',
+function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService, VideoService){
+    $scope.playing = VideoService.playing;
     $scope.Math = Math;
     $scope.roles = User.roles;
     $scope.user = User.get();
@@ -10,6 +10,11 @@ function($scope, $location, User, TorrentsService, ngDialog, $sce, FilterService
     $scope.gotoDetails = function(){
         if(!$scope.smallView){
             var path = '/torrent/' + $scope.torrent.hash + '/' + ($scope.torrent.guessedType != 'unknown' && $scope.torrent.guessedType ? 'preview' : 'files');
+
+            if($scope.playing.torrent && $scope.playing.torrent.id == $scope.torrent.id){
+                path += '/' + $scope.playing.file.id;
+            }
+            
             $location.path(path);
         }
     };

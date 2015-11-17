@@ -33,7 +33,7 @@ module.exports = ['SyncService', (function(){
                      torrent.peersSendingToUs + torrent.peersGettingFromUse +
                      torrent.rateDownload + torrent.rateUpload + torrent.eta +
                      torrent.activityDate + torrent.isFinished + torrent.isStalled + 
-                     torrent.transcodingState);
+                     torrent.transcodableState);
     };
     
     /**
@@ -51,10 +51,10 @@ module.exports = ['SyncService', (function(){
     * Update only one torrent and sync it
     * @return promise
     **/
-    SyncService.updateOne = function(torrent){
+    SyncService.updateOne = function(torrent, forceUpdateTag){
         console.log('SyncService.updateOne', torrent.name);
         
-        if(!torrent.syncTag)
+        if(!torrent.syncTag || forceUpdateTag)
             torrent.syncTag = SyncService.generateSyncTag(torrent);
         
         return app.services.TorrentService._upsertTorrent(torrent)

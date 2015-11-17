@@ -4,7 +4,7 @@ angular.module('services')
     var cuser = User.get();
     
     return {
-        data: { 
+        playing: { 
             file: null,
             torrent: null
         },
@@ -15,8 +15,9 @@ angular.module('services')
          * @return void
          */
         play: function(torrent, file){
-            this.data.file = file;
-            this.data.torrent = torrent;
+            this.playing.file = file;
+            this.playing.torrent = torrent;
+            console.debug('PLAY => ', torrent, file);
         },
         
         /**
@@ -28,7 +29,7 @@ angular.module('services')
         },
         
         stop: function(){
-            this.data.file = this.data.torrent = null;
+            this.playing.file = this.playing.torrent = null;
         }
     };
 }]);

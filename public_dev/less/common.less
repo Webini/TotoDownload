@@ -2,7 +2,6 @@ ul {
     margin-bottom: 0px;   
 }
 
-
 /** radioboxes **/
 /* Cachons la case à cocher */
 [type="radio"]:not(:checked),
@@ -34,7 +33,7 @@ ul {
     border: 1px solid #222d32; /*#367fa9;*/
     background: #f8f8f8;
 }
-
+ 
 /* Aspect général de la coche */
 [type="radio"]:not(:checked) + label:after,
 [type="radio"]:checked + label:after {
@@ -56,6 +55,16 @@ ul {
 [type="radio"]:checked + label:after {
     opacity: 1; /* coche opaque */
     transform: scale(1); /* mise à l'échelle 1:1 */
+}
+
+.content-wrapper, .right-side, .main-footer, .main-sidebar, .left-side {
+    -webkit-transition: none !important;
+    -moz-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
+    -webkit-transition: none !important;
+    -o-transition: none !important;
+    transition: none !important;
 }
 
 .typo-black { color: #444; }
@@ -83,6 +92,12 @@ ul {
     animation-fill-mode: both;
 }
 
+.transition {
+    -webkit-transition: all 0.3s ease-in;
+       -moz-transition: all 0.3s ease-in;
+         -o-transition: all 0.3s ease-in;
+            transition: all 0.3s ease-in;
+}
 
 .box { overflow: hidden; }
 
@@ -132,6 +147,23 @@ ul {
     overflow: hidden;
     word-break: break-all;
     white-space: nowrap;
+}
+
+/** in torrent detail page **/
+
+.detail-widget.ng-hide { 
+    height: 0px !important;
+    min-height: 0px !important; 
+    display: block !important; 
+    overflow: hidden;
+} 
+.detail-widget {
+    .torrent-widget:hover {
+        background-color: transparent !important;
+    }
+    
+    .torrent-widget { cursor: default !important; }
+    height: 111px;
 }
 
 .torrent {
@@ -238,6 +270,14 @@ ul {
     .progress.xxs { margin-bottom: 5px; }
     
     .completed { border-bottom: 1px solid #F5F5F5; margin-bottom: 4px; }
+    .playing {
+        background-color: #fefefe;
+        .icon-outside { margin-left: -20px; }
+    }
+    
+    .stream-link:hover {
+        .icon-outside { margin-left: -20px; display: inline-block !important; }
+    }
 }
 
 .head-filters {
@@ -307,6 +347,7 @@ ul {
     }
     
 }
+
 
 
 @import "modal.less";

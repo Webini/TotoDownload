@@ -16,7 +16,10 @@
           </h1>
         </section>
         <section class="content-header">
-            <div class="box box-solid torrent nomargin" torrent-display="torrent"></div>
+            <div ng-hide="streamFileId" ng-animate class="box box-solid torrent detail-widget transition nomargin" torrent-display="torrent"></div>
+            <div ng-hide="!streamFileId" ng-animate class="detached-video-cont transition">
+                <detached-video-player enabled="playing.torrent.id == torrent.id"></detached-video-player>
+            </div>
         </section>
         <section class="content">
             <div class="row">
@@ -27,27 +30,30 @@
                         </div>
                         <div class="box-body no-padding">
                             <ul class="nav nav-pills nav-stacked">
-                                <li ng-class="{'active': (page == 'preview')}" ng-if="torrent.runtime || torrent.genre || torrent.year || torrent.synopsis">
-                                    <a href="#/torrent/{{ torrent.hash }}/preview"><i class="fa fa-info-circle"></i> {{ 'INFORMATIONS' | translate }}</a>
+                                <li ng-class="{'active': (routeParams.page == 'preview')}" ng-if="torrent.runtime || torrent.genre || torrent.year || torrent.synopsis">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/preview/{{ streamFileId }}"><i class="fa fa-info-circle"></i> {{ 'INFORMATIONS' | translate }}</a>
                                 </li>
-                                <li ng-class="{'active': (page == 'trailer')}" ng-if="torrent.trailer">
-                                    <a href="#/torrent/{{ torrent.hash }}/trailer"><i class="fa fa-youtube-play"></i> {{ 'TRAILER'|translate }}</a>
+                                <li ng-class="{'active': (routeParams.page == 'trailer')}" ng-if="torrent.trailer">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/trailer/{{ streamFileId }}"><i class="fa fa-youtube-play"></i> {{ 'TRAILER'|translate }}</a>
                                 </li>
-                                <li ng-class="{'active': (page == 'files')}">
-                                    <a href="#/torrent/{{ torrent.hash }}/files"><i class="fa fa-files-o"></i> {{ 'FILES'|translate }}</a>
+                                <li ng-class="{'active': (routeParams.page == 'files')}">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/files/{{ streamFileId }}"><i class="fa fa-download"></i> {{ 'DOWNLOAD'|translate }}</a>
                                 </li>
-                                <li ng-class="{'active': (page == 'trackers') }">
-                                    <a href="#/torrent/{{ torrent.hash }}/trackers"><i class="fa fa-share-alt"></i> {{ 'TRACKERS'|translate }}</a>
+                                <li ng-class="{'active': (routeParams.page == 'trackers') }">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/trackers/{{ streamFileId }}"><i class="fa fa-share-alt"></i> {{ 'TRACKERS'|translate }}</a>
                                 </li>
-                                <li ng-show="user.is(roles.TAGGER) || user.id == torrent.userId" ng-class="{'active': (page == 'tag') }">
-                                    <a href="#/torrent/{{ torrent.hash }}/tag"><i class="fa fa-tag"></i> {{ 'CHANGE_TAG'|translate }}</a>
+                                <li ng-class="{'active': (routeParams.page == 'streaming')}" ng-show="torrent.transcodableState == 8">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/streaming/{{ streamFileId }}"><i class="fa fa-play"></i> {{ 'STREAMING' | translate }}</a>
+                                </li>
+                                <li ng-class="{'active': (routeParams.page == 'tag') }" ng-show="user.is(roles.TAGGER) || user.id == torrent.userId">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/tag/{{ streamFileId }}"><i class="fa fa-tag"></i> {{ 'CHANGE_TAG'|translate }}</a>
                                 </li>
                             </ul>
                         </div><!-- /.box-body -->
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <div class="box box-primary" ng-include="pageTemplate"></div>
+                    <div class="box box-primary" ng-include="'/app/views/torrent/' + routeParams.page + '.html'"></div>
                 </div>
             </div>
         </section>

@@ -1,7 +1,7 @@
-<div class="video-player" ng-show="file">
+<div class="video-player" ng-show="file && !detached">
     <div class="box box-primary">
         <div class="box-header with-border">
-            <h3 class="box-title text-overflow">{{ file.name }}</h3>
+            <h3 class="box-title text-overflow">{{ available }}{{ file.name }}</h3>
     
             <div class="box-tools pull-right">
                 <button type="button" ng-click="stop()" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -9,8 +9,10 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-            <video class="player" ng-show="available" controls autoplay></video>
-            <span class="text-center" ng-if="!available">{{ 'PLAYER_NOT_AVAILABLE' | translate }}</video>
+            <div class="player-container">
+                <span class="text-center" ng-if="!available">{{ 'PLAYER_NOT_AVAILABLE' | translate }}</video>
+            </div>
         </div>
     </div>
 </div>
+<div ng-transclude></div>

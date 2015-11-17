@@ -439,8 +439,8 @@ module.exports = ['TranscodingService', (function(){
             ];
             
             if(config.debug){
-                options.push('-t 2');
-              //  options.push('-ss 00:01:00');
+                options.push('-t 30');
+                options.push('-ss 00:01:00');
             }
             
             if(cQal.threads){

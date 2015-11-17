@@ -65,23 +65,10 @@ function($scope, $rootScope, $location, User, TorrentsService, VideoService){
     $scope.Math = Math;
     $scope.__firstFilesCtrl = true;
     $scope.user = User.get();
-    $scope.streamFiles = {};
     
     $scope.filesSearch = {
         keywords: ''
     };
-    
-    function updateStreamingFiles(){
-        if(!$scope.torrent || $scope.torrent.transcodableState != 8){
-            return;
-        }
-        
-        TorrentsService.getStreamingFiles($scope.torrent.hash).then(
-            function(data){
-                $scope.streamFiles = data;
-            }
-        );
-    }
     
     var host = $location.protocol() + '://' + $location.host() + (($location.port() != 80) ? (':' + $location.port()) : '');
 
@@ -144,6 +131,7 @@ function($scope, $rootScope, $location, User, TorrentsService, VideoService){
      */
     $scope.play = function(streamFile, name){
         streamFile.name = name;
+        console.debug('PLAYING => ', $scope.torrent, streamFile);
         VideoService.play($scope.torrent, streamFile);
     };
     
@@ -157,5 +145,4 @@ function($scope, $rootScope, $location, User, TorrentsService, VideoService){
             $scope.files.apply($scope.torrent.files);
     });
     
-    $scope.$watch('torrent.transcodableState', updateStreamingFiles);
 }]); 

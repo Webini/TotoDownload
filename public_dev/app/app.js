@@ -40,6 +40,7 @@ angular.module('services', []);
 /** Dashboard **/
 angular.module('totodl', [
     'ngRoute',
+    'ngAnimate',
     'pascalprecht.translate',
     'angular-loading-bar',
     'services',

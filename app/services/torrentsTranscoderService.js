@@ -156,7 +156,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         }
         
         torrent.transcodableState = newState;
-        return SyncService.updateOne(torrent.dataValues);
+        return SyncService.updateOne(torrent.dataValues, true);
     };    
     
     /**
@@ -287,10 +287,16 @@ module.exports = ['TorrentsTranscoderService', (function(){
         var promises = [];
         
         for(var quality in result){
-            promises.push(TranscodingService.getMetadata({ input: result[quality].fullPath, quality: quality }).then(function(data){
+            var path = result[quality].fullPath;
+            if(!path){
+                path = TorrentsTranscoderService.getFullPath(result[quality].path);
+            }
+            
+            promises.push(TranscodingService.getMetadata({ input: path, quality: quality }).then(function(data){
                 //cf http://www.wowza.com/forums/content.php?210-How-to-add-resolution-and-codec-metadata-to-iOS-streams
                 var bandwidth = 0;
                 var streams = data.metadata.streams;
+                
                 for(var i = 0; i < streams.length; i++){
                     if(streams[i].codec_type.toLowerCase() == 'audio' && !result[data.quality].audio_codec){
                         result[data.quality].audio_codec = streams[i].codec_tag_string + '.40.' + (streams[i].profile == 'HE' ? 5 : 2);
@@ -313,6 +319,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
                         
                         result[data.quality].video_codec = streams[i].codec_tag_string + '.' + profile + '.' + streams[i].level;
                         result[data.quality].resolution = streams[i].width + 'x' + streams[i].height;
+                        result[data.quality].duration = Math.floor(streams[i].duration);
                         bandwidth += streams[i].bit_rate;
                     }
                 }
