@@ -126,15 +126,6 @@ function($scope, $rootScope, $location, User, TorrentsService, VideoService){
         return host + '/torrents/stream/download/' + $scope.torrent.hash + '/file/' + $scope.user.id + '/' + $scope.user.downloadHash + '/' + fileId + '/' + quality + '/' + encodeURIComponent(fileName); 
     };
     
-    /**
-     * Démarre la lecture
-     */
-    $scope.play = function(streamFile, name){
-        streamFile.name = name;
-        console.debug('PLAYING => ', $scope.torrent, streamFile);
-        VideoService.play($scope.torrent, streamFile);
-    };
-    
     $scope.$watch('torrent.leftUntilDone', function(newVal, oldVal){
         if(newVal == oldVal && $scope.__firstFilesCtrl)
             return;

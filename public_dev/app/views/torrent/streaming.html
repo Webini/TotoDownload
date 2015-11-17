@@ -7,14 +7,14 @@
             <div ng-if="streamFileId == value.id" class="completed playing">
                 <a ng-href="#/torrent/{{ torrent.hash }}/streaming" class="stream-link">
                     <i class="icon-outside fa fa-stop" ng-show="(streamFileId == value.id)"></i>
-                    <i class="fa fa-film"></i>&nbsp;{{ name }} {{ value.id }}
+                    <i class="fa fa-film"></i>&nbsp;{{ name }}
                     <time-display time="value.duration" type="min" class="pull-right"></time-display>
                 </a>
             </div>
             <div ng-if="streamFileId != value.id" class="completed">
                 <a ng-href="#/torrent/{{ torrent.hash }}/streaming/{{ value.id }}" class="stream-link">
                     <i class="icon-outside fa fa-play ng-hide"></i>
-                    <i class="fa fa-film"></i>&nbsp;{{ name }} {{ value.id }}
+                    <i class="fa fa-film"></i>&nbsp;{{ name }}
                     <time-display time="value.duration" type="min" class="pull-right"></time-display>
                 </a>
             </div>
