@@ -26,14 +26,14 @@ module.exports = function(app){
             
             torrent.getTranscodedFiles().then(
                 function(files){
-                    var out = {};
+                    var out = [];
                     for(var i = 0; i < files.length; i++){
-                        out[files[i].name] = { 
+                        out.push({ 
                             qualities: formatQualities(files[i]), 
                             id: files[i].id, 
                             duration: getDuration(files[i]),
                             name: files[i].name
-                        };
+                        });
                     }
                     
                     res.json(out).end();

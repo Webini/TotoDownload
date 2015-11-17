@@ -27,6 +27,8 @@ function($scope, $route, $rootScope, $routeParams, $controller, User, SyncServic
     $scope.page = $routeParams.page;
     
     $scope.streamFiles = null;
+    $scope.streamFilesOrdered = null;
+    
     $scope.loadingGlob = true;
     $scope.error = false;
     $scope.torrent = null;
@@ -48,7 +50,7 @@ function($scope, $route, $rootScope, $routeParams, $controller, User, SyncServic
         
         TorrentsService.getStreamingFiles($scope.torrent.hash).then(
             function(data){
-                $scope.streamFiles = data;
+                $scope.streamFiles = new FilesService(data);
                 $scope.streamFileId = $routeParams.id;
             }
         );
@@ -78,12 +80,21 @@ function($scope, $route, $rootScope, $routeParams, $controller, User, SyncServic
     });
     
     function findStreamFileById(id){
-        for(var key in $scope.streamFiles){
-            if($scope.streamFiles[key].id == id){
-                return $scope.streamFiles[key];
+        for(var i = 0; i < $scope.streamFiles.files.length; i++){
+            if($scope.streamFiles.files[i].id == id){
+                return $scope.streamFiles.files[i];
             }
         }
     };
+    
+    $scope.findStreamFileByName = function(name){
+        for(var i = 0; i < $scope.streamFiles.files.length; i++){
+            if($scope.streamFiles.files[i].name == name){
+                return $scope.streamFiles.files[i];
+            }
+        }
+        return null;
+    }
     
     $scope.$watch('torrent.transcodableState', updateStreamingFiles);
     

@@ -2,30 +2,49 @@
     <!-- directories -->
     <div ng-if="key.substr(0,2) != '__'">
         <i class="fa fa-folder-open"></i>&nbsp;{{ key }}
-        <button type="button" class="btn btn-default btn-xs pull-right" clipboard text="getLinks(item)"><i class="fa fa-clipboard"></i>{{ 'COPY' | translate }}</button>
-        <div ng-if="!item['$$empty']" ng-include="'/app/views/directives/files.html'" ng-init="items = item"></div>
+        <button ng-if="getLinks && !movies" type="button" class="btn btn-default btn-xs pull-right" clipboard text="getLinks(item)"><i class="fa fa-clipboard"></i>{{ 'COPY' | translate }}</button>
+        <div ng-if="!item['$$empty']" ng-include="'/app/views/directives/files.html'" ng-init="cTemplate = cTemplate; items = item"></div>
     </div>
     <!-- files -->
 
     <div ng-if="key.substr(0,2) == '__'">
         <div ng-repeat="file in item | filter:filesSearch:filesComparator">
-            <div ng-if="file.raw.bytesCompleted == file.raw.length" class="completed">
-                <a ng-href="{{ ::getLink(file.raw, file.filename) }}">
+            <div ng-if="movies"> 
+                <div ng-if="streamFileId && streamFileId == file.raw.id" class="completed playing">
+                    <a ng-href="#/torrent/{{ torrent.hash }}/streaming" class="stream-link">
+                        <i class="icon-outside fa fa-stop" ng-show="(streamFileId && streamFileId == file.raw.id)"></i>
+                        <i class="fa fa-film"></i>&nbsp;{{ file.filename }}
+                        <time-display time="file.raw.duration" type="min" class="pull-right"></time-display>
+                    </a>
+                </div>
+                <div ng-if="!streamFileId || streamFileId != file.raw.id" class="completed">
+                    <a ng-href="#/torrent/{{ torrent.hash }}/streaming/{{ file.raw.id }}" class="stream-link">
+                        <i class="icon-outside fa fa-play ng-hide"></i>
+                        <i class="fa fa-film"></i>&nbsp;{{ file.filename }}
+                        <time-display time="file.raw.duration" type="min" class="pull-right"></time-display>
+                    </a>
+                </div>                
+            </div>
+            <div ng-if="!movies">
+                <div ng-if="file.raw.bytesCompleted == file.raw.length" class="completed">
+                    <a ng-href="{{ ::getLink(file.raw, file.filename) }}">
+                        <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
+                        <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
+                    </a>
+                    
+                    <span ng-init="cStreamFile = findStreamFileByName(file.raw.name)">
+                        <a ng-if="cStreamFile" ng-href="{{ ::getStreamLink(cStreamFile.id, file.filename, quality) }}" ng-repeat="quality in cStreamFile.qualities" class="quality-btn btn btn-xs btn-info">
+                            <i class="fa fa-download"></i>&nbsp;{{ quality }}
+                        </a>
+                    </span>
+                </div>
+                
+                <div ng-if="file.raw.byteCompleted && file.raw.bytesCompleted != file.raw.length">
                     <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
                     <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
-                </a>
-                <span ng-if="streamFiles[file.raw.name] != undefined">
-                    <a ng-href="{{ ::getStreamLink(streamFiles[file.raw.name].id, file.filename, quality) }}" ng-repeat="quality in streamFiles[file.raw.name].qualities" class="quality-btn btn btn-xs btn-info">
-                        <i class="fa fa-download"></i>&nbsp;{{ quality }}
-                    </a>
-                </span>
-            </div>
-            
-            <div ng-if="file.raw.bytesCompleted != file.raw.length">
-                <i class="fa" ng-class="extensionToCss(file.extension)"></i>&nbsp;{{ file.filename }}
-                <unit-display class="pull-right" size="file.raw.length" suffix=""></unit-display>
-                <div class="progress xxs">
-                    <div class="progress-bar progress-bar-aqua" progress-done="file.raw.bytesCompleted" progress-total="file.raw.length" progress-width></div>
+                    <div class="progress xxs">
+                        <div class="progress-bar progress-bar-aqua" progress-done="file.raw.bytesCompleted" progress-total="file.raw.length" progress-width></div>
+                    </div>
                 </div>
             </div>
         </div>

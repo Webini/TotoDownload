@@ -1,13 +1,13 @@
 angular.module('totodl')
-       .directive('filesDisplay', function(){
-    
+       .directive('filesDisplay', [function(){
+    //cette directive => SATAN // A refactoriser
     return {
         restrict: 'E',
         scope: {
-            items: '=items',
-            streamFiles: '=streamFiles'
+            items: '=',
+            movies: '=movies'
         },
         replace: true,
         templateUrl: '/app/views/directives/files.html'
     };
-});  
+}]);  

@@ -1,23 +1,14 @@
-<div ng-controller="StreamingController">
+<div ng-controller="FilesController" ng-init="movies = true" class="stream-box">
     <div class="box-header with-border">
         <h3 class="box-title">{{ 'STREAMING' | translate }}</h3>
-    </div>
-    <div ng-if="streamFiles" class="box-body">        
-        <div ng-repeat="(name, value) in streamFiles" class="torrent-files">
-            <div ng-if="streamFileId == value.id" class="completed playing">
-                <a ng-href="#/torrent/{{ torrent.hash }}/streaming" class="stream-link">
-                    <i class="icon-outside fa fa-stop" ng-show="(streamFileId == value.id)"></i>
-                    <i class="fa fa-film"></i>&nbsp;{{ name }}
-                    <time-display time="value.duration" type="min" class="pull-right"></time-display>
-                </a>
-            </div>
-            <div ng-if="streamFileId != value.id" class="completed">
-                <a ng-href="#/torrent/{{ torrent.hash }}/streaming/{{ value.id }}" class="stream-link">
-                    <i class="icon-outside fa fa-play ng-hide"></i>
-                    <i class="fa fa-film"></i>&nbsp;{{ name }}
-                    <time-display time="value.duration" type="min" class="pull-right"></time-display>
-                </a>
+        <div class="box-tools pull-right">
+            <div class="has-feedback">
+                <input type="text" ng-model="filesSearch.keywords" class="form-control input-sm" placeholder="{{ 'SEARCH'|translate }}">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
         </div>
+    </div>
+    <div class="box-body">
+        <files-display items="streamFiles.out" movies="true" class="first"></files-display>
     </div>
 </div>
