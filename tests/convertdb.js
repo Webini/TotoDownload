@@ -9,7 +9,13 @@ var TranscodedFiles = app.orm.TranscodedFiles;
 TranscodedFiles.all().then(function(files){
     var allPromises = [];
     files.forEach(function(file){
-        allPromises.push(TorrentsTranscoderService._fillWithCodecInformations(file.transcoded)
+        var transcoded = file.transcoded;
+        for(var quality in transcoded){
+            delete transcoded[quality]['video_codec'];
+            delete transcoded[quality]['audio_codec'];
+        }
+        
+        allPromises.push(TorrentsTranscoderService._fillWithCodecInformations(transcoded)
                                                   .then(TorrentsTranscoderService._convertToRelativePath)
                                                   .then(
             function(result){

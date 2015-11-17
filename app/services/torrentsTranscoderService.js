@@ -254,7 +254,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 console.log('TorrentsTranscoderService._onTranscoderObjectReady');
                 
                 app.orm.TranscodedFiles.create({
-                    torrentId: transcoder.original.id,
+                    torrentId: (transcoder.original.id ? transcoder.original.id : TorrentService.getFromMemory(transcoder.torrent)),
                     name: transcoder.transcoding.name,
                     transcoded: TorrentsTranscoderService._convertToRelativePath(result),
                     createdAt: new Date()
