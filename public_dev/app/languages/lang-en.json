@@ -139,5 +139,6 @@
     "STREAMING_AVAILABLE": "Streaming available",
     "PLAYER_NOT_AVAILABLE": "Player not available for this browser",
     "PLAY": "Play",
-    "STREAMING": "Streaming"
+    "STREAMING": "Streaming",
+    "SEARCH_TORRENT_PLACEHOLDER": "Comedy, 720p, Title..."
 }

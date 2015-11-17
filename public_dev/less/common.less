@@ -57,14 +57,21 @@ ul {
     transform: scale(1); /* mise à l'échelle 1:1 */
 }
 
-.content-wrapper, .right-side, .main-footer, .main-sidebar, .left-side {
+.main-sidebar, .content-wrapper, .right-side, .main-footer, .left-side {
     -webkit-transition: none !important;
     -moz-transition: none !important;
     -o-transition: none !important;
     transition: none !important;
-    -webkit-transition: none !important;
-    -o-transition: none !important;
-    transition: none !important;
+}
+
+.main-sidebar.hide {
+    left: -230px;
+    display: block !important;
+    overflow: hidden;
+}
+
+.content-wrapper.full-width {
+    margin-left: 0px !important;
 }
 
 .typo-black { color: #444; }
@@ -92,7 +99,8 @@ ul {
     animation-fill-mode: both;
 }
 
-.transition {
+.transition, .transition.ng-enter, .transition.ng-leave {
+    overflow: hidden;
     -webkit-transition: all 0.3s ease-in;
        -moz-transition: all 0.3s ease-in;
          -o-transition: all 0.3s ease-in;
@@ -348,6 +356,13 @@ ul {
     
 }
 
+.fade, .fade.ng-enter.ng-enter-active, .fade.ng-leave { 
+    opacity: 1;
+}
+.fade.ng-hide, .fade.ng-leave.ng-leave-active, .fade.ng-enter {
+    display: block !important;
+    opacity: 0;
+}
 
 
 @import "modal.less";

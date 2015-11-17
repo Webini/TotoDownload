@@ -1,8 +1,18 @@
 <section class="head-filters">
   <h4>{{ 'FILTERS' | translate }}</h3>
-    
-  <filter-button ng-repeat="(name, data) in filters | orderDefault:false" name="data.name" data="data"></filter-button>
-       
+  
+  <div>
+    <filter-button ng-repeat="(name, data) in filters | tags:{removable:false} | orderDefault:false" name="data.name" data="data"></filter-button>
+    <!-- search form -->
+    <div class="has-feedback pull-right">
+        <input type="text" ng-model="search" class="form-control input-md" placeholder="Rechercher">
+        <span class="glyphicon glyphicon-search form-control-feedback"></span>
+    </div>
+    <!-- /.search form -->
+  </div>
+  <div>
+      <filter-button ng-repeat="(name, data) in filters | tags:{removable:true} | orderDefault:false" name="data.name" data="data"></filter-button>
+  </div>
 </section>
 
 <!-- Content Header (Page header) -->
@@ -14,12 +24,16 @@
 
 
 <!-- Main content -->
-<section class="content" ng-controller="SearchController as searchCtrl">
+<section class="content">
     <div infinite-scroll="addElementsShown()" 
          infinite-scroll-distance="0.7">
-        <div class="box box-solid torrent" 
-            ng-repeat="torrent in torrents | filter:myTorrentsFilter | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' | limitTo:elementsShown track by torrent.syncTag" 
-            torrent-display="torrent">
+        <div class="box fade transition box-solid torrent" 
+             ng-repeat="torrent in torrents | filter:myTorrentsFilter | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' | limitTo:elementsShown as results track by torrent.syncTag" 
+             torrent-display="torrent">
+        </div>
+        <div class="callout callout-info transition fade" ng-show="results.length <= 0">
+            <h4>{{ 'NO_RESULTS_FOUND' | translate }}</h4>
+            <p>{{ 'RETRY_LATER'|translate }}</p>
         </div>
     </div>
 </section><!-- /.content -->

@@ -7,13 +7,16 @@ angular.module('totodl')
        }])
        .controller('DashboardController', [ '$scope', '$rootScope', '$routeParams', 'SyncService', 'User', 'TorrentsService', 'FilterService',
 function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, FilterService){
+    var regClear = /[a-z0-9]+/img;
     $scope.filters = FilterService.filters;
     $scope.filtersComparator = FilterService.comparator;
     $scope.elementsShown = 20;
+    $scope.search = '';
     
     FilterService.setDefault([
         { name: 'MOVIES', data: { key: 'guessedType', value: 'movie' }},
         { name: 'SERIES', data: { key: 'guessedType', value: 'episode' }},
+        { name: 'STREAMING', data: { key: 'transcodableState', value: 8 }},
         { name: 'OTHER_TYPES', data: { key: 'guessedType', value: 'unknown' }},
         { name: '1080P', data: { key: 'screenSize', value: '1080p' }},
         { name: '720P', data: { key: 'screenSize', value: '720p' }}
@@ -25,6 +28,28 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, F
         $scope.elementsShown += 20;    
     }
     
+    $scope.torrentsComparator = function(expected){ 
+        var actual = $scope.search;
+        if(('' + actual).length <= 0)
+            return true;
+        
+        expected = expected.name + 
+                 ( expected.title ? ' ' + expected.title : '') + 
+                 ( expected.screenSize ? ' ' + expected.screenSize : '' ) + 
+                 ( expected.genre ? ' ' + expected.genre : '');
+        
+        expected = expected.toLowerCase().match(regClear).join(' ');
+        
+        var keywords = actual.toLowerCase().match(regClear);
+        var found = 0;
+        
+        for(var i in keywords){
+            if(expected.indexOf(keywords[i]) > -1) 
+                found++;
+        }
+        
+        return (found == keywords.length);
+    };    
     
     var unbindTorrentsChange = $rootScope.$on('torrents-change', function($evt, torrents){
         $scope.torrents = torrents;
