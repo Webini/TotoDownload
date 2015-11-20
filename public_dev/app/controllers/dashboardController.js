@@ -22,7 +22,14 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, F
         { name: '720P', data: { key: 'screenSize', value: '720p' }}
     ]);
     
-    $scope.torrents = SyncService.data.torrents;
+    $scope.torrents = null;
+    $scope.loading = true;
+    
+    SyncService.getAll().then(function(data){
+        $scope.torrents = data;
+    }).finally(function(){
+        $scope.loading = false; 
+    });
     
     $scope.addElementsShown = function(){
         $scope.elementsShown += 20;    

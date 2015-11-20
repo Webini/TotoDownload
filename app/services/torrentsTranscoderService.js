@@ -73,7 +73,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
      * @return boolean
      */
     TorrentsTranscoderService.isTranscodable = function(torrent){
-        if(!torrent.files || !torrent.movieId){
+        if(!torrent.files){
             return false;
         }
         
@@ -169,7 +169,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         }
         
         //we will work only with torrent hash and then request the data to SyncService to avoid sync problems with database
-        transcoder.torrent = queue.splice(0, 1)[0];
+        transcoder.torrent = queue.splice(queue.length - 1, 1)[0];
         var torrent = TorrentService.getFromMemory(transcoder.torrent);
         
         console.log('TorrentsTranscoderService.process ', torrent.name, torrent.hash);

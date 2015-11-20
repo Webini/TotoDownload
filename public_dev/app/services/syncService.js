@@ -17,7 +17,7 @@ function($http, $q, Socket, User, $rootScope){
     **/
     this._getAll = function(){
         if(getAllPromise){
-            if(getAllPromise.state === 0){
+            if(getAllPromise.promise.$$state.status === 0){
                 return getAllPromise.promise;
             }
             else{

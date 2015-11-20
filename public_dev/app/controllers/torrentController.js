@@ -88,6 +88,10 @@ function($scope, $route, $rootScope, $routeParams, $controller, User, SyncServic
     };
     
     $scope.findStreamFileByName = function(name){
+        if(!$scope.streamFiles){
+            return null;
+        }
+        
         for(var i = 0; i < $scope.streamFiles.files.length; i++){
             if($scope.streamFiles.files[i].name == name){
                 return $scope.streamFiles.files[i];

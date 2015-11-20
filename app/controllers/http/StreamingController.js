@@ -24,7 +24,7 @@ module.exports = function(app){
                 return res.status(404).end();
             }
             
-            torrent.getTranscodedFiles().then(
+            torrent.getTranscodedFiles({ order: [['name',  'ASC']] }).then(
                 function(files){
                     var out = [];
                     for(var i = 0; i < files.length; i++){

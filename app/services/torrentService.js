@@ -338,7 +338,7 @@ module.exports = ['TorrentService', (function(){
     TorrentService.getAllTranscodableFromDb = function(states, includeZero){
         return app.orm.Torrent.findAll({ 
             where: ['((transcodableState & ?) > 0)' + (includeZero ? ' OR transcodableState = 0' : ''), states ],
-            order: 'transcodableState DESC, createdAt DESC'
+            order: 'transcodableState ASC, createdAt ASC'
         });
     };
     
