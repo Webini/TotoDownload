@@ -21,6 +21,8 @@ module.exports = ['TorrentsTranscoderService', (function(){
     
     //queue of torrents waiting for processing
     var queue = [];
+    var started = false;
+    
     //transcoders instances
     var transcoders = [];
     for(var i = 0; i < config.maxSimult; i++){
@@ -46,6 +48,9 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 for(var i = 0; i < torrents.length; i++){
                     TorrentsTranscoderService.addToQueue(torrents[i]);
                 }
+            }).finally(function(){
+                started = true;
+                TorrentsTranscoderService.process();  
             });
             
             SyncService.on('download-complete', function(torrent){
@@ -164,7 +169,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
      */
     TorrentsTranscoderService.process = function(){
         var transcoder = TorrentsTranscoderService._findInactiveTranscoder();
-        if(!transcoder || queue.length <= 0){
+        if(!transcoder || queue.length <= 0 || !started){
             return;
         }
         
