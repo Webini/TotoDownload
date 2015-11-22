@@ -22,15 +22,18 @@ function($scope, $element, VideoService){
         
         var file = $scope.playing.file;
         
-        player = new Clappr.Player({
+        var options = {
             source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
             autoPlay: true,
             parentId: '#clappr-container',
             plugins: {
                 core: [ ClapprThumbnailsPlugin ]
             },
-            width: '100%',
-            scrubThumbnails: {
+            width: '100%'
+        };
+        
+        if(file.thumbs){
+            options['scrubThumbnails'] = {
                 backdropHeight: file.thumbs.size.height,
                 spotlightHeight: file.thumbs.size.height,
                 thumbs: ClapprThumbnailsPlugin.buildSpriteConfig(
@@ -41,8 +44,10 @@ function($scope, $element, VideoService){
                     file.thumbs.cols, 
                     file.thumbs.interval
                 )
-            }
-        }); 
+            };
+        }
+        
+        player = new Clappr.Player(options); 
     };
     
     /**

@@ -7,11 +7,27 @@ var TorrentsTranscoderService = app.services.TorrentsTranscoderService;
 var TranscodingService = app.services.TranscodingService;
 var TranscodedFiles = app.orm.TranscodedFiles;
 
+var files = [];
 
-TranscodedFiles.all().then(function(files){
+TranscodedFiles.all().then(function(cfiles){
     var allPromises = [];
-    files.forEach(function(file){
-        file.getTorrent().then(function(torrent){
+    files = cfiles;
+    
+    function executeNext(){
+        if(files.length <= 0){
+            return $q.resolve();
+        }
+        
+        var file = files.splice(0, 1)[0];
+        return createThumb(file);
+    }
+    
+    function createThumb(file){
+        if(file.thumbs){
+            return executeNext();
+        }
+        
+        return file.getTorrent().then(function(torrent){
             var transcoded = file.transcoded;
             var item = { bandwidth: 0 };
             
@@ -26,24 +42,23 @@ TranscodedFiles.all().then(function(files){
             var ext     = path.extname(input);
             outpath     = outpath.substr(0, outpath.length - ext.length);        
             
-            allPromises.push(
-                TranscodingService.extractThumbnails(
-                    input, //in
-                    outpath,  //o
-                    item.duration
-                ).then(
-                    function(result){
-                        file.thumbs = result.meta;
-                        console.log('thumb generated for => ', outpath);
-                        return file.save();
-                    }
-                )
-        );
-       });
-    });
+            console.log('processing ==> ', torrent.name);
+            return TranscodingService.extractThumbnails(
+                input, //in
+                outpath,  //o
+                item.duration
+            ).then(
+                function(result){
+                    file.thumbs = result.meta;
+                    console.log('thumb generated for => ', outpath);
+                    return file.save();
+                }
+            );
+       }).then(executeNext);
+    }
     
-    $q.all(allPromises).then(function(){
-        console.log('DONE'); 
+    executeNext().then(function(){
+        console.log('FINISH');
     });
     
 });

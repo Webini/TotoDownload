@@ -44,6 +44,10 @@
     "ffmpeg": {
         "preferredLang": "^fr.*", //regex for matching languages in subtitle & audio tracks
         "debug": true, //if debug => the movie will not be fully transcoded (only ~1 min)
+        "thumbnails": { //thumb for preview
+            "delay": 10, //take a thumb each 10s
+            "size": "120x?" //thumb size
+        },
         "qualities": [
             {
                 "default": true, //reference configuration
