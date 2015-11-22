@@ -1,0 +1,10 @@
+VOD 
+====
+nginx + nginx-vod-module-1.3
+ffmpeg
+imagemagick
+
+Filename parser
+====
+guessit
+

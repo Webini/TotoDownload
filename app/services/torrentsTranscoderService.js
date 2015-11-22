@@ -50,7 +50,9 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 }
             }).finally(function(){
                 started = true;
-                TorrentsTranscoderService.process();  
+                for(var i = 0; i < config.maxSimult; i++){
+                    TorrentsTranscoderService.process();  
+                }
             });
             
             SyncService.on('download-complete', function(torrent){
@@ -71,7 +73,6 @@ module.exports = ['TorrentsTranscoderService', (function(){
     TorrentsTranscoderService.getFullPath = function(transcodedFilePath){
         return path.join(config.output, transcodedFilePath);
     };
-    
     
     /**
      * Check if torrent is transcodable
@@ -247,12 +248,39 @@ module.exports = ['TorrentsTranscoderService', (function(){
     };
     
     /**
+     * Create thumbnail from transcoded movie
+     * @return promise 
+     */
+    TorrentsTranscoderService._createThumbnails = function(result, transObj, transcoder){
+        var outpath = transObj.getOutput();
+        var item    = { bandwidth: 0 };
+        
+        for(var key in result){
+            if(result[key].bandwidth > item.bandwidth){
+                item = result[key];
+            }    
+        }
+        
+        return TranscodingService.extractThumbnails(
+            item.fullPath, 
+            outpath, 
+            item.duration
+        ).then(function(thumbResult){
+            return {
+                thumbs: thumbResult.meta,
+                qualities: result
+            };
+        });
+    };
+    
+    /**
      * Transcode object and add transcoded file in database
      */
     TorrentsTranscoderService._onTranscoderObjectReady = function(transObj, transcoder){
         transcoder.transObj = transObj;
         return transObj.transcode()
                        .then(TorrentsTranscoderService._fillWithCodecInformations)
+                       .then(function(result){ return TorrentsTranscoderService._createThumbnails(result, transObj, transcoder); })
                        .then(
             function(result){
                 var defer = $q.defer();
@@ -261,8 +289,9 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 app.orm.TranscodedFiles.create({
                     torrentId: (transcoder.original.id ? transcoder.original.id : TorrentService.getFromMemory(transcoder.torrent)),
                     name: transcoder.transcoding.name,
-                    transcoded: TorrentsTranscoderService._convertToRelativePath(result),
-                    createdAt: new Date()
+                    transcoded: TorrentsTranscoderService._convertToRelativePath(result.qualities),
+                    createdAt: new Date(),
+                    thumbs: result.thumbs
                 }).then(function(file){
                     transcoder.done.push(file);
                 }).finally(function(){ 

@@ -1,5 +1,6 @@
 module.exports = function(app){
     var TorrentService             = app.services.TorrentService;
+    var TorrentsTranscoderService  = app.services.TorrentsTranscoderService;
     var DownloadService            = app.services.DownloadService;
     
     function formatQualities(file){
@@ -32,7 +33,9 @@ module.exports = function(app){
                             qualities: formatQualities(files[i]), 
                             id: files[i].id, 
                             duration: getDuration(files[i]),
-                            name: files[i].name
+                            name: files[i].name,
+                            thumbs: files[i].thumbs,
+                            thumbsImg: DownloadService.getThumbPath(files[i].name, torrent) + '.jpg'
                         });
                     }
                     
@@ -129,9 +132,10 @@ module.exports = function(app){
                                'RESOLUTION=' + transcoded[quality].resolution + ',' + 
                                'CODECS="' + transcoded[quality].audio_codec + ',' + transcoded[quality].video_codec + '",' + 
                                'NAME="' + quality + "\"\n";
-                        out += '/torrents/stream/hls/' + torrent.hash + '/file/' + req.params.userId + '/' + req.params.userHash + '/' + file.id + '/' + quality + '/' + encodeURIComponent(file.name) + ".m3u8\n";
+                        out += DownloadService.getHost() + '/torrents/stream/hls/' + torrent.hash + '/file/' + req.params.userId + '/' + req.params.userHash + '/' + file.id + '/' + quality + '/' + encodeURIComponent(file.name) + ".m3u8\n";
                     }
-
+                    
+                    res.set('Content-Type', 'application/vnd.apple.mpegurl');
                     res.send(out).end();
                 }
             ).catch(function(e){

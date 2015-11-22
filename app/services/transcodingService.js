@@ -6,11 +6,21 @@ module.exports = ['TranscodingService', (function(){
     var _             = require('underscore');
     var fs            = require('fs')
     var mkdir         = require('mkdirp');
+    var Montage       = require(__dirname + '/../wrapper/montage.js');
+    var rmiraf        = require('rimraf');
     
     var config = {
         "maxSimult": 1,
         "preferredLang": "^fr.*",
         "debug": false,
+        "thumbnails": {
+            "delay": 10,
+            "size": "120x?"
+        },
+        "snapshots": {
+            "time": 5,
+            "sizes": [ "320x240", "620x480" ]  
+        },
         "qualities": []
     };
     _.extend(config, app.config.ffmpeg);
@@ -26,6 +36,8 @@ module.exports = ['TranscodingService', (function(){
         throw new Error('Default quality not found in ffmpeg configuration');
     }
     
+    var thumbCols = 6;
+    var thumbPath = 'thumbnails'; //default thumbpath
     var forcedReg = /force/ig; //to find forced subtitles 
     var killedReg = /killed/ig; //to find error when process is killed
     var preferredLangReg = new RegExp(config.preferredLang, 'i');
@@ -37,6 +49,22 @@ module.exports = ['TranscodingService', (function(){
         this._conf = conf;
         this._conf._processing = null;
         this.killed = false;
+    };
+    
+    /**
+     * Retreive input file
+     * @return string
+     */
+    TranscoderObject.prototype.getInput = function(){
+        return this._conf.input;
+    };
+    
+    /**
+     * Retreive output path
+     * @return string
+     */
+    TranscoderObject.prototype.getOutput = function(){
+        return this._conf.output;  
     };
     
     /**
@@ -404,6 +432,164 @@ module.exports = ['TranscodingService', (function(){
         return defer.promise;
     };
     
+    
+    TranscodingService._getImageSizeFromFilename = function(filename){
+        var matches = filename.match(/-([0-9]+)x([0-9]+)\./); 
+        if(matches && matches.length > 0){
+            return { 
+                width: parseInt(matches[1]), 
+                height: parseInt(matches[2])
+            };
+        } 
+        return { width: 100, height: 50 };
+    };
+    
+    TranscodingService._getTimeFromFilename = function(filename){
+        var matches = filename.match(/^([0-9]+)\.([0-9]{0,3})/);
+        var out  = {
+            ms: '000',
+            sec: '00',
+            min: '00',
+            hours: '00'  
+        };
+        
+        if(matches && matches.length > 0){
+            var time  = parseInt(matches[1]);
+            out.ms    = parseInt(matches[2]);    
+            out.sec   = time % 60;
+            time      = (time - out.sec) / 60;
+            out.min   = time % 60;
+            time      = (time - out.min) / 60;
+            out.hours = time;
+            
+            if(out.sec < 10){
+                out.sec = '0' + out.sec.toString();
+            }
+            if(out.min < 10){
+                out.min = '0' + out.sec.toString();
+            }
+            if(out.hours < 10){
+                out.hours = '0' + out.hours.toString();   
+            }
+        }
+        return out;
+    };
+    
+    TranscodingService._orderByTimeInFilename = function(file, fileComp){
+        var nb = parseFloat(file.match(/^([0-9]+\.[0-9]{0,3})/)[1]);
+        var nbComp = parseFloat(fileComp.match(/^([0-9]+\.[0-9]{0,3})/)[1]);
+        return nb - nbComp;
+    };
+    
+    TranscodingService._compileThumbnails = function(params){
+        var mont  = new Montage();
+        var defer = $q.defer();
+        
+        console.log('TranscodingService._compileThumbnails open directory', params.thumbPath);
+        fs.readdir(params.thumbPath, function(err, files){
+            if(err){
+                defer.reject(err);
+                return;
+            }
+            
+            console.log('TranscodingService._compileThumbnails open file ', params.output + '.vtt');
+            //var ovtt     = fs.openSync(params.output + '.vtt', 'w');
+            var outImage = params.output + '.jpg';
+            //fs.writeSync(ovtt, "WEBVTT\r\n\r\n");
+                
+            files.sort(TranscodingService._orderByTimeInFilename);
+            
+            //var lastTime = '00:00:00.000'
+            var imageSize = null;
+            for (var i = 0; i < files.length; i++) {
+                var filename = files[i];
+                //var time     = TranscodingService._getTimeFromFilename(filename);
+                if(imageSize === null){
+                    imageSize = TranscodingService._getImageSizeFromFilename(filename);
+                }
+                
+                /*var nTime = time.hours + ':' + time.min + ':' + time.sec + '.' + time.ms;
+                fs.writeSync(ovtt, (i+1) + "\r\n" +
+                                   lastTime + ' --> ' + nTime + "\r\n" + 
+                                   path.join(params.webBasepath, path.basename(outImage)) + '#xywh=' + 
+                                   (i % thumbCols * imageSize.width) + ',' +
+                                   ((i - i % thumbCols) / thumbCols * imageSize.height) + ',' +
+                                   imageSize.width + ',' + imageSize.height + "\r\n\r\n"
+                );
+                lastTime = nTime;*/
+                mont.addInput(path.join(params.thumbPath, filename));
+            }
+            
+            //fs.close(ovtt);
+            
+            //transform images to sprite
+            mont.setBackground('black')
+                .setTile(thumbCols)
+                .setGeometry(['+0', '+0'])
+                .setMode('concatenate')
+                .setOutput(outImage)
+                .convert()
+                .then(function(ret){
+                    rmiraf(params.thumbPath, function(){});
+                    
+                    defer.resolve({
+                        meta: {
+                            quantity: files.length,
+                            size: { width: imageSize.width, height: imageSize.height },
+                            cols: thumbCols,
+                            interval: config.thumbnails.delay
+                        },
+                        img: outImage
+                    });
+                })
+                .catch(function(err, code, sig){
+                    defer.reject(err, code, sig);
+                });        
+                
+        });
+        
+        return defer.promise;        
+    };
+    
+    /**
+     * Extract thumbnail from file
+     * @param string input
+     * @param string output file
+     * @param int duration
+     * @return promise with output string file 
+     */
+    TranscodingService.extractThumbnails = function(input, output, duration){
+        var outPath  = output + '.' + thumbPath;
+        
+        try{
+            mkdir.sync(outPath);
+        }
+        catch(e){}
+        
+        var ffo      = ffmpeg(input);
+        var defer    = $q.defer();
+        
+        ffo.on('error', function(err, stdout, stderr) {
+            defer.reject(err, stdout, stderr);
+        });
+        
+        ffo.on('end', function(){
+            defer.resolve(TranscodingService._compileThumbnails({ 
+                output: output, 
+                thumbPath: outPath
+            }));
+        });
+        
+        ffo.screenshots({
+            filename: '%s-%wx%h.png',
+            count: duration / config.thumbnails.delay,
+            folder: outPath,
+            size: config.thumbnails.size
+        });
+        
+        return defer.promise;
+    };
+    
     /**
      * Create ffmpeg object for conversion
      * @return conf object
@@ -413,29 +599,32 @@ module.exports = ['TranscodingService', (function(){
         conf.return = {};
         
         for(var i = 0; i < conf.qualities.length; i++){
-            var cQal = conf.qualities[i];
-            var outFile = conf.output + '.' + cQal.name;
+            var cQual = conf.qualities[i];
+            var outFile = conf.output + '.' + cQual.name;
             var co = ffo.output(outFile);
         
             //trying to remove file if exists
             try{
-                fs.unlinkSyn(outFile);
+                fs.unlinkSync(outFile);
             }catch(e){}
         
             //object that will be returned with paths & qualities informations
-            conf.return[cQal.name] = { fullPath: outFile };
+            conf.return[cQual.name] = { 
+                fullPath: outFile,
+                bandwidth: cQual.abitrate + cQual.vbitrate
+            };
             
             var outId = 0;
             var filters = [ { 
                 filter: 'scale', 
                 inputs: '0:' + conf.map.video.index,
-                options: cQal.width + ':' + cQal.height,
+                options: cQual.width + ':' + cQual.height,
                 outputs: 'out' + outId
             } ];
             
             var options = [
-                '-maxrate ' + parseInt(cQal.maxbitrate / 1024).toString() + 'k',
-                '-bufsize ' + parseInt(cQal.maxbitrate * 4 / 1024).toString() + 'k'
+                '-maxrate ' + parseInt(cQual.maxbitrate / 1024).toString() + 'k',
+                '-bufsize ' + parseInt(cQual.maxbitrate * 4 / 1024).toString() + 'k'
             ];
             
             if(config.debug){
@@ -443,12 +632,12 @@ module.exports = ['TranscodingService', (function(){
                 options.push('-ss 00:01:00');
             }
             
-            if(cQal.threads){
-                options.push('-threads ' + cQal.threads);
+            if(cQual.threads){
+                options.push('-threads ' + cQual.threads);
             }
             
-            if(cQal.preset){
-                options.push('-preset ' + cQal.preset);
+            if(cQual.preset){
+                options.push('-preset ' + cQual.preset);
             }
             
             if(conf.map.audio){
@@ -472,7 +661,7 @@ module.exports = ['TranscodingService', (function(){
                 filters.push({
                     filter: 'scale', 
                     inputs: '0:' + conf.map.subtitle.index,
-                    options: cQal.width + ':' + cQal.height,
+                    options: cQual.width + ':' + cQual.height,
                     outputs: 'sub'
                 });
                 
@@ -486,11 +675,11 @@ module.exports = ['TranscodingService', (function(){
             
             options.push('-map [out' + outId + ']');
             
-            co.audioCodec(cQal.acodec)
-              .audioBitrate(parseInt(cQal.abitrate / 1024).toString() + 'k')
-              .audioChannels(cQal.channel)
-              .videoCodec(cQal.vcodec)
-              .videoBitrate(parseInt(cQal.vbitrate / 1024).toString() + 'k')
+            co.audioCodec(cQual.acodec)
+              .audioBitrate(parseInt(cQual.abitrate / 1024).toString() + 'k')
+              .audioChannels(cQual.channel)
+              .videoCodec(cQual.vcodec)
+              .videoBitrate(parseInt(cQual.vbitrate / 1024).toString() + 'k')
               .complexFilter(filters) //bug https://github.com/fluent-ffmpeg/node-fluent-ffmpeg/issues/464
               .format('mp4')
               .outputOptions(options);

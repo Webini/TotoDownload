@@ -4,7 +4,8 @@
   "description": "Frontend for seedbox",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "bower install && grunt install --prod"
   },
   "author": "Nicolas GASPARINI",
   "license": "ISC",

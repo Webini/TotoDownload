@@ -38,7 +38,8 @@
         "enable": true, 
         "types": [ "avi", "mkv", "mp4", "mov", "mpg", "mpeg" ], //extension accepted for transcoding
         "maxSimult": 2, //max transcoding movie simultaneous 
-        "output": "outputPath" //output for transcoded movies
+        "output": "outputPath", //output for transcoded movies
+        "webThumbPath": "/movies/thumb" //basepath for thumbnails in VTT playlist
     },
     "ffmpeg": {
         "preferredLang": "^fr.*", //regex for matching languages in subtitle & audio tracks

@@ -1,63 +1,48 @@
 angular.module('totodl')
        .controller('VideoPlayerController', [ '$scope', '$element', 'VideoService',
 function($scope, $element, VideoService){ 
-    $scope.available = !(Hls.isSupported() !== true);
+    $scope.available = true;
     $scope.playing = VideoService.playing;
-    
     $scope.detached = false;
+    
     var self = this;
-    var hls = null;
-    var player = $element.find('.player').get(0);
     var boxContainer = $('.video-player .box-body').first();
     var playerContainer = boxContainer.find('.player-container').first();
-    
-    function createHls(){
-        player = $('<video class="player" ng-show="available === true" controls autoplay></video>');
-        playerContainer.prepend(player);
-        player = playerContainer.find('video').get(0);
-        hls = new Hls();
-        hls.attachVideo(player);
-        hls.autoLevelEnabled = true;
-        
-        hls.on(Hls.Events.MSE_ATTACHED, function(){
-            self._loadFile();
-        });
-        
-        hls.on(Hls.Events.ERROR,function(event, data) {
-            if(!data.fatal){
-                switch(data.type) {
-                    case Hls.ErrorTypes.NETWORK_ERROR:
-                        // try to recover network error
-                        console.debug("fatal network error encountered, try to recover");
-                        hls.recoverNetworkError();
-                        break;
-                        
-                    case Hls.ErrorTypes.MEDIA_ERROR:
-                        console.debug("fatal media error encountered, try to recover");
-                        hls.recoverMediaError();
-                        break;
-                        
-                    default:
-                        // cannot recover
-                        hls.destroy();
-                        break;  
-                }
-            }
-        });
-        
-        hls.on(Hls.Events.MANIFEST_PARSED, function(){
-            player.currentTime = 1;
-            self.play();
-        });
-    }
+    var player = null;
+    //playerContainer.append('<video class="player" ng-show="available === true" controls autoplay></video>');
+    //var domPlayer = playerContainer.find('.player').get(0);
     
     /**
      * Force reloading file
      */
     this._loadFile = function(){
-        if($scope.file){
-            hls.loadSource(VideoService.getPlaylistUrl($scope.playing.torrent, $scope.file));
+        if(player){
+            player.destroy();
         }
+        
+        var file = $scope.playing.file;
+        
+        player = new Clappr.Player({
+            source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
+            autoPlay: true,
+            parentId: '#clappr-container',
+            plugins: {
+                core: [ ClapprThumbnailsPlugin ]
+            },
+            width: '100%',
+            scrubThumbnails: {
+                backdropHeight: file.thumbs.size.height,
+                spotlightHeight: file.thumbs.size.height,
+                thumbs: ClapprThumbnailsPlugin.buildSpriteConfig(
+                    file.thumbsImg,
+                    file.thumbs.quantity-1,
+                    file.thumbs.size.width, 
+                    file.thumbs.size.height,
+                    file.thumbs.cols, 
+                    file.thumbs.interval
+                )
+            }
+        }); 
     };
     
     /**
@@ -80,14 +65,9 @@ function($scope, $element, VideoService){
     }
     
     this.play = function(){
-        player = playerContainer.find('video').get(0);
-        if(player && player.paused){
+        if(player){
             player.play();
         }
-    };
-    
-    this.isAvailable = function(){
-        return $scope.available;
     };
     
     $scope.stop = function(){
@@ -95,24 +75,20 @@ function($scope, $element, VideoService){
     };
     
     $scope.$watch('playing.file', function(newVal, oldVal){
-        if($scope.available){
-            if(newVal == oldVal){
-                return;
-            }
-            
-            if(hls || player){
-                hls.destroy();
-                hls = null;
-                angular.element(player).remove();
-            }
-            
-            if(newVal){
-                createHls();
-            }
-            
-            $scope.file = newVal;
+        if(newVal == oldVal){
+            return;
         }
         
+        if($scope.playing.file){
+            self._loadFile();
+            self.play();
+        }
+        else{
+            player.destroy();
+            player = null;
+        }
+        
+        $scope.file = newVal;
     });    
 }])
 .directive('videoPlayer', function(){

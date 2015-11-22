@@ -19,7 +19,6 @@ module.exports = function(grunt) {
                         './bower_components/ngDialog/js/ngDialog.js',
 						'./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
 						'./bower_components/TdGal/dist/js/tdgal.angular.standalone.js',
-                        './bower_components/hls.js/dist/hls.js',
                         './public_dev/app/app.js',
                         './public_dev/app/controllers/registerController.js',
                         './public_dev/app/controllers/**/*.js',
@@ -66,6 +65,22 @@ module.exports = function(grunt) {
                 ],
                 dest: './public/',
                 expand: true
+            },
+            player: {
+                cwd: './redist/clappr/dist',
+                src: [ 
+                    '**/*'
+                ],
+                dest: './public/player',
+                expand: true
+            },
+            player_plugin: {
+                cwd: './bower_components/clappr-thumbnails-plugin/dist/',
+                src: [
+                    'clappr-thumbnails-plugin.js'
+                ],
+                dest: './public/player',
+                expand: true
             }
         },
 		watch: {
@@ -96,5 +111,7 @@ module.exports = function(grunt) {
 	**/
     grunt.registerTask('default', [ 'watch' ]);
     grunt.registerTask('install-alte', [ 'copy:alte' ]);
+    grunt.registerTask('install-player', [ 'copy:player', 'copy:player_plugin' ]);
+    grunt.registerTask('install', [ 'copy', 'uglify', 'less' ])
     grunt.registerTask('build', [ 'uglify', 'less' ]);
 };

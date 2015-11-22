@@ -92,6 +92,25 @@ module.exports = ['DownloadService', (function(){
     };
     
     /**
+     * Retreive download host
+     * @return string
+     */
+    DownloadService.getHost = function(){
+        return (config.ssl ? 'https' : 'http') + '://' + 
+                config.host + (config.port == 80 ? '' : ':' + config.port);
+    };
+
+    /**
+     * Retreive web thumb path for a transcoded file
+     * @param string itemName like myDirectory/myFile.(vtt|jpg) 
+     * @return string
+     */
+    DownloadService.getThumbPath = function(itemName, torrent){
+        return path.join(config.thumbPath, torrent.hash, itemName);  
+    };
+        
+    
+    /**
     * Generate the public file link
     **/
     DownloadService._generatePublicLink = function(torrent, fileId, user){

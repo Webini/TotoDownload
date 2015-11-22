@@ -2,6 +2,7 @@ node_modules
 bower_components/*
 public/js/*
 public/css/*
+public/player
 public/bower_components
 npm-debug.log
 app/config/config.json

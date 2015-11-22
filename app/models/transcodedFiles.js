@@ -13,6 +13,10 @@ module.exports = function(sequelize, DataTypes) {
         createdAt: {
             allowNull: false,
             type: DataTypes.DATE
+        },
+        thumbsMeta: {
+            allowNull: true,
+            type: DataTypes.STRING(255)
         }
     }, {
         timestamps: false,
@@ -31,11 +35,22 @@ module.exports = function(sequelize, DataTypes) {
                 catch(e){
                     return [];
                 }
+            },
+            thumbs: function(){
+                try{
+                    return JSON.parse(this.thumbsMeta);    
+                }
+                catch(e){
+                    return {};
+                }
             }
         },
         setterMethods: {
             transcoded: function(data){
                 this.transcodedJson = JSON.stringify(data);    
+            },
+            thumbs: function(data){
+                this.thumbsMeta = JSON.stringify(data);
             }
         }
     });
