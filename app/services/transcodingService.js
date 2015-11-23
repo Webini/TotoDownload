@@ -8,6 +8,7 @@ module.exports = ['TranscodingService', (function(){
     var mkdir         = require('mkdirp');
     var Montage       = require(__dirname + '/../wrapper/montage.js');
     var rmiraf        = require('rimraf');
+    var imagemagick   = require('imagemagick');
     
     var config = {
         "maxSimult": 1,
@@ -444,36 +445,6 @@ module.exports = ['TranscodingService', (function(){
         return { width: 100, height: 50 };
     };
     
-    TranscodingService._getTimeFromFilename = function(filename){
-        var matches = filename.match(/^([0-9]+)\.([0-9]{0,3})/);
-        var out  = {
-            ms: '000',
-            sec: '00',
-            min: '00',
-            hours: '00'  
-        };
-        
-        if(matches && matches.length > 0){
-            var time  = parseInt(matches[1]);
-            out.ms    = parseInt(matches[2]);    
-            out.sec   = time % 60;
-            time      = (time - out.sec) / 60;
-            out.min   = time % 60;
-            time      = (time - out.min) / 60;
-            out.hours = time;
-            
-            if(out.sec < 10){
-                out.sec = '0' + out.sec.toString();
-            }
-            if(out.min < 10){
-                out.min = '0' + out.sec.toString();
-            }
-            if(out.hours < 10){
-                out.hours = '0' + out.hours.toString();   
-            }
-        }
-        return out;
-    };
     
     TranscodingService._orderByTimeInFilename = function(file, fileComp){
         var nb = parseFloat(file.match(/^([0-9]+\.[0-9]{0,3})/)[1]);
@@ -486,41 +457,18 @@ module.exports = ['TranscodingService', (function(){
         var defer = $q.defer();
         
         console.log('TranscodingService._compileThumbnails open directory', params.thumbPath);
-        fs.readdir(params.thumbPath, function(err, files){
-            if(err){
-                defer.reject(err);
-                return;
-            }
-            
-            console.log('TranscodingService._compileThumbnails open file ', params.output + '.vtt');
-            //var ovtt     = fs.openSync(params.output + '.vtt', 'w');
-            var outImage = params.output + '.jpg';
-            //fs.writeSync(ovtt, "WEBVTT\r\n\r\n");
-                
-            files.sort(TranscodingService._orderByTimeInFilename);
-            
-            //var lastTime = '00:00:00.000'
-            var imageSize = null;
+        var files = fs.readdirSync(params.thumbPath); 
+        if(!files || files.length <= 0){
+            return $q.reject('Thumbs images not found');
+        }
+        
+        var outImage = params.output + '.jpg';    
+        files.sort(TranscodingService._orderByTimeInFilename);
+        
+        imagemagick.identify(path.join(params.thumbPath, files[0]), function(err, imageData){
             for (var i = 0; i < files.length; i++) {
-                var filename = files[i];
-                //var time     = TranscodingService._getTimeFromFilename(filename);
-                if(imageSize === null){
-                    imageSize = TranscodingService._getImageSizeFromFilename(filename);
-                }
-                
-                /*var nTime = time.hours + ':' + time.min + ':' + time.sec + '.' + time.ms;
-                fs.writeSync(ovtt, (i+1) + "\r\n" +
-                                   lastTime + ' --> ' + nTime + "\r\n" + 
-                                   path.join(params.webBasepath, path.basename(outImage)) + '#xywh=' + 
-                                   (i % thumbCols * imageSize.width) + ',' +
-                                   ((i - i % thumbCols) / thumbCols * imageSize.height) + ',' +
-                                   imageSize.width + ',' + imageSize.height + "\r\n\r\n"
-                );
-                lastTime = nTime;*/
-                mont.addInput(path.join(params.thumbPath, filename));
+                mont.addInput(path.join(params.thumbPath, files[i]));
             }
-            
-            //fs.close(ovtt);
             
             //transform images to sprite
             mont.setBackground('black')
@@ -535,7 +483,7 @@ module.exports = ['TranscodingService', (function(){
                     defer.resolve({
                         meta: {
                             quantity: files.length,
-                            size: { width: imageSize.width, height: imageSize.height },
+                            size: { width: imageData.width, height: imageData.height },
                             cols: thumbCols,
                             interval: config.thumbnails.delay
                         },
@@ -545,7 +493,6 @@ module.exports = ['TranscodingService', (function(){
                 .catch(function(err, code, sig){
                     defer.reject(err, code, sig);
                 });        
-                
         });
         
         return defer.promise;        
