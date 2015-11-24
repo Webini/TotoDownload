@@ -433,22 +433,9 @@ module.exports = ['TranscodingService', (function(){
         return defer.promise;
     };
     
-    
-    TranscodingService._getImageSizeFromFilename = function(filename){
-        var matches = filename.match(/-([0-9]+)x([0-9]+)\./); 
-        if(matches && matches.length > 0){
-            return { 
-                width: parseInt(matches[1]), 
-                height: parseInt(matches[2])
-            };
-        } 
-        return { width: 100, height: 50 };
-    };
-    
-    
     TranscodingService._orderByTimeInFilename = function(file, fileComp){
-        var nb = parseFloat(file.match(/^([0-9]+\.[0-9]{0,3})/)[1]);
-        var nbComp = parseFloat(fileComp.match(/^([0-9]+\.[0-9]{0,3})/)[1]);
+        var nb = parseFloat(file.match(/^([0-9]+)\-/)[1]);
+        var nbComp = parseFloat(fileComp.match(/^([0-9]+)\-/)[1]);
         return nb - nbComp;
     };
     

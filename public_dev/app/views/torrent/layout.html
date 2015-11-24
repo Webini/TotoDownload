@@ -36,14 +36,14 @@
                                 <li ng-class="{'active': (routeParams.page == 'trailer')}" ng-if="torrent.trailer">
                                     <a ng-href="#/torrent/{{ torrent.hash }}/trailer/{{ streamFileId }}"><i class="fa fa-youtube-play"></i> {{ 'TRAILER'|translate }}</a>
                                 </li>
+                                <li ng-class="{'active': (routeParams.page == 'streaming')}" ng-show="torrent.transcodableState == 8">
+                                    <a ng-href="#/torrent/{{ torrent.hash }}/streaming/{{ streamFileId }}"><i class="fa fa-play"></i> {{ 'STREAMING' | translate }}</a>
+                                </li>
                                 <li ng-class="{'active': (routeParams.page == 'files')}">
                                     <a ng-href="#/torrent/{{ torrent.hash }}/files/{{ streamFileId }}"><i class="fa fa-download"></i> {{ 'DOWNLOAD'|translate }}</a>
                                 </li>
                                 <li ng-class="{'active': (routeParams.page == 'trackers') }">
                                     <a ng-href="#/torrent/{{ torrent.hash }}/trackers/{{ streamFileId }}"><i class="fa fa-share-alt"></i> {{ 'TRACKERS'|translate }}</a>
-                                </li>
-                                <li ng-class="{'active': (routeParams.page == 'streaming')}" ng-show="torrent.transcodableState == 8">
-                                    <a ng-href="#/torrent/{{ torrent.hash }}/streaming/{{ streamFileId }}"><i class="fa fa-play"></i> {{ 'STREAMING' | translate }}</a>
                                 </li>
                                 <li ng-class="{'active': (routeParams.page == 'tag') }" ng-show="user.is(roles.TAGGER) || user.id == torrent.userId">
                                     <a ng-href="#/torrent/{{ torrent.hash }}/tag/{{ streamFileId }}"><i class="fa fa-tag"></i> {{ 'CHANGE_TAG'|translate }}</a>
