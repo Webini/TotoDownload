@@ -434,8 +434,8 @@ module.exports = ['TranscodingService', (function(){
     };
     
     TranscodingService._orderByTimeInFilename = function(file, fileComp){
-        var nb = parseFloat(file.match(/^([0-9]+)\-/)[1]);
-        var nbComp = parseFloat(fileComp.match(/^([0-9]+)\-/)[1]);
+        var nb = parseFloat(file.match(/^([0-9\.]+)\-/)[1]);
+        var nbComp = parseFloat(fileComp.match(/^([0-9\.]+)\-/)[1]);
         return nb - nbComp;
     };
     
