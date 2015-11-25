@@ -24,8 +24,11 @@ angular.module('services')
          * Retreive playlist url for file
          * @return string
          */
-        getPlaylistUrl: function(torrent, file){
-            return '/torrents/stream/playlist/' + torrent.hash + '/file/' + cuser.id + '/' + cuser.downloadHash + '/' + file.id + '/' + encodeURIComponent(file.name) + '.m3u8'; 
+        getPlaylistUrl: function(torrent, file, segmenter){
+            if(!segmenter){
+                segmenter = 'm3u8';
+            }
+            return '/torrents/stream/playlist/' + torrent.hash + '/' + file.id + '/' + encodeURIComponent(file.name) + '.' + segmenter; 
         },
         
         stop: function(){

@@ -188,6 +188,18 @@ module.exports = ['TranscodingService', (function(){
     };
     
     /**
+     * Get array of qualities available for file
+     * @return array
+     */
+    TranscodingService.getQualities = function(file){
+        var out = [];
+        for(var key in file.transcoded){
+            out.push(key);
+        }
+        return out;
+    };
+    
+    /**
      * Retreive metadata for file @file
      * @param object conf Object with field input => Full path to string
      * @return promise 

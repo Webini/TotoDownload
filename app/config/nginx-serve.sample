@@ -1,35 +1,151 @@
 server {
-        listen 81;
-        listen [::]:81;
+    error_log /var/lib/nginx/totodl.error.log;
+    access_log /var/lib/nginx/totodl.access.log;
+    listen 80 default;
+    
+    index index.html index.htm index.nginx-debian.html;
 
-        index index.html index.htm index.nginx-debian.html;
-        server_name MYHOST;
+    set $transcoded_path "/home/transcoded"; #transcoded path same as transcoder.output in app/config
+    set $download_path "/home/dl"; #torrent downloaded path
+    set $secret_token "xyz"; #secret token, same as secret.download in app/config
 
-        location ~ "^/[a-fA-F0-9]{32,64}/([a-zA-Z0-9=\-_]{24})/[0-9]+/([0-9]+)/(.*)$" {
-                set $md5 $1;
-                set $expires $2;
-                set $filepath $3;
-                secure_link $md5,$expires;
-                set $token "MYTOKEN";
-                secure_link_md5 "$expires$token";
+    location / {
+        proxy_pass http://127.0.0.1:8081; #nodeserver
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection upgrade;
+        proxy_redirect off;
+        proxy_buffers 8 32k;
+        proxy_buffer_size 64k;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_set_header X-NginX-Proxy true;
+    }
 
-                if ($secure_link = "") {
-                        return 403;
-                }
-                if ($secure_link = "0") {
-                        return 403;
-                }
+    #original file downlad
+    location ~ "^/download/[a-fA-F0-9]{32,64}/([a-zA-Z0-9=\-_]{24})/[0-9]+/([0-9]+)/(.*)$" {
+        set $md5 $1;
+        set $expires $2;
+        set $filepath $3;
 
-                if ($filepath ~* "/?([^/]+)$"){
-                        set $filename $1;
-                }
+        secure_link $md5,$expires;
+        secure_link_md5 "$expires$secret_token";
 
-                add_header Content-Disposition "attachment; filename=$filename";
-                rewrite "^/[a-fA-F0-9]{32,64}/([a-zA-Z0-9=\-_]{24})/[0-9]+/([0-9]+)/(.*)$" /$3;
+        if ($secure_link = "") {
+            return 403;
         }
 
-        location / {
-                root ROOTDIR;
-                internal;
+        if ($secure_link = "0") {
+            return 403;
         }
+
+        if ($filepath ~* "/?([^/]+)$"){
+            set $filename $1;
+        }
+
+       	rewrite ^ /download-internal/$filepath last;
+    }
+
+    #streaming file direct download
+    location ~ "^/stream/([a-fA-F0-9]{32,64})/([a-zA-Z0-9=\-_]{24})/[0-9]+/([a-zA-Z0-9]+)/([0-9]+)/(.*)$" {
+        set $hash $1;
+        set $md5 $2;
+        set $quality $3;
+        set $expires $4;
+        set $filepath $5;
+
+        secure_link $md5,$expires;
+        secure_link_md5 "$expires$secret_token";
+
+        if ($secure_link = "") {
+            return 403;
+        }
+
+        if ($secure_link = "0") {
+            return 403;
+        }
+
+        if ($filepath ~* "/?([^/]+)$"){
+            set $filename $1;
+        }
+
+        rewrite ^ /stream-internal/$hash/$filepath.$quality last;
+    }
+    
+    location ~ "^/vod-master-playlist/([0-9a-z,]+)/(.*)/master.(m3u8|mpd|mss)$" {
+        vod_multi_uri_suffix .urlset;
+        set $segmenter $3;
+        set $filepath $2;
+        set $qualities $1;
+        
+        if ($segmenter = "m3u8"){
+            rewrite ^ /vod-hls/$filepath.,$qualities,.urlset/master.m3u8;
+        }
+        if ($segmenter = "mpd"){
+            rewrite ^ /vod-dash/$filepath.,$qualities,.urlset/manifest.mpd last;
+        }
+        if ($segmenter = "mss"){
+            rewrite ^ /vod-mss/$filepath.,$qualities,.urlset/manifest last;
+        }
+    } 
+
+    location /vod-dash {
+        alias $transcoded_path;
+
+        aio on;
+        vod dash;
+        vod_mode local;
+        vod_moov_cache moov_cache 512m;
+    }
+
+    location /vod-mss {
+        alias $transcoded_path;
+       
+        aio on; 
+        vod mss;
+        vod_mode local;
+        vod_moov_cache moov_cache 512m;
+    }
+
+    location /vod-hls {
+        alias $transcoded_path;
+ 
+        aio on; 
+        vod hls;
+        vod_mode local;
+        vod_moov_cache moov_cache 512m;
+    }
+
+
+    location ~ "^/stream-thumb/([a-fA-Z0-9]{32,64})/(.*)$" {
+        set $filepath $2;
+        set $torrentHash $1;
+        
+        if ($filepath ~* "/?([^/]+)$"){
+            set $filename $1;
+            add_header Content-Disposition 'attachment; filename="$1"';
+        }
+        
+        rewrite ^ /download-thumbnails/$torrentHash/$filepath last;
+    }
+
+    location /download-thumbnails {
+        alias $transcoded_path;
+        internal;
+        add_header Content-Disposition 'attachment; filename="$filename"';
+    }
+
+    location /download-internal {
+        alias $download_path;
+        internal;
+        add_header Content-Disposition 'attachment; filename="$filename"';
+    }
+
+    location /stream-internal {
+        alias $transcoded_path;
+        internal;
+        add_header Content-Disposition 'attachment; filename="$filename.$quality.mp4"';
+    }
 }
+

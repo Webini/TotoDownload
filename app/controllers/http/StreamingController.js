@@ -92,17 +92,13 @@ module.exports = function(app){
         },
         
         onGetFilePlaylist: function(req, res){
-            if(!req.params.torrentHash || !req.params.userId || !req.params.userHash || 
-                !req.params.fileId || !req.params.fileName || !req.params.quality)
+            if(!req.params.torrentHash || !req.params.fileName || !req.params.segmenter)
                 return res.status(404).end();
             
-            DownloadService.getStreamLink(
+            DownloadService.getPlaylistLink(
                 req.params.torrentHash, 
-                req.params.userId, 
-                req.params.userHash, 
                 req.params.fileId,
-                req.params.quality,
-                true
+                req.params.segmenter
             ).then(
                 function(location){
                     res.redirect(302, location);    
@@ -113,35 +109,6 @@ module.exports = function(app){
                        .end();
                 }
             );
-        },
-        
-        onGetMasterPlaylist: function(req, res){
-            var torrent = null;
-            if(!req.params.torrentHash || !req.params.fileId || !req.params.userId || !req.params.userHash ||
-                !(torrent = TorrentService.getFromMemory(req.params.torrentHash))){
-                return res.status(404).end();
-            } 
-            
-            torrent.getTranscodedFile(req.params.fileId).then(
-                function(file){
-                    var out = "#EXTM3U\n";
-                    var transcoded = file.transcoded;
-                    for(var quality in transcoded){
-                        out += '#EXT-X-STREAM-INF:PROGRAM-ID=1,' +
-                               'BANDWIDTH=' + transcoded[quality].bandwidth + ',' + 
-                               'RESOLUTION=' + transcoded[quality].resolution + ',' + 
-                               'CODECS="' + transcoded[quality].audio_codec + ',' + transcoded[quality].video_codec + '",' + 
-                               'NAME="' + quality + "\"\n";
-                        out += DownloadService.getHost() + '/torrents/stream/hls/' + torrent.hash + '/file/' + req.params.userId + '/' + req.params.userHash + '/' + file.id + '/' + quality + '/' + encodeURIComponent(file.name) + ".m3u8\n";
-                    }
-                    
-                    res.set('Content-Type', 'application/vnd.apple.mpegurl');
-                    res.send(out).end();
-                }
-            ).catch(function(e){
-                res.json(e.stack);
-                res.status(500).end(); 
-            });         
         }
     };
 };

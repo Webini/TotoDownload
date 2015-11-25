@@ -13,7 +13,7 @@ module.exports = ['DownloadService', (function(){
         "ssl": false, 
         "dlBasepath": null, 
         "streamBasepath": null,
-        "hlsBasepath": null
+        "playlistBasepath": null
     };
     
     _.extend(config, app.config.download);
@@ -147,7 +147,7 @@ module.exports = ['DownloadService', (function(){
     * Generate the public stream link
     * @return promise
     **/
-    DownloadService._generatePublicStreamLink = function(torrent, file, quality, user, hls){
+    DownloadService._generatePublicStreamLink = function(torrent, file, quality, user){
         if(!file.transcoded[quality]){
             return $q.reject('Quality not found', 404);
         }
@@ -159,13 +159,13 @@ module.exports = ['DownloadService', (function(){
                 
                 var segment = '/' + torrent.hash + '/' + linkTTLHash + '/' + file.id + '/' + quality + '/' + expiration + '/';
                 if(config.useServer){ //if we are using dedicated webserver
-                    var basepath = (hls ? config.hlsBasepath : config.streamBasepath);
+                    var basepath = config.streamBasepath;
                     
                     segment = (config.ssl ? 'https' : 'http') + '://' + 
                               config.host + 
                               (config.port == 80 ? '' : ':' + config.port) + 
                               (basepath ? path.normalize('/' + basepath) : '')
-                              + segment + encodeURI(file.name) + (hls ? '.m3u8' : '');
+                              + segment + encodeURI(file.name);
                 }
                 else{ //else serve the files
                     var fileSegments = file.name.split('/');
@@ -175,7 +175,7 @@ module.exports = ['DownloadService', (function(){
                 return {
                     torrent: torrent,
                     file: file,
-                    uri: segment, //'/' + torrent.hash + '/' + linkTTLHash + '/' + fileId + '/' + expiration + '/' + encodeURIComponent(fileSegments[fileSegments.length-1]),
+                    uri: segment, 
                     user: user
                 };
             }
@@ -183,10 +183,33 @@ module.exports = ['DownloadService', (function(){
     };   
     
     /**
+     * Retreive master playlist
+     * @return promise string link
+     */
+    DownloadService.getPlaylistLink = function(torrentHash, fileId, segmenter){
+        var torrent = app.services.TorrentService.getFromMemory(torrentHash);
+        if(!torrent)
+            return $q.reject('Torrent not found', 404);
+            
+        return torrent.getTranscodedFile(fileId)
+                      .then(function(file){
+                          var qualities = TranscodingService.getQualities(file);
+                          var basepath = config.playlistBasepath;
+                          
+                          return (config.ssl ? 'https' : 'http') + '://' + 
+                                  config.host + 
+                                 (config.port == 80 ? '' : ':' + config.port) + 
+                                 (basepath ? path.normalize('/' + basepath) : '') + 
+                                 '/' + qualities.join(',') + '/' + torrent.hash + '/' + 
+                                 encodeURI(file.name) + '/master.' + segmenter;
+                      });
+    };
+    
+    /**
     * Retreive the download link for a stream file
     * @return promise
     **/
-    DownloadService.getStreamLink = function(torrentHash, userId, userHash, fileId, quality, hls){
+    DownloadService.getStreamLink = function(torrentHash, userId, userHash, fileId, quality){
         return app.services.UserService.get(userId).then(
             //check if this user is valid
             function success(user){
@@ -201,7 +224,7 @@ module.exports = ['DownloadService', (function(){
                     
                     return torrent.getTranscodedFile(fileId)
                                   .then(function(file){
-                                      return DownloadService._generatePublicStreamLink(torrent, file, quality, user, hls);
+                                      return DownloadService._generatePublicStreamLink(torrent, file, quality, user);
                                   }); 
                 }
                 else

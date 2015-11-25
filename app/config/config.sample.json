@@ -21,9 +21,10 @@
         "host": "localhost", //url generated will be like http[s]?://host:port/torrent.hash/TTLHash(expire+secret.download)/fileId/expiration/filePath
         "port": 80, //not required
         "ssl": false, 
-        "dlBasepath": "lalal/lulu", //not required only used when useServer => true
-        "streamBasepath": "lalal/lulu", //not required ( basepath for downloading transocded files )
-        "hlsBasepath": "lalal/lulu" //base path for HLS playlist
+        "dlBasepath": "/download", //not required only used when useServer => true
+        "streamBasepath": "/stream", //not required ( basepath for downloading transocded files )
+        "playlistBasepath": "/vod-master-playlist", //base path for streaming playlist
+        "thumbPath": "/stream-thumb" //basepath for accessing media thumbnails
     },
     "sessionExpiration": 240,
     "torrents": {
