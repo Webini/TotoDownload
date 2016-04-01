@@ -84,17 +84,21 @@ detached-video-player video {
     .media-control-icon[data-volume] {
         color: #c2c2c2 !important;
     }
-    
-    .media-control-button {
-        font-weight: bold !important;
-        text-shadow: none !important;
+
+    .media-control-icon[data-fullscreen], .media-control-icon[data-playpause] {
+        svg {
+            width: 32px !important;
+            height: 32px !important;	
+        }
     }
-    
+ 
     .media-control-icon[data-volume] {
-        font-weight: bold !important;
-        text-shadow: none !important;
-        font-size: 35px !important; 
-        width: 20px !important;    
-        line-height: 32px !important;
+	width: 26px !important;
+	svg {
+            stroke: #c2c2c2;
+            fill: #c2c2c2;
+	}
     }
+
+    
 } 

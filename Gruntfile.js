@@ -67,7 +67,7 @@ module.exports = function(grunt) {
                 expand: true
             },
             player: {
-                cwd: './redist/clappr/dist',
+                cwd: './bower_components/clappr/dist',
                 src: [ 
                     '**/*'
                 ],
