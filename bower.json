@@ -35,7 +35,7 @@
     "TdGal": "https://github.com/Webini/TdGal.git#master",
     "ngInfiniteScroll": "~1.2.1",
     "angular": "1.4.7",
-    "angular-animate": "~1.4.7",
+    "angular-animate": "1.4.7",
     "clappr-thumbnails-plugin": "git://github.com/tjenkinson/clappr-thumbnails-plugin#~3.3.0",
     "clappr": "~0.2.42"
   },
