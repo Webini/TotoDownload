@@ -1,4 +1,3 @@
-require('heapdump');
 
 var config      = require(__dirname + '/config/config.json');
 var express     = require('express');

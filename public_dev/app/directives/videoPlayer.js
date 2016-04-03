@@ -29,7 +29,8 @@ function($scope, $element, VideoService){
             plugins: {
                 core: [ ClapprThumbnailsPlugin ]
             },
-            width: '100%'
+            width: '100%',
+            maxBufferLength: 900
         };
         
         if(file.thumbs){
