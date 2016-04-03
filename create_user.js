@@ -1,4 +1,4 @@
-#create a new admin user, use : node create_user.js nickname email password
+//create a new admin user, use : node create_user.js nickname email password
 var app = require('./app/app.js');
 var UserService = app.services.UserService;
 var args = process.argv.slice(2);
