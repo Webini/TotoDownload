@@ -24,7 +24,8 @@
 
 <!-- Main content -->
 <section class="content">
-    <div infinite-scroll="addElementsShown()" 
+    <div infinite-scroll-disabled="loading"
+         infinite-scroll="addElementsShown()"
          infinite-scroll-distance="0.7">
         <div class="box box-solid torrent" 
              ng-repeat="torrent in torrents | filter:myTorrentsFilter | filter:torrentsComparator | filter:filtersComparator | orderBy:'-createdAt' | limitTo:elementsShown as results track by torrent.syncTag" 

@@ -66,12 +66,14 @@ function($scope, $rootScope, $routeParams, SyncService, User, TorrentsService, F
     
     var unbindTorrentChange = $rootScope.$on('torrent-change', function($evt, torrent){
         //disable loading state when we received change notification
-        for(var i = 0; i < $scope.torrents.length; i++){
-            if($scope.torrents[i].hash == torrent.hash){
-                if($scope.torrents[i].loading)
-                    $scope.torrents[i].loading = false;
+        if ($scope.torrents) {
+            for(var i = 0; i < $scope.torrents.length; i++){
+                if($scope.torrents[i].hash == torrent.hash){
+                    if($scope.torrents[i].loading)
+                        $scope.torrents[i].loading = false;
                 
-                break;
+                    break;
+                }
             }
         }
         

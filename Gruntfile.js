@@ -3,9 +3,9 @@ module.exports = function(grunt) {
     
 	grunt.initConfig({
         uglify: {
-			js: {
-				files: {
-					'./public/js/app.js': [
+              js: {
+                  files: {
+                        './public/js/app.js': [
                         './bower_components/angular/angular.js',
                         './bower_components/angular-route/angular-route.js',
                         './bower_components/angular-animate/angular-animate.js',
@@ -16,9 +16,9 @@ module.exports = function(grunt) {
                         './bower_components/ng-flow/dist/ng-flow-standalone.js',
                         './bower_components/fusty-flow.js/src/fusty-flow-factory.js',
                         './bower_components/fusty-flow.js/src/fusty-flow.js',
-                        './bower_components/ngDialog/js/ngDialog.js',
-						'./bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
-						'./bower_components/TdGal/dist/js/tdgal.angular.standalone.js',
+                        './bower_components/ng-dialog/js/ngDialog.js',
+                        './bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js',
+                        './bower_components/TdGal/dist/js/tdgal.angular.standalone.js',
                         './public_dev/app/app.js',
                         './public_dev/app/controllers/registerController.js',
                         './public_dev/app/controllers/**/*.js',

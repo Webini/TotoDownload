@@ -52,7 +52,7 @@ angular.module('totodl', [
     $routeProvider.otherwise({redirectTo: '/dashboard'});
     languageSetup($routeProvider, $translateProvider);
     flowFactoryProvider.factory = fustyFlowFactory;
-}]).run(['$rootScope', '$location', 'User', '$http', function($rootScope, $location, User, $http) {
+}]).run(['$rootScope', '$location', 'User', '$http', '$route', function($rootScope, $location, User, $http, $route) {
     //check login status
     redirectOnStatus($rootScope, $location, User);
 }]);
