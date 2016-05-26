@@ -1,11 +1,11 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     var debug = !grunt.option('prod');
-    
-	grunt.initConfig({
+
+    grunt.initConfig({
         uglify: {
-              js: {
-                  files: {
-                        './public/js/app.js': [
+            js: {
+                files: {
+                    './public/js/app.js': [
                         './bower_components/angular/angular.js',
                         './bower_components/angular-route/angular-route.js',
                         './bower_components/angular-animate/angular-animate.js',
@@ -25,9 +25,9 @@ module.exports = function(grunt) {
                         './public_dev/app/services/**/*.js',
                         './public_dev/app/filters/**/*.js',
                         './public_dev/app/directives/**/*.js'
-					]
-				},
-				options: {       
+                    ]
+                },
+                options: {
                     preserveComments: debug,
                     compress: (!debug ? {
                         drop_debugger: true,
@@ -36,31 +36,31 @@ module.exports = function(grunt) {
                     } : false),
                     beautify: debug,
                     mangle: !debug
-				}
-			}
-		},
-		less: {
-			development: {
-				options: {
-					compress: !debug,
-					yuicompress: false,
-					optimization: (debug ? 2 : 10)
-				},
-				files: {
-					"./public/css/common.css": [ 
-                        "./bower_components/ngDialog/css/ngDialog.css",
-                        "./bower_components/angular-loading-bar/src/loading-bar.css", 
-						'./bower_components/TdGal/dist/css/tdgal.css',
+                }
+            }
+        },
+        less: {
+            development: {
+                options: {
+                    compress: !debug,
+                    yuicompress: false,
+                    optimization: (debug ? 2 : 10)
+                },
+                files: {
+                    "./public/css/common.css": [
+                        "./bower_components/ng-dialog/css/ngDialog.css",
+                        "./bower_components/angular-loading-bar/src/loading-bar.css",
+                        './bower_components/TdGal/dist/css/tdgal.css',
                         "./public_dev/less/common.less"
                     ]
-				}
-			}
-		},
+                }
+            }
+        },
         copy: {
             alte: {
-                src: [ 
-                    './bower_components/admin-lte/bootstrap/**/*', 
-                    './bower_components/admin-lte/dist/**/*', 
+                src: [
+                    './bower_components/admin-lte/bootstrap/**/*',
+                    './bower_components/admin-lte/dist/**/*',
                     './bower_components/admin-lte/plugins/**/*'
                 ],
                 dest: './public/',
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
             },
             player: {
                 cwd: './bower_components/clappr/dist',
-                src: [ 
+                src: [
                     '**/*'
                 ],
                 dest: './public/player',
@@ -83,35 +83,34 @@ module.exports = function(grunt) {
                 expand: true
             }
         },
-		watch: {
-			styles: {
-				files: [
-					'./public_dev/less/*.less'
-				], // which files to watch
-				tasks: ['less'],
-				options: {
-					nospawn: true
-				}
-			},
-			js: {
-				files: [
-                    './public_dev/app/**/*.js',
-				],
-				tasks: ['uglify']
-			}
-		}
-	});
-	
-	grunt.loadNpmTasks('grunt-contrib-less');
-	grunt.loadNpmTasks('grunt-contrib-watch');
+        watch: {
+            styles: {
+                files: [
+                    './public_dev/less/*.less'
+                ], // which files to watch
+                tasks: ['less'],
+                options: {
+                    nospawn: true
+                }
+            },
+            js: {files: [
+                    './public_dev/app/**/*.js'
+                ],
+                tasks: ['uglify']
+            }
+        }
+    });
+
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     /**
-    * grunt.loadNpmTasks('grunt-ng-annotate');
-	**/
-    grunt.registerTask('default', [ 'watch' ]);
-    grunt.registerTask('install-alte', [ 'copy:alte' ]);
-    grunt.registerTask('install-player', [ 'copy:player', 'copy:player_plugin' ]);
-    grunt.registerTask('install', [ 'copy', 'uglify', 'less' ])
-    grunt.registerTask('build', [ 'uglify', 'less' ]);
+     * grunt.loadNpmTasks('grunt-ng-annotate');
+     **/
+    grunt.registerTask('default', ['watch']);
+    grunt.registerTask('install-alte', ['copy:alte']);
+    grunt.registerTask('install-player', ['copy:player', 'copy:player_plugin']);
+    grunt.registerTask('install', ['copy', 'uglify', 'less']);
+    grunt.registerTask('build', ['uglify', 'less']);
 };
