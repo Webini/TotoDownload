@@ -126,7 +126,7 @@ module.exports = ['DownloadService', (function(){
                               config.host + 
                               (config.port == 80 ? '' : ':' + config.port) + 
                               (config.dlBasepath ? path.normalize('/' + config.dlBasepath) : '')
-                              + segment + encodeURI(torrent.files[fileId].name);
+                              + segment + encodeURIComponent(torrent.files[fileId].name);
                 }
                 else{ //else serve the files
                     var fileSegments = torrent.files[fileId].name.split('/');
@@ -165,7 +165,7 @@ module.exports = ['DownloadService', (function(){
                               config.host + 
                               (config.port == 80 ? '' : ':' + config.port) + 
                               (basepath ? path.normalize('/' + basepath) : '')
-                              + segment + encodeURI(file.name);
+                              + segment + encodeURIComponent(file.name);
                 }
                 else{ //else serve the files
                     var fileSegments = file.name.split('/');
@@ -201,7 +201,7 @@ module.exports = ['DownloadService', (function(){
                                  (config.port == 80 ? '' : ':' + config.port) + 
                                  (basepath ? path.normalize('/' + basepath) : '') + 
                                  '/' + qualities.join(',') + '/' + torrent.hash + '/' + 
-                                 encodeURI(file.name) + '/master.' + segmenter;
+                                 encodeURIComponent(file.name) + '/master.' + segmenter;
                       });
     };
     
