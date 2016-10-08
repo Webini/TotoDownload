@@ -230,9 +230,11 @@ module.exports = ['TorrentsTranscoderService', (function(){
         }
         */
         transcoder.transcoding = file;
-        
+        const fullPath = path.join(transcoder.original.path, file.name);
+        const basedir = path.basedir(fullPath);
+        const filename = path.basename(fullPath);
         return TranscodingService
-                .prepare(path.join(transcoder.original.path, file.name))
+                .prepare(basedir, filename)
                 .then((media) => {
                     transcoder.media = media;   
                     transcoder.transPromise = TranscodingService.transcode(
