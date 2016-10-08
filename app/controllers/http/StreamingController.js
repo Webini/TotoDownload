@@ -13,7 +13,7 @@ module.exports = function(app){
     
     function getDuration(file){
         for(var key in file.transcoded){
-            return file.transcoded[key].duration;
+            return Math.floor(file.transcoded[key].duration);
         }
         return 0;
     }
