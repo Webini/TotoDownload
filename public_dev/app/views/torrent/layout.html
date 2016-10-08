@@ -62,7 +62,7 @@
     <div class="row" ng-show="error">
         <div class="col-xs-6 col-xs-offset-3 alert alert-danger alert-dismissable err-margin">
             <h4>{{ 'ERROR' | translate }}</h4>
-            <p>{{ error | translate }}</p>
+            <p ng-if="error">{{ error | translate }}</p>
             <p class="text-center"><button class="btn btn-default" type="button" onclick="window.history.back()"><i class="fa fa-arrow-circle-left"></i>&nbsp;{{ 'BACK'|translate }}</button></p>
         </div>
         <div class="clearfix"></div>
