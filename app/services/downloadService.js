@@ -3,7 +3,6 @@ module.exports = ['DownloadService', (function(){
     var $q                        = require('q');
     var path                      = require('path');
     var _                         = require('underscore');
-    var TranscodingService        = null;
     var TorrentsTranscoderService = null;
     
     var config = {
@@ -21,7 +20,6 @@ module.exports = ['DownloadService', (function(){
     function DownloadService(){}
     
     DownloadService.ready = function(){
-        TranscodingService        = app.services.TranscodingService;
         TorrentsTranscoderService = app.services.TorrentsTranscoderService;
     };
     
@@ -197,7 +195,7 @@ module.exports = ['DownloadService', (function(){
             
         return torrent.getTranscodedFile(fileId)
                       .then(function(file){
-                          var qualities = TranscodingService.getQualities(file);
+                          var qualities = TorrentsTranscoderService.getQualities(file);
                           var basepath = config.playlistBasepath;
                           
                           return (config.ssl ? 'https' : 'http') + '://' + 

@@ -64,6 +64,19 @@ module.exports = ['TorrentsTranscoderService', (function(){
             });
         }
     };
+
+
+    /**
+     * Get array of qualities available for file
+     * @return array
+     */
+    TorrentsTranscoderService.getQualities = function(file){
+        var out = [];
+        for(var key in file.transcoded){
+            out.push(key);
+        }
+        return out;
+    };
     
     /**
      * Retreive full path for the @transcodedFilePath
