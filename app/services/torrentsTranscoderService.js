@@ -231,7 +231,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         */
         transcoder.transcoding = file;
         const fullPath = path.join(transcoder.original.path, file.name);
-        const basedir = path.basedir(fullPath);
+        const basedir = path.dirname(fullPath);
         const filename = path.basename(fullPath);
         return TranscodingService
                 .prepare(basedir, filename)
