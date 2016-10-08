@@ -106,7 +106,11 @@ module.exports = ['DownloadService', (function(){
      * @return string
      */
     DownloadService.getThumbPath = function(itemName, torrent){
-        return path.join(config.thumbPath, torrent.hash, itemName);  
+        if (torrent) {
+            return path.join(config.thumbPath, torrent.hash, itemName); 
+        } 
+
+        return path.join(config.thumbPath, itemName); 
     };
         
     

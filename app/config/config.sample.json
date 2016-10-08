@@ -43,52 +43,74 @@
         "webThumbPath": "/movies/thumb" //basepath for thumbnails in VTT playlist
     },
     "ffmpeg": {
+
+
         "preferredLang": "^fr.*", //regex for matching languages in subtitle & audio tracks
         "debug": true, //if debug => the movie will not be fully transcoded (only ~1 min)
-        "thumbnails": { //thumb for preview
-            "delay": 10, //take a thumb each 10s
-            "size": "120x?" //thumb size
+        "thumbnails": {
+            "delay": "1/10", //take a thumb each 10s
+            "width": "120", //thumbs width
+            "columns": 6 //output columns for spritesheet
         },
-        "qualities": [
+        "subtitles": {
+            "codec": "webvtt",
+            "extension": "vtt"
+        },
+        "presets": [
             {
                 "default": true, //reference configuration
-                "name": "480p", //characters allowed [a-zA-Z0-9]
-                "vcodec": "libx264",
-                "vbitrate": 516096,
-                "maxbitrate": 516096,
-                "acodec": "libfaac",
-                "abitrate": 98304,
-                "channel": 2,
+                "name": "480p",
+                "video": {
+                    "codec": "libx264",
+                    "bitrate": 516096,
+                    "maxbitrate": 516096,
+                    "width": 720,
+                    "height": 480
+                },
+                "audio": {
+                    "codec": "libfaac",
+                    "bitrate": 98304,
+                    "channels": 2
+                },
                 "threads": 4,
-                "width": 720,
-                "height": 480,
-                "preset": "slow"
+                "preset": "slow",
+                "format": "mp4"
             },
             {
                 "name": "720p",
-                "vcodec": "libx264",
-                "vbitrate": 890880,
-                "maxbitrate": 890880,
-                "acodec": "libfaac",
-                "abitrate": 131072,
-                "channel": 2,
+                "video": {
+                    "codec": "libx264",
+                    "bitrate": 890880,
+                    "maxbitrate": 890880,
+                    "width": 1280,
+                    "height": 720
+                },
+                "audio": {
+                    "codec": "libfaac",
+                    "bitrate": 131072,
+                    "channels": 2
+                },
                 "threads": 4,
-                "width": 1280,
-                "height": 720,
-                "preset": "slow"
+                "preset": "slow",
+                "format": "mp4"
             },
             {
                 "name": "1080p",
-                "vcodec": "libx264",
-                "vbitrate": 1884160,
-                "maxbitrate": 1884160,
-                "acodec": "libfaac",
-                "abitrate": 163840,
-                "channel": 2,
+                "video": {
+                    "codec": "libx264",
+                    "bitrate": 1884160,
+                    "maxbitrate": 1884160,
+                    "width": 1920, 
+                    "height": 1080
+                },
+                "audio": {
+                    "codec": "libfaac",
+                    "bitrate": 163840,
+                    "channels": 2
+                },
                 "threads": 4,
-                "width": 1920, 
-                "height": 1080,
-                "preset": "slow"
+                "preset": "slow",
+                "format": "mp4"
             }
         ]
     },

@@ -117,8 +117,8 @@ module.exports = ['TorrentsTranscoderService', (function(){
         if(torrent.transcodableState == states.TRANSCODING){
             for(var i = 0; i < transcoders.length; i++){
                 if(transcoders[i].torrent == torrent.hash){
-                    if(transcoders[i].transObj){
-                        transcoders[i].transObj.kill();
+                    if(transcoders[i].transPromise && transcoders[i].transPromise.kill){
+                        transcoders[i].transPromise.kill();
                     }
                     break;
                 }
@@ -212,7 +212,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         
         var file = transcoder.files.splice(0, 1)[0];
         console.log('TorrentsTranscoderService._transcodeNextFile', file.name);
-        
+        /*
         var subtitleFile = TorrentsTranscoderService._findSubtitle(transcoder.original.files, file.name);
         var subtitle = null;
         
@@ -228,9 +228,42 @@ module.exports = ['TorrentsTranscoderService', (function(){
             };
             console.log('TorrentsTranscoderService subtitles founds', subfile, codec);
         }
-        
+        */
         transcoder.transcoding = file;
         
+        return TranscodingService
+                .prepare(path.join(transcoder.original.path, file.name))
+                .then((media) => {
+                    transcoder.media = media;   
+                    transcoder.transPromise = TranscodingService.transcode(
+                        media,
+                        path.join(config.output, transcoder.torrent),
+                        file.name
+                    );
+                    
+                    return transcoder.transPromise;
+                })
+                .then((result) => {
+                    return app.orm.TranscodedFiles.create({
+                        torrentId: (transcoder.original.id ? transcoder.original.id : TorrentService.getFromMemory(transcoder.torrent)),
+                        name: transcoder.transcoding.name,
+                        transcoded: TorrentsTranscoderService._convertToRelativePath(result.transcoded),
+                        createdAt: new Date(),
+                        thumbs: TorrentsTranscoderService._convertThumbsToRelativePath(result.thumbnails),
+                        subtitles: TorrentsTranscoderService._convertSubtitlesToRelativePath(result.subtitles)
+                    }).then(function(file){
+                        transcoder.done.push(file);
+                        return transcoder;
+                    });
+                })
+                .catch((err) => {
+                    if (err.message && err.message.match('kill')) {
+                        transcoder.killed = true;
+                    }
+                    return transcoder;
+                })
+                .then(TorrentsTranscoderService._transcodeNextFile);
+/*
         return TranscodingService.prepare({
             input: path.join(transcoder.original.path, file.name),
             output: path.join(config.output, transcoder.torrent, file.name),
@@ -244,13 +277,30 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 console.log('Prepare transcoding error', util.inspect(err), stdout, stderr);
                 return transcoder;
             }
-        ).then(TorrentsTranscoderService._transcodeNextFile);
+        )*/
     };
-    
+
+    TorrentsTranscoderService._convertSubtitlesToRelativePath = function(subtitles) {
+        console.log('TorrentsTranscoderService._convertSubtitlesToRelativePath => ', subtitles);
+        return subtitles.map((subtitle) => {
+            subtitle.file = subtitle.file.substr(config.output.length);
+        });
+    };
+        
+    TorrentsTranscoderService._convertThumbsToRelativePath = function(thumbs) {
+        console.log('TorrentsTranscoderService._convertThumbsToRelativePath => ', thumbs);
+
+        if (thumbs) {
+            thumbs.file = thumbs.file.substr(config.output.length);
+        }
+        
+        return thumbs;
+    };
+
     /**
      * Create thumbnail from transcoded movie
      * @return promise 
-     */
+    
     TorrentsTranscoderService._createThumbnails = function(result, transObj, transcoder){
         var outpath = transObj.getOutput();
         var item    = { bandwidth: 0 };
@@ -271,11 +321,11 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 qualities: result
             };
         });
-    };
+    }; */
     
     /**
      * Transcode object and add transcoded file in database
-     */
+     
     TorrentsTranscoderService._onTranscoderObjectReady = function(transObj, transcoder){
         transcoder.transObj = transObj;
         return transObj.transcode()
@@ -312,10 +362,10 @@ module.exports = ['TorrentsTranscoderService', (function(){
             }
        );
     };
-    
+    */
     /**
      * Retreive codec informations
-     */
+    
     TorrentsTranscoderService._fillWithCodecInformations = function(result){
         console.log('TorrentsTranscoderService._fillWithCodecInformations');
         var promises = [];
@@ -368,7 +418,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 return result;
             }
         );
-    };
+    }; */
     
     /**
      * Transformat absolute path from TranscodingService results to relative path
@@ -377,8 +427,8 @@ module.exports = ['TorrentsTranscoderService', (function(){
     TorrentsTranscoderService._convertToRelativePath = function(result){ 
         console.log('TorrentsTranscoderService._convertToRelativePath => ', result);
         for(var quality in result){
-            result[quality].path = result[quality].fullPath.substr(config.output.length);
-            delete result[quality].fullPath;
+            result[quality].path = result[quality].file.substr(config.output.length);
+            delete result[quality].file;
         }
         
         return result;
@@ -406,11 +456,12 @@ module.exports = ['TorrentsTranscoderService', (function(){
             console.log('TorrentsTranscoderService._finalizeTranscoding instance killed');
         }
         
-        delete transcoder.transObj;
+        delete transcoder.transPromise;
         delete transcoder.killed;
         delete transcoder.files;
         delete transcoder.done;
         delete transcoder.original;
+        delete transcoder.media;
         delete transcoder.transcoding;
         delete transcoder.torrent;
         transcoder.processing = false;

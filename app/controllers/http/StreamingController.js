@@ -35,7 +35,10 @@ module.exports = function(app){
                             duration: getDuration(files[i]),
                             name: files[i].name,
                             thumbs: files[i].thumbs,
-                            thumbsImg: DownloadService.getThumbPath(files[i].name, torrent) + '.jpg'
+                            subtitles: files[i].subtitles,
+                            thumbsImg: (files[i].thumbs.file ? 
+                                            DownloadService.getThumbPath(files[i].thumbs.file) : 
+                                            DownloadService.getThumbPath(files[i].name, torrent) + '.jpg')
                         });
                     }
                     

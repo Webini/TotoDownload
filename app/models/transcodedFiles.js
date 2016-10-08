@@ -43,6 +43,14 @@ module.exports = function(sequelize, DataTypes) {
                 catch(e){
                     return {};
                 }
+            },
+            subtitles: function(){
+                try{
+                    return JSON.parse(this.subtitlesJson);    
+                }
+                catch(e){
+                    return {};
+                }
             }
         },
         setterMethods: {
@@ -51,6 +59,9 @@ module.exports = function(sequelize, DataTypes) {
             },
             thumbs: function(data){
                 this.thumbsMeta = JSON.stringify(data);
+            },
+            subtitles: function(data) {
+                this.subtitlesJson = JSON.stringify(data);
             }
         }
     });
