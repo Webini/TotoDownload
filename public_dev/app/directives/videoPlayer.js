@@ -36,7 +36,7 @@ function($scope, $element, VideoService){
         if(file.thumbs){
             if (file.thumbs.meta) {
                 Object.assign(file.thumbs, file.thumbs.meta, {
-                    interval: /^[0-9]+\/([0-9]+)$/ig.exec(file.thumbs.delay)[1]
+                    interval: /^[0-9]+\/([0-9]+)$/ig.exec(file.thumbs.meta.delay)[1]
                 });
             }
 
