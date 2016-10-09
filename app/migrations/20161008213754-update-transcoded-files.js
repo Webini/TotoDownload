@@ -6,7 +6,7 @@ module.exports = {
         'TranscodedFiles',
         'subtitlesJson',
         {
-            type: Sequelize.STRING(1024),
+            type: Sequelize.TEXT,
             allowNull: true
         }
      );

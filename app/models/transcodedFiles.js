@@ -10,6 +10,10 @@ module.exports = function(sequelize, DataTypes) {
             type: DataTypes.TEXT,
             allowNull: false
         },
+        subtitlesJson: {
+            type: DataTypes.TEXT,
+            allowNull: true
+        },
         createdAt: {
             allowNull: false,
             type: DataTypes.DATE
