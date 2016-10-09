@@ -297,6 +297,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
         console.log('TorrentsTranscoderService._convertSubtitlesToRelativePath => ', subtitles);
         return subtitles.map((subtitle) => {
             subtitle.file = subtitle.file.substr(config.output.length);
+            return subtitle;
         });
     };
         
