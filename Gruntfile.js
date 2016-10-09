@@ -67,17 +67,26 @@ module.exports = function (grunt) {
                 expand: true
             },
             player: {
-                cwd: './bower_components/clappr/dist',
+                cwd: './node_modules/video.js/dist',
                 src: [
                     '**/*'
                 ],
                 dest: './public/player',
                 expand: true
             },
-            player_plugin: {
-                cwd: './bower_components/clappr-thumbnails-plugin/dist/',
+            player_hls: {
+                cwd: './node_modules/videojs-contrib-hls/dist/',
                 src: [
-                    'clappr-thumbnails-plugin.js'
+                    '**/*'
+                ],
+                dest: './public/player',
+                expand: true
+            },
+            player_thumbs: {
+                cwd: './node_modules/videojs-thumbnails/',
+                src: [
+                    'videojs.thumbnails.js',
+                    'videojs.thumbnails.css'
                 ],
                 dest: './public/player',
                 expand: true
@@ -110,7 +119,7 @@ module.exports = function (grunt) {
      **/
     grunt.registerTask('default', ['watch']);
     grunt.registerTask('install-alte', ['copy:alte']);
-    grunt.registerTask('install-player', ['copy:player', 'copy:player_plugin']);
+    grunt.registerTask('install-player', [ 'copy:player', 'copy:player_hls', 'copy:player_thumbs' ]);
     grunt.registerTask('install', ['copy', 'uglify', 'less']);
     grunt.registerTask('build', ['uglify', 'less']);
 };

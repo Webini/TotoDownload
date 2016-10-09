@@ -12,27 +12,89 @@ function($scope, $element, VideoService){
     //playerContainer.append('<video class="player" ng-show="available === true" controls autoplay></video>');
     //var domPlayer = playerContainer.find('.player').get(0);
     
+    function destroyPlayer() {
+        if (player) {
+            player.dispose();
+            player = null;
+        }
+    }
+
+    function prepareThumbnailsObject(thumbnailUrl, thumbsConfig, duration) {
+        var delay = Math.floor(duration / thumbsConfig.quantity);
+        var out   = {};
+
+        for (var i = 0; i < thumbsConfig.quantity; i++) {
+            var y = i % thumbsConfig.cols;
+            var x = i - (y * cols);
+
+            out[i * delay] = {
+                style: {
+                    clip: 'rect(' + (thumbsConfig.size.height * y) + ', ' + (thumbsConfig.size.width * (x+1)) + 'px, ' + 
+                          (thumbsConfig.size.height * (y+1)) + 'px, ' + (thumbsConfig.size.width * x) + ')'
+                }
+            };
+
+            if (i === 0) {
+                out.src = thumbnailUrl;
+                out.style.width = thumbsConfig.size.width;
+                out.style.height = thumbsConfig.size.height;
+            }
+        } 
+
+        return out;
+    }
+
     /**
      * Force reloading file
      */
     this._loadFile = function(){
-        if(player){
-            player.destroy();
-        }
+        destroyPlayer();
         
         var file = $scope.playing.file;
-        
+        var sources = [
+            { type: 'application/x-mpegURL', src: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file) }
+        ];
+
         var options = {
-            source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
+            techOrder: ['html5', 'flash'],
+            controls: true,
+            preload: 'auto',
+            autoplay: true,
+            width: '100%',
+            language: navigator.language || navigator.userLanguage,
+            sources: sources
+            /*source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
             autoPlay: true,
             parentId: '#clappr-container',
             plugins: {
                 core: [ ClapprThumbnailsPlugin ]
             },
             width: '100%',
-            maxBufferLength: 900
+            maxBufferLength: 900*/
         };
-        
+
+        player = videojs('#clappr-container', options);
+
+        file.subtitles.forEach(function(subtitle) {
+            var trackOpt = {
+                language: subtitle.lang_639_1,
+                label: subtitle.language || subtitle.label,
+                src: subtitle.file,
+                default: subtitle.default,
+                kind: 'subtitles'
+            };
+
+            if (subtitle.forced) {
+                trackOpt.label += ' (forced)';
+            }
+
+            player.addRemoteTextTrack(trackOpt);
+        });
+
+        if (file.thumbs) {
+            player.thumbnails(prepareThumbnailsObject(file.thumbsImg, file.thumbs, file.duration));
+        }
+/*
         if(file.thumbs){
             if (file.thumbs.meta) {
                 Object.assign(file.thumbs, file.thumbs.meta, {
@@ -54,7 +116,7 @@ function($scope, $element, VideoService){
             };
         }
         
-        player = new Clappr.Player(options); 
+        player = new Clappr.Player(options);*/ 
     };
     
     /**
@@ -85,6 +147,10 @@ function($scope, $element, VideoService){
     $scope.stop = function(){
         VideoService.stop();  
     };
+
+    $scope.$on('$destroy', function() {
+        destroyPlayer();
+    });
     
     $scope.$watch('playing.file', function(newVal, oldVal){
         if(newVal == oldVal){
@@ -96,8 +162,7 @@ function($scope, $element, VideoService){
             self.play();
         }
         else{
-            player.destroy();
-            player = null;
+            destroyPlayer();
         }
         
         $scope.file = newVal;
