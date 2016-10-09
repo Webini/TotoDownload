@@ -27,8 +27,11 @@ module.exports = function(app){
             
             torrent.getTranscodedFiles({ order: [['name',  'ASC']] }).then(
                 function(files){
-                    res.json(files.map((file) => {
-                        return {
+                    var out = [];
+
+                    for (var i = 0, sz = files.length; i < sz; i++) {
+                        const file = files[i];
+                        out.push({
                             qualities: formatQualities(file), 
                             id: file.id, 
                             duration: getDuration(file),
@@ -41,8 +44,10 @@ module.exports = function(app){
                             thumbsImg: (file.thumbs.file ? 
                                             DownloadService.getThumbPath(file.thumbs.file) : 
                                             DownloadService.getThumbPath(file.name, torrent) + '.jpg')
-                        };
-                    })).end();
+                        });
+                    }
+
+                    res.json(out).end();
                 },
                 function(){ res.status(500).end() }
             );
