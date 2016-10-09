@@ -72,8 +72,11 @@ function($scope, $element, VideoService){
             width: '100%',
             maxBufferLength: 900*/
         };
+        
+        var el = $('<video></video>'); //
+        $('#clappr-container').html(el);
 
-        player = videojs('#clappr-container', options);
+        player = videojs(el.get(0), options);
 
         file.subtitles.forEach(function(subtitle) {
             var trackOpt = {

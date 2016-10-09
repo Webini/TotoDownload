@@ -37,10 +37,10 @@ module.exports = function(app){
                             duration: getDuration(file),
                             name: file.name,
                             thumbs: file.thumbs,
-                            subtitles: file.subtitles.map((subtitle) => {
+                            subtitles: (file.subtitles ? file.subtitles.map((subtitle) => {
                                 subtitle.file = DownloadService.getThumbPath(subtitle.file);
                                 return subtitle;
-                            }),
+                            }) : []),
                             thumbsImg: (file.thumbs.file ? 
                                             DownloadService.getThumbPath(file.thumbs.file) : 
                                             DownloadService.getThumbPath(file.name, torrent) + '.jpg')
