@@ -22,22 +22,25 @@ function($scope, $element, VideoService){
     function prepareThumbnailsObject(thumbnailUrl, thumbsConfig, duration) {
         var delay = Math.floor(duration / thumbsConfig.quantity);
         var out   = {};
+	var width = parseInt(thumbsConfig.size.width);
+	var height = parseInt(thumbsConfig.size.height);
 
         for (var i = 0; i < thumbsConfig.quantity; i++) {
             var y = i % thumbsConfig.cols;
-            var x = i - (y * cols);
+            var x = Math.floor(i / thumbsConfig.cols);
+            var pos = i * delay;
 
-            out[i * delay] = {
+            out[pos] = {
                 style: {
-                    clip: 'rect(' + (thumbsConfig.size.height * y) + ', ' + (thumbsConfig.size.width * (x+1)) + 'px, ' + 
-                          (thumbsConfig.size.height * (y+1)) + 'px, ' + (thumbsConfig.size.width * x) + ')'
+                    clip: 'rect(' + (height * y) + 'px, ' + (width * (x+1)) + 'px, ' + 
+                          (height * (y+1)) + 'px, ' + (width * x) + 'px)'
                 }
             };
 
             if (i === 0) {
-                out.src = thumbnailUrl;
-                out.style.width = thumbsConfig.size.width;
-                out.style.height = thumbsConfig.size.height;
+                out[pos].src = thumbnailUrl;
+//                out[pos].style.width = width;
+//                out[pos].style.height = height;
             }
         } 
 
@@ -60,20 +63,21 @@ function($scope, $element, VideoService){
             controls: true,
             preload: 'auto',
             autoplay: true,
-            width: '100%',
             language: navigator.language || navigator.userLanguage,
-            sources: sources
+            sources: sources,
+            controlBar: {
+                muteToggle: true,
+                fullscreenToggle: true,
+            },
             /*source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
             autoPlay: true,
             parentId: '#clappr-container',
             plugins: {
                 core: [ ClapprThumbnailsPlugin ]
-            },
-            width: '100%',
-            maxBufferLength: 900*/
+            },*/
         };
         
-        var el = $('<video></video>'); //
+        var el = $('<video class="video-js vjs-default-skin vjs-16-9"></video>'); //
         $('#clappr-container').html(el);
 
         player = videojs(el.get(0), options);
@@ -95,6 +99,13 @@ function($scope, $element, VideoService){
         });
 
         if (file.thumbs) {
+            if (file.thumbs.meta) {
+                angular.extend(file.thumbs, file.thumbs.meta, {
+                    interval: /^[0-9]+\/([0-9]+)$/ig.exec(file.thumbs.meta.delay)[1]
+                });
+            }
+
+
             player.thumbnails(prepareThumbnailsObject(file.thumbsImg, file.thumbs, file.duration));
         }
 /*
