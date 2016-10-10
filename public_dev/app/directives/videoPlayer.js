@@ -20,23 +20,22 @@ function($scope, $element, VideoService){
     }
 
     function prepareThumbnailsObject(thumbnailUrl, thumbsConfig, duration) {
-        var delay = Math.floor(duration / thumbsConfig.quantity);
+        var delay = thumbsConfig.interval;// Math.floor(duration / thumbsConfig.quantity);
         var out   = {};
         var width = parseInt(thumbsConfig.size.width);
         var height = parseInt(thumbsConfig.size.height);
 
         for (var i = 0; i < thumbsConfig.quantity; i++) {
-            var y = i % thumbsConfig.cols;
-            var x = Math.floor(i / thumbsConfig.cols);
+            var x = i % thumbsConfig.cols;
+            var y = Math.floor(i / thumbsConfig.cols);
             var pos = i * delay;
 
-            out[pos] = {
+            out[pos.toString()] = {
                 style: {
                     clip: 'rect(' + (height * y) + 'px, ' + (width * (x+1)) + 'px, ' + 
                           (height * (y+1)) + 'px, ' + (width * x) + 'px)',
-                    width: width * (x+1),
-                    height: height * (y+1),
-                    left: -(width * x)
+                    left: -(width * x + width / 2) + 'px',
+		    top: -(height * (y+1) + height / 2) + 'px',
                 }
             };
 
@@ -45,7 +44,7 @@ function($scope, $element, VideoService){
 //                out[pos].style.width = width;
 //                out[pos].style.height = height;
             }
-        } 
+        }
 
         return out;
     }
