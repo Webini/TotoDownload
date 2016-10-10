@@ -30,7 +30,7 @@
     "underscore": "^1.8.2",
     "video.js": "^5.11.7",
     "videojs-contrib-hls": "^3.6.0",
-    "videojs-thumbnails": "git+ssh://git@github.com/brightcove/videojs-thumbnails.git",
+    "videojs-thumbnails": "git+ssh://git@github.com/hola/videojs-thumbnails.git",
     "winston": "^0.9.0"
   },
   "devDependencies": {

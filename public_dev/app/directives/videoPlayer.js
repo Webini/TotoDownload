@@ -21,27 +21,20 @@ function($scope, $element, VideoService){
 
     function prepareThumbnailsObject(thumbnailUrl, thumbsConfig, duration) {
         var delay = Math.floor(duration / thumbsConfig.quantity);
-        var out   = {};
-	var width = parseInt(thumbsConfig.size.width);
-	var height = parseInt(thumbsConfig.size.height);
+        var positions = [];
+        var out = {
+            0: {
+                src: thumbnailUrl,
+                sprites: {
+                    width: parseInt(thumbsConfig.size.width),
+                    height: parseInt(thumbsConfig.size.height),
+                    position: positions
+                }
+            }
+        };
 
         for (var i = 0; i < thumbsConfig.quantity; i++) {
-            var y = i % thumbsConfig.cols;
-            var x = Math.floor(i / thumbsConfig.cols);
-            var pos = i * delay;
-
-            out[pos] = {
-                style: {
-                    clip: 'rect(' + (height * y) + 'px, ' + (width * (x+1)) + 'px, ' + 
-                          (height * (y+1)) + 'px, ' + (width * x) + 'px)'
-                }
-            };
-
-            if (i === 0) {
-                out[pos].src = thumbnailUrl;
-//                out[pos].style.width = width;
-//                out[pos].style.height = height;
-            }
+            positions.push(i * delay);
         } 
 
         return out;
