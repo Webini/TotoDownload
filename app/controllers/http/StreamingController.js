@@ -28,20 +28,25 @@ module.exports = function(app){
             torrent.getTranscodedFiles({ order: [['name',  'ASC']] }).then(
                 function(files){
                     var out = [];
-                    for(var i = 0; i < files.length; i++){
-                        out.push({ 
-                            qualities: formatQualities(files[i]), 
-                            id: files[i].id, 
-                            duration: getDuration(files[i]),
-                            name: files[i].name,
-                            thumbs: files[i].thumbs,
-                            subtitles: files[i].subtitles,
-                            thumbsImg: (files[i].thumbs.file ? 
-                                            DownloadService.getThumbPath(files[i].thumbs.file) : 
-                                            DownloadService.getThumbPath(files[i].name, torrent) + '.jpg')
+
+                    for (var i = 0, sz = files.length; i < sz; i++) {
+                        const file = files[i];
+                        out.push({
+                            qualities: formatQualities(file), 
+                            id: file.id, 
+                            duration: getDuration(file),
+                            name: file.name,
+                            thumbs: file.thumbs,
+                            subtitles: (file.subtitles ? file.subtitles.map((subtitle) => {
+                                subtitle.file = DownloadService.getThumbPath(subtitle.file);
+                                return subtitle;
+                            }) : []),
+                            thumbsImg: (file.thumbs.file ? 
+                                            DownloadService.getThumbPath(file.thumbs.file) : 
+                                            DownloadService.getThumbPath(file.name, torrent) + '.jpg')
                         });
                     }
-                    
+
                     res.json(out).end();
                 },
                 function(){ res.status(500).end() }
