@@ -49,10 +49,13 @@ module.exports = ['TorrentsTranscoderService', (function(){
                     TorrentsTranscoderService.addToQueue(torrents[i]);
                 }
             }).finally(function(){
-                started = true;
-                for(var i = 0; i < config.maxSimult; i++){
-                    TorrentsTranscoderService.process();  
-                }
+                //crappy fix for startup, we have a getFromMemory in process(), so if the torrents datas aren't fill in memory it will crash the service
+                setTimeout(function() {
+                    started = true;
+                    for(var i = 0; i < config.maxSimult; i++){
+                        TorrentsTranscoderService.process();  
+                    }
+                }, 2500);
             });
             
             SyncService.on('download-complete', function(torrent){
