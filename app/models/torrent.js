@@ -111,7 +111,7 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: false
       },
       eta: {
-        type: DataTypes.BIGINT.UNSIGNED,
+        type: DataTypes.BIGINT,
         allowNull: true
       },
       status: {

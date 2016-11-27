@@ -6,7 +6,7 @@ module.exports = {
       'Torrents',
       'eta',
       {
-        type: DataTypes.BIGINT.UNSIGNED,
+        type: DataTypes.BIGINT,
         allowNull: true
       }
     ).then(function() {
