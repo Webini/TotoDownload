@@ -176,7 +176,10 @@ ul {
 
 .torrent {
     min-height: 111px !important;
-    .streaming { margin: 7px 0px }
+    .streaming { 
+        float: right;
+        margin: 7px 0px; 
+    }
     
     .torrent-widget:hover {
         background-color: #f5f5f5;
@@ -257,7 +260,12 @@ ul {
     .box-footer { padding: 4px 10px; } 
     .clearfix { height: 0px; }
     
-    .to-footer { line-height: 30px; }
+    .to-footer { 
+        line-height: 30px; 
+        span {
+            float: left;
+        }
+    }
 }
 
 .torrent-preview {
