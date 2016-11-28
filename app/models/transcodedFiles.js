@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
         },
         thumbsMeta: {
             allowNull: true,
-            type: DataTypes.STRING(255)
+            type: DataTypes.TEXT
         }
     }, {
         timestamps: false,
