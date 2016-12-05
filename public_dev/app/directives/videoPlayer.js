@@ -68,7 +68,7 @@ function($scope, $element, VideoService){
             language: navigator.language || navigator.userLanguage,
             sources: sources,
             controlBar: {
-                muteToggle: true,
+                //muteToggle: true,
                 fullscreenToggle: true,
             },
             /*source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
