@@ -30,7 +30,7 @@ module.exports = ['SyncService', (function(){
     SyncService.generateSyncTag = function(torrent){
         return crc32(torrent.hash + torrent.status +
                      torrent.leftUntilDone + torrent.error + torrent.movieId + 
-                     torrent.peersSendingToUs + torrent.peersGettingFromUse +
+                     torrent.peersSendingToUs + torrent.peersGettingFromUs +
                      torrent.rateDownload + torrent.rateUpload + torrent.eta +
                      torrent.activityDate + torrent.isFinished + torrent.isStalled + 
                      torrent.transcodableState);

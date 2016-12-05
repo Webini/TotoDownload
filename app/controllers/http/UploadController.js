@@ -14,7 +14,7 @@ module.exports = function(app){
         /**
         * When we upload .torrent
         **/
-        onUploadFiles: function(req, res){            
+        onUploadFiles: function(req, res){ 
             if(!req.files || !req.files.file){
                 return respondError(res, -1, 'file not found', 500);   
             }

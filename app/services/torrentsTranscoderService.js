@@ -273,6 +273,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
                     });
                 })
                 .catch((err) => {
+                    console.log('TorrentsTranscoderService._transcodeNextFile error => ', err);
                     if (err.message && err.message.match('kill')) {
                         transcoder.killed = true;
                     }

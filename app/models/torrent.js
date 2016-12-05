@@ -167,7 +167,7 @@ module.exports = function(sequelize, DataTypes) {
         allowNull: true
       },
       uploadedEver: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.BIGINT,
         allowNull: true
       },
       seedRatioLimit: {
