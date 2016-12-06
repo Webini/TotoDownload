@@ -445,8 +445,10 @@ module.exports = ['TorrentsTranscoderService', (function(){
     TorrentsTranscoderService._convertToRelativePath = function(result){ 
         console.log('TorrentsTranscoderService._convertToRelativePath => ', result);
         for(var quality in result){
-            result[quality].path = result[quality].file.substr(config.output.length);
-            delete result[quality].file;
+            if (result[quality].file) {
+                result[quality].path = result[quality].file.substr(config.output.length);
+                delete result[quality].file;
+            }
         }
         
         return result;
