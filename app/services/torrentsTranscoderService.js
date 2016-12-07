@@ -261,7 +261,7 @@ module.exports = ['TorrentsTranscoderService', (function(){
                 })
                 .then((result) => {
                     const obj = {
-                        torrentId: (transcoder.original.id ? transcoder.original.id : TorrentService.getFromMemory(transcoder.torrent)),
+                        torrentId: (transcoder.original.id ? transcoder.original.id : TorrentService.getFromMemory(transcoder.torrent).id),
                         name: transcoder.transcoding.name,
                         transcoded: TorrentsTranscoderService._convertToRelativePath(result.transcoded),
                         createdAt: new Date(),
