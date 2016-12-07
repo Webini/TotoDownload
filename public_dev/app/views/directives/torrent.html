@@ -123,11 +123,13 @@
         </div>
     </div>
     <div class="text-overflow" ng-class="{'to-footer': !torrent.isFinished}">
-        <span ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
-            <a href="javascript:" ng-click="remove($event)"><i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}</a>
+        <span class="pull-left" ng-if="torrent.userId == user.id || user.is(roles.ADMIN)">
+            <a href="javascript:" ng-click="remove($event)">
+                <i class="fa fa-trash"></i>&nbsp;{{ 'REMOVE_TORRENT' | translate }}
+            </a>
             <span ng-if="torrent.userId">&nbsp;-&nbsp;</span>
         </span>
-        <span ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: username } }}</span>
+        <span class="pull-left" ng-if="torrent.userId">{{ 'UPLOADED_BY' | translate:{ name: username } }}</span>
         <span ng-if="torrent.transcodableState == 8" class="streaming label label-info pull-right"><i class="fa fa-play"></i>&nbsp;&nbsp;{{ 'STREAMING_AVAILABLE' | translate }}</span>
     </div>
 </div>

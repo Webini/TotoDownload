@@ -260,14 +260,16 @@ module.exports = ['TorrentsTranscoderService', (function(){
                     return transcoder.transPromise;
                 })
                 .then((result) => {
-                    return app.orm.TranscodedFiles.create({
+                    const obj = {
                         torrentId: (transcoder.original.id ? transcoder.original.id : TorrentService.getFromMemory(transcoder.torrent)),
                         name: transcoder.transcoding.name,
                         transcoded: TorrentsTranscoderService._convertToRelativePath(result.transcoded),
                         createdAt: new Date(),
                         thumbs: TorrentsTranscoderService._convertThumbsToRelativePath(result.thumbnails),
                         subtitles: TorrentsTranscoderService._convertSubtitlesToRelativePath(result.subtitles)
-                    }).then(function(file){
+                    };
+                    console.log('TorrentsTranscoderService._transcodeNextFile dump', obj);
+                    return app.orm.TranscodedFiles.create(obj).then(function(file){
                         transcoder.done.push(file);
                         return transcoder;
                     });
@@ -445,10 +447,8 @@ module.exports = ['TorrentsTranscoderService', (function(){
     TorrentsTranscoderService._convertToRelativePath = function(result){ 
         console.log('TorrentsTranscoderService._convertToRelativePath => ', result);
         for(var quality in result){
-            if (result[quality].file) {
-                result[quality].path = result[quality].file.substr(config.output.length);
-                delete result[quality].file;
-            }
+            result[quality].path = result[quality].file.substr(config.output.length);
+            delete result[quality].file;
         }
         
         return result;
