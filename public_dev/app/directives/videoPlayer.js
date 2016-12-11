@@ -83,7 +83,7 @@ function($scope, $element, VideoService){
 
         player = videojs(el.get(0), options);
         player.Resume({
-            uuid: $scope.playing.torrent.hash + $scope.playing.file,
+            uuid: $scope.playing.torrent.hash + $scope.playing.file.name,
             playbackOffset: 15,
             title: 'Reprendre la lecture ?',
             resumeButtonText: 'Continuer',
