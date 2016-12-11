@@ -7,6 +7,7 @@ module.exports = function (grunt) {
                 files: {
                     './public/js/app.js': [
                         './bower_components/angular/angular.js',
+                        './bower_components/store-js/store.min.js', //videojs resume dep
                         './bower_components/angular-route/angular-route.js',
                         './bower_components/angular-animate/angular-animate.js',
                         './bower_components/angular-translate/angular-translate.js',
