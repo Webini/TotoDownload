@@ -68,7 +68,6 @@ function($scope, $element, VideoService){
             language: navigator.language || navigator.userLanguage,
             sources: sources,
             controlBar: {
-                //muteToggle: true,
                 fullscreenToggle: true,
             },
             /*source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
@@ -83,6 +82,14 @@ function($scope, $element, VideoService){
         $('#clappr-container').html(el);
 
         player = videojs(el.get(0), options);
+        player.Resume({
+            uuid: $scope.playing.torrent.hash + $scope.playing.file,
+            playbackOffset: 15,
+            title: 'Reprendre la lecture ?',
+            resumeButtonText: 'Continuer',
+            cancelButtonText: 'Recommencer'
+        });
+
 
         file.subtitles.forEach(function(subtitle) {
             var trackOpt = {

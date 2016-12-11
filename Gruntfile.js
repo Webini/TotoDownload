@@ -90,6 +90,15 @@ module.exports = function (grunt) {
                 ],
                 dest: './public/player',
                 expand: true
+            },
+            player_resume: {
+                cwd: './node_modules/videojs-resume/dist',
+                src: [
+                    'videojs-resume.min.js',
+                    'videojs-resume.min.css'
+                ],
+                dest: './public/player',
+                expand: true
             }
         },
         watch: {
@@ -119,7 +128,7 @@ module.exports = function (grunt) {
      **/
     grunt.registerTask('default', ['watch']);
     grunt.registerTask('install-alte', ['copy:alte']);
-    grunt.registerTask('install-player', [ 'copy:player', 'copy:player_hls', 'copy:player_thumbs' ]);
+    grunt.registerTask('install-player', [ 'copy:player', 'copy:player_hls', 'copy:player_thumbs', 'copy:player_resume' ]);
     grunt.registerTask('install', ['copy', 'uglify', 'less']);
     grunt.registerTask('build', ['uglify', 'less']);
 };

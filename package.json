@@ -28,9 +28,10 @@
     "toto-transcoder": "https://github.com/Webini/toto-transcoder.git",
     "transmission": "^0.4.2",
     "underscore": "^1.8.2",
-    "video.js": "^5.11.7",
-    "videojs-contrib-hls": "^3.6.0",
-    "videojs-thumbnails": "https://github.com/brightcove/videojs-thumbnails.git",
+    "video.js": "^5.12.6",
+    "videojs-contrib-hls": "^4.0.0",
+    "videojs-resume": "^0.3.2",
+    "videojs-thumbnails": "git+https://github.com/brightcove/videojs-thumbnails.git",
     "winston": "^0.9.0"
   },
   "devDependencies": {
