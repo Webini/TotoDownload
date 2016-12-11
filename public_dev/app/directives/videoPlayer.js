@@ -14,7 +14,7 @@ function($scope, $element, VideoService){
     
     function destroyPlayer() {
         if (player) {
-            player.dispose();
+            try { player.dispose(); } catch(e) {}
             player = null;
         }
     }
