@@ -43,8 +43,7 @@
         "webThumbPath": "/movies/thumb" //basepath for thumbnails in VTT playlist
     },
     "ffmpeg": {
-
-
+        "hwAccel": "cuvid", //or null if no hw acceleration
         "preferredLang": "^fr.*", //regex for matching languages in subtitle & audio tracks
         "debug": true, //if debug => the movie will not be fully transcoded (only ~1 min)
         "thumbnails": {
