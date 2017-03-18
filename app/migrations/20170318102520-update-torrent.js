@@ -6,7 +6,7 @@ module.exports = {
       'Torrents',
       'magnetLink',
       {
-        type: DataTypes.STRING(8096),
+        type: Sequelize.STRING(8096),
         allowNull: true
       }
     );
@@ -17,7 +17,7 @@ module.exports = {
       'Torrents',
       'magnetLink',
       {
-        type: DataTypes.STRING(8096),
+        type: Sequelize.STRING(8096),
         allowNull: true
       }
     );
