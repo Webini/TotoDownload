@@ -163,7 +163,7 @@ module.exports = function(sequelize, DataTypes) {
           defaultValue: 0
       },
       magnetLink: {
-        type: DataTypes.STRING(2048),
+        type: DataTypes.STRING(8096),
         allowNull: true
       },
       uploadedEver: {
