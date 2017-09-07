@@ -219,10 +219,6 @@ module.exports = ['DownloadService', (function(){
                     var torrent = app.services.TorrentService.getFromMemory(torrentHash);
                     if(!torrent)
                         return $q.reject('Torrent not found', 404);
-                        
-                    if(!TranscodingService.qualityExists(quality)){
-                        return $q.rejec('Quality not found', 404);
-                    }
                     
                     return torrent.getTranscodedFile(fileId)
                                   .then(function(file){
