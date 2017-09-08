@@ -89,7 +89,7 @@ function($scope, $element, VideoService){
                     .attr('srclang', subtitle.lang_639_1 || 'fr')
                     .attr('src', subtitle.file)
                     .attr('default', subtitle ? 'true' : 'false')
-                    .attr('king', 'subtitles')
+                    .attr('kind', 'subtitles')
                     .attr('label', (subtitle.language || subtitle.label) + (subtitle.forced ? ' (forced)' : ''))
             );
         });
