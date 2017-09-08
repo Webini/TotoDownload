@@ -56,9 +56,6 @@ function($scope, $element, VideoService){
         destroyPlayer();
         
         var file = $scope.playing.file;
-        var sources = [
-            { type: 'application/x-mpegURL', src: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file) }
-        ];
 
         var options = {
             techOrder: ['html5', 'flash'],
@@ -66,19 +63,56 @@ function($scope, $element, VideoService){
             preload: 'auto',
             autoplay: true,
             language: navigator.language || navigator.userLanguage,
-            sources: sources,
+            enableLowInitialPlaylist: true,
             controlBar: {
-                fullscreenToggle: true,
-            },
-            /*source: VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file), 
-            autoPlay: true,
-            parentId: '#clappr-container',
-            plugins: {
-                core: [ ClapprThumbnailsPlugin ]
-            },*/
+                children: [
+                    'playToggle',
+                    'volumePanel',
+                    'currentTimeDisplay',
+                    'timeDivider',
+                    'durationDisplay',
+                    'progressControl',
+                    'liveDisplay',
+                    'remainingTimeDisplay',
+                    'subsCapsButton',
+                    'audioTrackButton',
+                    'fullscreenToggle'
+                ]
+            }
         };
         
         var el = $('<video class="video-js vjs-default-skin vjs-16-9"></video>'); //
+        
+        file.subtitles.forEach(function(subtitle) {
+            var trackOpt = {
+                language: subtitle.lang_639_1,
+                label: subtitle.language || subtitle.label,
+                src: subtitle.file,
+                srclang: subtitle.lang_639_1,
+                default: subtitle.default,
+                kind: 'subtitles'
+            };
+
+            if (subtitle.forced) {
+                trackOpt.label += ' (forced)';
+            }
+            el.append(
+                $('<track>')
+                    .attr('srclang', subtitle.lang_639_1 || 'fr')
+                    .attr('src', subtitle.file)
+                    .attr('default', subtitle ? 'true' : 'false')
+                    .attr('king', 'subtitles')
+                    .attr('label', (subtitle.language || subtitle.label) + (subtitle.forced ? ' (forced)' : ''))
+            );
+            //player.addRemoteTextTrack(trackOpt);
+        });
+
+        el.append(
+            $('<source>')
+                .attr('src', VideoService.getPlaylistUrl($scope.playing.torrent, $scope.playing.file))
+                .attr('type', 'application/x-mpegURL')
+        );
+
         $('#clappr-container').html(el);
 
         player = videojs(el.get(0), options);
@@ -88,23 +122,6 @@ function($scope, $element, VideoService){
             title: 'Reprendre la lecture ?',
             resumeButtonText: 'Continuer',
             cancelButtonText: 'Recommencer'
-        });
-
-
-        file.subtitles.forEach(function(subtitle) {
-            var trackOpt = {
-                language: subtitle.lang_639_1,
-                label: subtitle.language || subtitle.label,
-                src: subtitle.file,
-                default: subtitle.default,
-                kind: 'subtitles'
-            };
-
-            if (subtitle.forced) {
-                trackOpt.label += ' (forced)';
-            }
-
-            player.addRemoteTextTrack(trackOpt);
         });
 
         if (file.thumbs) {
