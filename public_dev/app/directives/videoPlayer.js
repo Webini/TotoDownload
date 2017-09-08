@@ -84,18 +84,6 @@ function($scope, $element, VideoService){
         var el = $('<video class="video-js vjs-default-skin vjs-16-9"></video>'); //
         
         file.subtitles.forEach(function(subtitle) {
-            var trackOpt = {
-                language: subtitle.lang_639_1,
-                label: subtitle.language || subtitle.label,
-                src: subtitle.file,
-                srclang: subtitle.lang_639_1,
-                default: subtitle.default,
-                kind: 'subtitles'
-            };
-
-            if (subtitle.forced) {
-                trackOpt.label += ' (forced)';
-            }
             el.append(
                 $('<track>')
                     .attr('srclang', subtitle.lang_639_1 || 'fr')
@@ -104,7 +92,6 @@ function($scope, $element, VideoService){
                     .attr('king', 'subtitles')
                     .attr('label', (subtitle.language || subtitle.label) + (subtitle.forced ? ' (forced)' : ''))
             );
-            //player.addRemoteTextTrack(trackOpt);
         });
 
         el.append(
